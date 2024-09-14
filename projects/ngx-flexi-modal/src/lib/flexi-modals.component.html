@@ -1,0 +1,25 @@
+@if (modals().length) {
+  <div class="fm-modals--overlay" @fadeInOut></div>
+
+  @for(modal of modals(); track modal.id) {
+    @switch (modal.type) {
+      @case ('COMPONENT') {
+        <fm-component-modal-container
+          class="fm-modal-container"
+          [config]="$any(modal)"
+          @fadeInOut
+          #modals
+        />
+      }
+      @case ('TEMPLATE') {
+        <fm-template-modal-container
+          class="fm-modal-container"
+          [config]="$any(modal)"
+          @fadeInOut
+          #modals
+        />
+      }
+    }
+  }
+}
+

@@ -1,6 +1,5 @@
 import {animate, style, transition, trigger} from "@angular/animations";
 
-// export function fadeInOutAnimation(name: string, duration: number = 300) {
 export function fadeInOutAnimation(name: string, duration: number = 300) {
   return trigger(name, [
     transition(':enter', [

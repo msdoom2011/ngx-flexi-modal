@@ -1,0 +1,43 @@
+@if (isOverlayVisible()) {
+  <div class="fm-modals--overlay"></div>
+}
+
+@if (config().closable) {
+  <div class="fm-modal--closing-layer" (click)="modal().close()"></div>
+}
+
+<div class="fm-modal--body-wrapper">
+  <div class="fm-modal--body" [style]="bodyStyles()">
+    @if (config().closable) {
+      <div class="fm-modal-close-btn" (click)="modal().close()">
+        <span class="line"></span>
+        <span class="line"></span>
+      </div>
+    }
+
+    @if (config().title || config().headerTpl) {
+      <fm-modal-container-header
+        class="fm-modal--header"
+        [title]="config().title"
+        [headerTpl]="config().headerTpl"
+      />
+    }
+
+    <div
+      class="fm-modal--content"
+      [class.scrollable]="config().scroll === 'content'"
+    >
+      <ng-content />
+    </div>
+
+    @if (config().buttons || config().buttonsTpl || config().footerTpl) {
+      <fm-modal-container-footer
+        class="fm-modal--footer"
+        [buttons]="config().buttons"
+        [buttonsTpl]="config().buttonsTpl"
+        [contentTpl]="config().footerTpl"
+        [modal]="modal()"
+      />
+    }
+  </div>
+</div>

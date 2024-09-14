@@ -1,0 +1,10 @@
+<div class="fm-modal--viewport" [class.scrollable]="config().scroll === 'modal'">
+  <fm-modal-container-layout [config]="config()" [modal]="this">
+    <ng-container
+      *ngTemplateOutlet="
+          config().template;
+          context: config().context
+      "
+    />
+  </fm-modal-container-layout>
+</div>
