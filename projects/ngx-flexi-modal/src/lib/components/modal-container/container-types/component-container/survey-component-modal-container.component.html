@@ -1,0 +1,13 @@
+<div class="sw-modal--viewport" [class.scrollable]="config().scroll === 'modal'">
+  <sw-modal-container-layout [config]="config()" [modal]="this">
+    <ng-container
+      *ngComponentOutlet="
+        config().component;
+        inputs: config().inputs;
+        injector: config().injector;
+        content: config().content;
+        ngModule: config().ngModule;
+      "
+    />
+  </sw-modal-container-layout>
+</div>

@@ -1,0 +1,27 @@
+@if (icon()) {
+  <div class="icon">
+    @switch(icon()) {
+      @case ('error') {
+        <sw-modal-basic-error-icon />
+      }
+      @case ('warning') {
+        <sw-modal-basic-warning-icon />
+      }
+      @case ('success') {
+        <sw-modal-basic-success-icon />
+      }
+      @case ('info') {
+        <sw-modal-basic-info-icon />
+      }
+      @case ('confirm') {
+        <sw-modal-basic-confirm-icon />
+      }
+    }
+  </div>
+}
+
+<div [class]="['message', 'align-' + messageAlign()]">
+  @for (paragraph of message(); track $index) {
+    <p>{{ paragraph }}</p>
+  }
+</div>

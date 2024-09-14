@@ -1,0 +1,34 @@
+:host {
+  display: flex;
+  flex-direction: row;
+  min-height: 120px;
+  padding: 18px 36px;
+}
+
+.icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 105px;
+  max-width: 105px;
+  width: 105px;
+  margin-left: -36px;
+}
+
+.message {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+
+  &.align-left {
+    text-align: left;
+  }
+
+  &.align-right {
+    text-align: left;
+  }
+
+  &.align-center {
+    text-align: left;
+  }
+}

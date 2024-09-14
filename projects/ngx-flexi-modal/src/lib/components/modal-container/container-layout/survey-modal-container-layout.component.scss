@@ -1,0 +1,83 @@
+:host {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+}
+
+.sw-modal-close-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: -24px;
+  right: -24px;
+  z-index: 10;
+  cursor: pointer;
+  width: 24px;
+  height: 24px;
+  border-radius: 100%;
+  background: white;
+  opacity: 0.5;
+  transition: opacity 200ms ease;
+
+  .line {
+    display: block;
+    width: 13px;
+    height: 1px;
+    position: absolute;
+    background: #333;
+    transform: rotate(45deg);
+
+    & + .line {
+      transform: rotate(-45deg);
+    }
+  }
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
+.sw-modals--overlay {
+  background: rgba(4, 67, 81, 0.5);
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+}
+
+.sw-modal--closing-layer {
+  position: absolute;
+  background: rgba(0, 0, 0, 0);
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.sw-modal--body-wrapper {
+  position: relative;
+  z-index: 10;
+  padding: 50px;
+}
+
+.sw-modal--body {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  background: white;
+  border-radius: 8px;
+}
+
+.sw-modal--content {
+  min-height: 100px;
+
+  &.scrollable {
+    overflow: auto;
+  }
+}

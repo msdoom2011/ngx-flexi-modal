@@ -1,0 +1,26 @@
+:host {
+  font-family: Arial, Helvetica, Tahoma, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  box-sizing: border-box;
+  overflow: hidden;
+  color: #333;
+
+  &::ng-deep * {
+    box-sizing: border-box;
+  }
+}
+
+.sw-modals--overlay,
+.sw-modal-container {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  z-index: 10;
+}
+
+.sw-modals--overlay {
+  background: rgba(4, 67, 81, 0.5);
+}

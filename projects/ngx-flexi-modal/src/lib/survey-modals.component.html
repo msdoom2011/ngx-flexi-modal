@@ -1,0 +1,25 @@
+@if (modals().length) {
+  <div class="sw-modals--overlay" @fadeInOut></div>
+
+  @for(modal of modals(); track modal.id) {
+    @switch (modal.type) {
+      @case ('COMPONENT') {
+        <sw-component-modal-container
+          class="sw-modal-container"
+          [config]="$any(modal)"
+          @fadeInOut
+          #modals
+        />
+      }
+      @case ('TEMPLATE') {
+        <sw-template-modal-container
+          class="sw-modal-container"
+          [config]="$any(modal)"
+          @fadeInOut
+          #modals
+        />
+      }
+    }
+  }
+}
+
