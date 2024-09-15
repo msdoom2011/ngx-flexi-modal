@@ -12,7 +12,6 @@ import {FlexiModalButton} from "./modals/buttons/flexi-modal-button";
 import {FlexiModalComponent} from "./modals/flexi-modal-component";
 import {FlexiModalTemplate} from "./modals/flexi-modal-template";
 import {modalWidthPresets} from "./flexi-modals.constants";
-import {FlexiModal} from "./modals/flexi-modal";
 
 export type TFlexiModalWidth = 'fit-content' | 'fit-window' | (keyof typeof modalWidthPresets) | number;
 export type TFlexiModalHeight = 'fit-content' | number;
@@ -42,26 +41,14 @@ export type TFlexiModalEvent = (
   | FlexiModalUpdateEvent
 );
 
-// export interface IFlexiModalConfig<ModalContainerT extends FlexiModalContainer<any, any>>
-// extends IFlexiModalCreateOptions<ModalContainerT> {
-//   type: FlexiModalType;
-//   modal$: BehaviorSubject<ModalContainerT | null>;
-// }
-
 export interface IFlexiModalCreateOptions {
   // Can be optionally specified. Otherwise, a random id value will be generated instead.
   // Required to be specified in case if you have plans to listen to "(open)" event
   // of a modal defined using the template driven approach. Otherwise, this event
   // will never be triggered.
   id: string;
-  // Will be ignored if headerTpl is specified
   title: string | undefined;
-  // Will be ignored if footerTpl is specified
   buttons: Array<IFlexiModalButtonConfig> | undefined;
-  // Will be ignored if footerTpl is specified
-  // buttonsTpl?: Array<FlexiModalButtonDirective>; // Will be ignored if footerTpl is specified
-  // headerTpl?: TemplateRef<any> | undefined;
-  // footerTpl?: TemplateRef<any> | undefined;
   onClose: (($event: FlexiModalBeforeCloseEvent<any>) => unknown) | undefined;
   onOpen: (($event: FlexiModalOpenEvent<any>) => unknown) | undefined;
   width: TFlexiModalWidth;
@@ -75,42 +62,6 @@ export interface IFlexiModalCreateOptions {
   data: {};
 }
 
-// export interface IFlexiModalCreateOptions<ModalContainerT extends FlexiModalContainer<any, any>> {
-//   // Can be optionally specified. Otherwise, a random id value will be generated instead.
-//   // Required to be specified in case if you have plans to listen to "(open)" event
-//   // of a modal defined with the template driven approach. Otherwise, this event
-//   // will never be triggered.
-//   id?: string;
-//   // Will be ignored if headerTpl is specified
-//   title?: string;
-//   // Will be ignored if footerTpl is specified
-//   buttons?: Array<IFlexiModalButtonConfig>;
-//   // Will be ignored if footerTpl is specified
-//   // buttonsTpl?: Array<FlexiModalButtonDirective>; // Will be ignored if footerTpl is specified
-//   // headerTpl?: TemplateRef<any> | undefined;
-//   // footerTpl?: TemplateRef<any> | undefined;
-//   onClose?: ($event: FlexiModalBeforeCloseEvent<ModalContainerT>) => unknown;
-//   onOpen?: ($event: FlexiModalOpenEvent<ModalContainerT>) => unknown;
-//   aliveUntil?: Observable<unknown>;
-//   width?: TFlexiModalWidth;
-//   height?: TFlexiModalHeight;
-//   scroll?: TFlexiModalScroll;
-//   closable?: boolean;
-//   classes?: Array<string>;
-//   // Random data that can be used to read for example in event listeners.
-//   // This object doesn't go to any renderable modal content
-//   data?: {};
-// }
-
-// export interface IFlexiComponentModalConfig<ComponentT = any>
-// extends
-//   IFlexiModalConfig<FlexiComponentModalContainerComponent<ComponentT>>,
-//   IFlexiComponentModalCreateOptions<ComponentT> {
-//
-//   type: FlexiModalType.Component;
-//   component: Type<Component>;
-// }
-
 export interface IFlexiComponentModalCreateOptions<
   ComponentT,
   InputsT extends object = Record<string, any>
@@ -119,28 +70,16 @@ extends IFlexiModalCreateOptions {
   inputs: InputsT;
   onClose: (($event: FlexiModalBeforeCloseEvent<FlexiModalComponent<ComponentT>>) => unknown) | undefined;
   onOpen: (($event: FlexiModalOpenEvent<FlexiModalComponent<ComponentT>>) => unknown) | undefined;
-  // injector?: Injector;
-  // content?: any[][];
-  // ngModule?: Type<any>;
 }
 
-// export interface IFlexiTemplateModalConfig<ContextT = any>
-// extends
-//   IFlexiModalConfig<FlexiTemplateModalContainerComponent<ContextT>>,
-//   IFlexiTemplateModalCreateOptions<ContextT> {
-//
-//   type: FlexiModalType.Template;
-//   template: TemplateRef<ContextT>;
-// }
-
-export interface IFlexiTemplateModalCreateOptions<ContextT extends object>
+export interface IFlexiTemplateModalCreateOptions<
+  ContextT extends object
+>
 extends IFlexiModalCreateOptions {
-
   context: ContextT | null,
-  // injector?: Injector;
-  buttonsTpl: Array<FlexiModalButtonDirective>; // Will be ignored if footerTpl is specified
   headerTpl: TemplateRef<any> | undefined;
   footerTpl: TemplateRef<any> | undefined;
+  buttonsTpl: Array<FlexiModalButtonDirective>; // Will be ignored if footerTpl is specified
   onClose: (($event: FlexiModalBeforeCloseEvent<FlexiModalTemplate<ContextT>>) => unknown) | undefined;
   onOpen: (($event: FlexiModalOpenEvent<FlexiModalTemplate<ContextT>>) => unknown) | undefined;
 }

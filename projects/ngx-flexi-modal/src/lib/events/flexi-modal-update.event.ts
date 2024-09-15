@@ -11,8 +11,6 @@ extends FlexiModalEvent<ModalT> {
   public readonly type = FlexiModalEventType.Update;
 
   constructor(
-    // config: IFlexiModalConfig<any>,
-    // public modal: FlexiModalContainer<any, any>,
     modal: ModalT,
     public changes: Partial<IFlexiModalCreateOptions>,
   ) {

@@ -30,11 +30,9 @@ import {
 })
 export class FlexiComponentModalContainerComponent<ComponentT>
 extends FlexiModalContainer<
-  // IFlexiComponentModalConfig<ComponentT>,
   FlexiModalComponent<ComponentT, any>,
   ComponentT
 > {
 
-  // public override config = input.required<IFlexiComponentModalConfig<ContentT>>();
   public override modal = input.required<FlexiModalComponent<ComponentT>>();
 }

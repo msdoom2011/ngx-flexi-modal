@@ -8,7 +8,6 @@ export abstract class FlexiModalEvent<ModalT extends FlexiModal> {
   private _stopped = false;
 
   constructor(
-    // public config: IFlexiModalConfig<any>,
     public modal: ModalT,
   ) {}
 
@@ -21,7 +20,6 @@ export abstract class FlexiModalEvent<ModalT extends FlexiModal> {
   }
 
   public get id(): string {
-    // return <string>this.config.id;
     return <string>this.modal.config.id;
   }
 }

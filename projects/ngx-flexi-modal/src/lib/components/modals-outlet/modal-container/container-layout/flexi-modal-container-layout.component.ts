@@ -21,8 +21,6 @@ import {FlexiModal} from "../../../../modals/flexi-modal";
 export class FlexiModalContainerLayoutComponent {
 
   // Inputs
-  // public config = input.required<IFlexiModalConfig<any>>();
-  // public modal = input.required<FlexiModalContainer<any, any>>();
   public modal = input.required<FlexiModal>();
 
 

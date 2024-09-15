@@ -17,32 +17,12 @@
       </div>
     }
 
-<!--    @if (config.title || $any(config).headerTpl) {-->
-<!--      <fm-modal-container-header-->
-<!--        class="fm-modal&#45;&#45;header"-->
-<!--        [title]="config.title"-->
-<!--        [headerTpl]="$any(config).headerTpl"-->
-<!--      />-->
-<!--    }-->
     <ng-content select="fm-modal-container-header" />
 
-    <div
-      class="fm-modal--content"
-      [class.scrollable]="config.scroll === 'content'"
-    >
+    <div class="fm-modal--content" [class.scrollable]="config.scroll === 'content'">
       <ng-content />
     </div>
 
     <ng-content select="fm-modal-container-footer" />
-
-<!--    @if (config.buttons || $any(config).buttonsTpl || $any(config).footerTpl) {-->
-<!--      <fm-modal-container-footer-->
-<!--        class="fm-modal&#45;&#45;footer"-->
-<!--        [buttons]="config.buttons"-->
-<!--        [buttonsTpl]="$any(config).buttonsTpl"-->
-<!--        [contentTpl]="$any(config).footerTpl"-->
-<!--        [modal]="modal()"-->
-<!--      />-->
-<!--    }-->
   </div>
 </div>

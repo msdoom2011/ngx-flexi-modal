@@ -26,6 +26,7 @@ import {
 import {
   FlexiTemplateModalContainerComponent
 } from "./components/modals-outlet/modal-container/container-types/template/flexi-template-modal-container.component";
+import {FlexiModalContainer} from "./components/modals-outlet/modal-container/flexi-modal-container";
 
 @Injectable()
 export class FlexiModalsService<
@@ -38,10 +39,8 @@ export class FlexiModalsService<
 
   private readonly _events$ = new Subject<TFlexiModalEvent>();
 
-  // private readonly _modals = signal<Array<IFlexiModalConfig<any>>>([]);
   private readonly _modals = signal<Array<FlexiModal>>([]);
 
-  // public get modals(): Signal<Array<IFlexiModalConfig<any>>> {
   public get modals(): Signal<Array<FlexiModal>> {
     return this._modals.asReadonly();
   }
@@ -51,9 +50,8 @@ export class FlexiModalsService<
   }
 
   constructor() {
-    this._extensions = this._extensionsArr.reduce(
-      (result, extension) => ({...result, ...extension}),
-      {}
+    this._extensions = (
+      this._extensionsArr.reduce((result, extension) => ({...result, ...extension}), {})
     ) as Record<keyof ExtensionOptionsByTypesT, IFlexiModalExtensionTypeConfig>;
   }
 
@@ -81,42 +79,9 @@ export class FlexiModalsService<
   ): Observable<FlexiComponentModalContainerComponent<ComponentT> | null> {
 
     const container$ = new BehaviorSubject<FlexiComponentModalContainerComponent<ComponentT> | null>(null);
-    const modal = new FlexiModalComponent(
-      this,
-      component,
-      container$,
-      this._normalizeModalOptions(takeUntilOrOptions),
-    );
-    // const modalConfig: IFlexiComponentModalConfig<ComponentT> = {
-    //   ...this._normalizeModalOptions(takeUntilOrOptions),
-    //   type: FlexiModalType.Component,
-    //   component,
-    //   modal$,
-    // };
-    const $beforeOpenEvent = new FlexiModalBeforeOpenEvent(modal);
+    const modal = new FlexiModalComponent(this, component, container$, this._normalizeOptions(takeUntilOrOptions));
 
-    this._modals.set([ ...this._modals(), modal ]);
-    this._events$.next($beforeOpenEvent);
-
-    if ($beforeOpenEvent.prevented || $beforeOpenEvent.stopped) {
-      return of(null);
-    }
-
-    return container$
-      .pipe(
-        filter(modalContainerComponent => !!modalContainerComponent),
-        // tap((modalContainerComponent: FlexiComponentModalContainerComponent<ComponentT>) => {
-        tap(() => {
-          // const $openEvent = new FlexiModalOpenEvent(modal, modalContainerComponent);
-          const $openEvent = new FlexiModalOpenEvent(modal);
-
-          this._events$.next($openEvent);
-
-          if (!$openEvent.stopped) {
-            modal.config.onOpen?.($openEvent);
-          }
-        })
-      );
+    return this._showModal(modal);
   }
 
   public showTemplate<ContextT extends object = {}>(
@@ -139,42 +104,9 @@ export class FlexiModalsService<
   ): Observable<FlexiTemplateModalContainerComponent<ContextT> | null> {
 
     const container$ = new BehaviorSubject<FlexiTemplateModalContainerComponent<ContextT> | null>(null);
-    const modal = new FlexiModalTemplate(
-      this,
-      template,
-      container$,
-      this._normalizeModalOptions(takeUntilOrOptions),
-    );
-    // const modalConfig: IFlexiTemplateModalConfig<ContextT> = {
-    //   ...this._normalizeModalOptions(takeUntilOrOptions),
-    //   type: FlexiModalType.Template,
-    //   template,
-    //   modal$: container$,
-    // };
-    const $beforeOpenEvent = new FlexiModalBeforeOpenEvent(modal);
+    const modal = new FlexiModalTemplate(this, template, container$, this._normalizeOptions(takeUntilOrOptions));
 
-    this._modals.set([ ...this._modals(), modal ]);
-    this._events$.next($beforeOpenEvent);
-
-    if ($beforeOpenEvent.prevented || $beforeOpenEvent.stopped) {
-      return of(null);
-    }
-
-    return container$
-      .pipe(
-        filter(modalContainerComponent => !!modalContainerComponent),
-        // tap((modalContainerComponent: FlexiTemplateModalContainerComponent<ContextT>) => {
-        tap(() => {
-          // const $openEvent = new FlexiModalOpenEvent(modal, modalContainerComponent);
-          const $openEvent = new FlexiModalOpenEvent(modal);
-
-          this._events$.next($openEvent);
-
-          if (!$openEvent.stopped) {
-            modal.config.onOpen?.($openEvent);
-          }
-        })
-      );
+    return this._showModal(modal);
   }
 
   public show<
@@ -198,7 +130,6 @@ export class FlexiModalsService<
   }
 
   public updateModal(modalId: string, changes: Partial<IFlexiModalCreateOptions>): void {
-    // const modalIndex = this.getModalIndexById(modalId);
     const modalIndex = this.getModalById(modalId)?.index || -1;
 
     if (modalIndex < 0) {
@@ -206,10 +137,6 @@ export class FlexiModalsService<
     }
 
     this._modals.update(modals => {
-      // modalConfigs[modalIndex] = this._normalizeModalOptions({
-      //   ...modalConfigs[modalIndex],
-      //   ...changes
-      // });
       modals[modalIndex].update(changes);
 
       return [ ...modals ];
@@ -234,10 +161,7 @@ export class FlexiModalsService<
       return;
     }
 
-    const $beforeCloseEvent = new FlexiModalBeforeCloseEvent(
-      modal,
-      // modalConfig.modal$.getValue(),
-    );
+    const $beforeCloseEvent = new FlexiModalBeforeCloseEvent(modal);
 
     this._events$.next($beforeCloseEvent);
 
@@ -252,10 +176,7 @@ export class FlexiModalsService<
     this._modals.update(modals => modals.filter(modalConfig => modalConfig.id !== modalId));
 
     setTimeout(() => {
-      this._events$.next(new FlexiModalCloseEvent(
-        modal,
-        // modal.modal$.getValue(),
-      ));
+      this._events$.next(new FlexiModalCloseEvent(modal));
     });
   }
 
@@ -265,7 +186,6 @@ export class FlexiModalsService<
     });
   }
 
-  // public getActiveModalId(): string | undefined {
   public getActiveModal(): FlexiModal | undefined {
     const modals = this._modals();
 
@@ -273,24 +193,10 @@ export class FlexiModalsService<
       return;
     }
 
-    // return modals[modals.length - 1]?.id;
     return modals[modals.length - 1];
   }
 
-  // public getModalIndexById(modalId: string): number {
-  //   if (!modalId) {
-  //     return -1;
-  //   }
-  //
-  //   return this._modals().findIndex(modalConfig => modalConfig.id === modalId);
-  // }
-
-  // public getModalById<
-  //   ModalConfigT extends IFlexiModalConfig<any> = IFlexiModalConfig<any>
-  // >(modalId: string): ModalConfigT | undefined {
-  public getModalById<
-    ModalT extends FlexiModal = FlexiModal
-  >(modalId: string): ModalT | undefined {
+  public getModalById<ModalT extends FlexiModal = FlexiModal>(modalId: string): ModalT | undefined {
     if (!modalId) {
       return;
     }
@@ -302,14 +208,10 @@ export class FlexiModalsService<
 
   // Private implementation
 
-  // private _generateModalId(): string {
-  //   return `flexi-modal-${generateRandomId()}`;
-  // }
-
-  private _normalizeModalOptions<ModalOptionsT extends Partial<IFlexiModalCreateOptions>>(
+  private _normalizeOptions<ModalOptionsT extends Partial<IFlexiModalCreateOptions>>(
     takeUntilOrOptions: ModalOptionsT | Observable<unknown> | undefined
   ): ModalOptionsT {
-    const options = <ModalOptionsT>{
+    return <ModalOptionsT>{
       ...flexiModalOptionsDefault,
       ...(
         takeUntilOrOptions instanceof Observable
@@ -317,21 +219,34 @@ export class FlexiModalsService<
           : (takeUntilOrOptions || {})
       )
     };
+  }
 
-    // if (!options.id) {
-    //   options.id = this._generateModalId();
-    // }
-    //
-    // if (options.buttons && options.buttons.length > 0) {
-    //   for (let i = 0; i < options.buttons.length; i++) {
-    //     options.buttons[i] = {
-    //       id: `fm-modal-button-${generateRandomId()}`,
-    //       ...flexiModalButtonOptionsDefault,
-    //       ...options.buttons[i]
-    //     }
-    //   }
-    // }
+  private _showModal<
+    ModalT extends FlexiModal<any, any, any>,
+    ContainerT extends FlexiModalContainer<any, any>
+  >(modal: ModalT): Observable<ContainerT | null> {
 
-    return options;
+    const $beforeOpenEvent = new FlexiModalBeforeOpenEvent(modal);
+
+    this._modals.set([ ...this._modals(), modal ]);
+    this._events$.next($beforeOpenEvent);
+
+    if ($beforeOpenEvent.prevented || $beforeOpenEvent.stopped) {
+      return of(null);
+    }
+
+    return modal.container$
+      .pipe(
+        filter(Boolean),
+        tap(() => {
+          const $openEvent = new FlexiModalOpenEvent(modal);
+
+          this._events$.next($openEvent);
+
+          if (!$openEvent.stopped) {
+            modal.config.onOpen?.($openEvent);
+          }
+        })
+      );
   }
 }

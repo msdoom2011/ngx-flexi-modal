@@ -10,7 +10,6 @@ export class FlexiModalButtons<ModalT extends FlexiModal<any, any, any>> {
 
   constructor(
     private _service: FlexiModalsService,
-    // private _modal: FlexiModalContainer<any, any>,
     private _modal: ModalT,
   ) {}
 

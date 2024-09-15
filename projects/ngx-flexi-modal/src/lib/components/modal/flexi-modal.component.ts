@@ -25,19 +25,17 @@ import {FlexiModalButtonDirective} from "../../directives/flexi-modal-button/fle
 import {FlexiModalButtonsComponent} from "./sections/section-types/flexi-modal-buttons.component";
 import {FlexiModalHeaderComponent} from "./sections/section-types/flexi-modal-header.component";
 import {FlexiModalFooterComponent} from "./sections/section-types/flexi-modal-footer.component";
+import {FlexiModalBeforeCloseEvent} from "../../events/flexi-modal-before-close.event";
 import {FlexiModalUpdateEvent} from "../../events/flexi-modal-update.event";
-import {FlexiModalEventType} from "../../flexi-modals.constants";
+import {FlexiModalCloseEvent} from "../../events/flexi-modal-close.event";
+import {FlexiModalOpenEvent} from "../../events/flexi-modal-open.event";
 import {FlexiModalsService} from "../../flexi-modals.service";
 import {
-  IFlexiModalButtonConfig,
-  IFlexiModalCreateOptions, IFlexiTemplateModalCreateOptions,
+  IFlexiTemplateModalCreateOptions,
   TFlexiModalHeight,
   TFlexiModalScroll,
   TFlexiModalWidth
 } from "../../flexi-modals.models";
-import {FlexiModalOpenEvent} from "../../events/flexi-modal-open.event";
-import {FlexiModalCloseEvent} from "../../events/flexi-modal-close.event";
-import {FlexiModalBeforeCloseEvent} from "../../events/flexi-modal-before-close.event";
 
 @Component({
   selector: 'fm-modal',
@@ -50,8 +48,8 @@ import {FlexiModalBeforeCloseEvent} from "../../events/flexi-modal-before-close.
 export class FlexiModalComponent implements OnInit, DoCheck, OnChanges, AfterContentInit, OnDestroy {
 
   // Dependencies
-  private _modalService = inject(FlexiModalsService);
-  private _elementRef = inject(ElementRef<any>);
+  public service = inject(FlexiModalsService);
+  public elementRef = inject(ElementRef<any>);
 
   // Inputs
   public title = input<string>();
@@ -59,7 +57,6 @@ export class FlexiModalComponent implements OnInit, DoCheck, OnChanges, AfterCon
   public height = input<TFlexiModalHeight>();
   public scroll = input<TFlexiModalScroll>();
   public closable = input<boolean>(true);
-  // public buttons = input<Array<IFlexiModalButtonConfig>>();
   public customId = input<string>('', { alias: 'id' });
 
   // Outputs
@@ -104,7 +101,7 @@ export class FlexiModalComponent implements OnInit, DoCheck, OnChanges, AfterCon
   // Effects
 
   private _idChangeEffect = effect((onCleanup) => {
-    const subscription = this._modalService.events$
+    const subscription = this.service.events$
       .pipe(
         filter($event => $event.id === this.id()),
         takeUntil(this._destroy$)
@@ -135,7 +132,7 @@ export class FlexiModalComponent implements OnInit, DoCheck, OnChanges, AfterCon
     }
 
     this._classesChanged.set(false);
-    this._modalService.updateModal(this.id(), {
+    this.service.updateModal(this.id(), {
       classes: this._classes(),
     });
   }, {
@@ -156,7 +153,7 @@ export class FlexiModalComponent implements OnInit, DoCheck, OnChanges, AfterCon
   }
 
   public ngDoCheck(): void {
-    const classesStrNew = this._elementRef.nativeElement.className.replace(/\s+/g, ' ');
+    const classesStrNew = this.elementRef.nativeElement.className.replace(/\s+/g, ' ');
     const classesStrOld = (this._classes() || []).join(' ');
     const classes = classesStrNew.split(' ');
 
@@ -167,14 +164,13 @@ export class FlexiModalComponent implements OnInit, DoCheck, OnChanges, AfterCon
 
     // Clean up the id attribute of the host element to prevent
     // it duplication in addition to appropriate rendered modal container
-    this._elementRef.nativeElement.removeAttribute('id');
+    this.elementRef.nativeElement.removeAttribute('id');
   }
 
   public ngOnChanges(changes: SimpleChanges): void {
     const { customId } = changes;
     const options: Partial<IFlexiTemplateModalCreateOptions<any>> = {};
     const optionNames: Array<keyof IFlexiTemplateModalCreateOptions<any>> = [
-      // 'title', 'width', 'height', 'scroll', 'closable', 'buttons'
       'title', 'width', 'height', 'scroll', 'closable'
     ];
 
@@ -189,7 +185,7 @@ export class FlexiModalComponent implements OnInit, DoCheck, OnChanges, AfterCon
     }
 
     if (Object.keys(options).length > 0) {
-      this._modalService.updateModal(this.id(), options);
+      this.service.updateModal(this.id(), options);
     }
   }
 
@@ -206,7 +202,7 @@ export class FlexiModalComponent implements OnInit, DoCheck, OnChanges, AfterCon
   // Public methods
 
   public close(): void {
-    this._modalService.closeModal(this.id());
+    this.service.closeModal(this.id());
   }
 
 
@@ -215,10 +211,9 @@ export class FlexiModalComponent implements OnInit, DoCheck, OnChanges, AfterCon
   private _show(): void {
     this._validateInputs();
 
-    this._modalService.showTemplate(this._bodyRef(), {
+    this.service.showTemplate(this._bodyRef(), {
       id: this.customId(),
       title: this.title(),
-      // buttons: this.buttons(),
       width: this.width(),
       height: this.height(),
       scroll: this.scroll(),
@@ -258,18 +253,5 @@ export class FlexiModalComponent implements OnInit, DoCheck, OnChanges, AfterCon
         'so the last one was ignored.'
       );
     }
-    //
-    // if (this.buttons() && (this._buttonsRef() || this._footerTpl())) {
-    //   const componentName = this._footerTpl()
-    //     ? '<fm-modal-footer />'
-    //     : '<fm-modal-buttons />';
-    //
-    //   console.warn(
-    //     `Specified both "${componentName}" component and the "buttons" property value ` +
-    //     `at the same time for the displaying modal. ` +
-    //     `The "${componentName}" takes precedence over the "buttons" property, ` +
-    //     `so the "buttons" bound value was ignored.`
-    //   );
-    // }
   }
 }

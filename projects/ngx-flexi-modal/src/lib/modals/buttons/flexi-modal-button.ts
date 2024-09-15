@@ -6,7 +6,6 @@ import {FlexiModal} from "../flexi-modal";
 export class FlexiModalButton {
 
   constructor(
-    // public modal: FlexiModalContainer<any, any>,
     public modal: FlexiModal,
     public config: IFlexiModalButtonConfig,
   ) {}

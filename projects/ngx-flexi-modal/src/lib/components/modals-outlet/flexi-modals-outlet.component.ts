@@ -48,7 +48,6 @@ export class FlexiModalsOutletComponent {
 
   private _modalsRefEffect = effect(() => {
     this._modalsRef().forEach((modalRef: FlexiModalContainer<FlexiModal, any>) => {
-      // const modal$ = modalRef.config().modal$;
       const container$ = modalRef.modal().container$;
 
       container$.next(modalRef);
