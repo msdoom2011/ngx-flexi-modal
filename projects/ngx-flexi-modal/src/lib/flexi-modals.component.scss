@@ -11,7 +11,7 @@
   }
 }
 
-.fm-modals--overlay,
+.fm-modals--backdrop,
 .fm-modal-container {
   position: absolute;
   left: 0;
@@ -21,6 +21,6 @@
   z-index: 10;
 }
 
-.fm-modals--overlay {
+.fm-modals--backdrop {
   background: rgba(4, 67, 81, 0.5);
 }

@@ -19,12 +19,12 @@ export function extendModalOptions(
     ...basicOptions,
     inputs: {
       ...(basicOptions.inputs || {}),
-      ...(userOptions.message ? { message: userOptions.message } : {}),
-      ...(userOptions.messageAlign ? { messageAlign: userOptions.messageAlign } : {}),
-      ...(userOptions.icon ? { icon: userOptions.icon } : {}),
+      ...('message' in userOptions ? { message: userOptions.message } : {}),
+      ...('messageAlign' in userOptions ? { messageAlign: userOptions.messageAlign } : {}),
+      ...('icon' in userOptions ? { icon: userOptions.icon } : {}),
     },
-    ...(userOptions.title ? { title: userOptions.title } : {}),
+    ...('title' in userOptions ? { title: userOptions.title } : {}),
+    ...('aliveUntil' in userOptions ? { onClose: userOptions.aliveUntil } : {}),
     ...(userOptions.onClose ? { onClose: userOptions.onClose } : {}),
-    ...(userOptions.aliveUntil ? { onClose: userOptions.aliveUntil } : {}),
   };
 }

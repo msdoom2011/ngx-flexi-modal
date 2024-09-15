@@ -42,7 +42,7 @@
   }
 }
 
-.fm-modals--overlay {
+.fm-modals--backdrop {
   background: rgba(4, 67, 81, 0.5);
   position: absolute;
   left: 0;
@@ -64,6 +64,7 @@
   position: relative;
   z-index: 10;
   padding: 50px;
+  box-sizing: content-box;
 }
 
 .fm-modal--body {
@@ -72,10 +73,11 @@
   position: relative;
   background: white;
   border-radius: 8px;
+  box-shadow: 0 5px 20px 0 rgba(0, 0, 0, 0.3)
 }
 
 .fm-modal--content {
-  min-height: 100px;
+  min-height: 80px;
 
   &.scrollable {
     overflow: auto;

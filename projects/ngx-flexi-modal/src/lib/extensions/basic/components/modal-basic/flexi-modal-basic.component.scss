@@ -1,7 +1,6 @@
 :host {
   display: flex;
   flex-direction: row;
-  min-height: 120px;
   padding: 18px 36px;
 }
 
@@ -13,22 +12,30 @@
   max-width: 105px;
   width: 105px;
   margin-left: -36px;
+
+  & .icon-default {
+    height: 40px;
+  }
 }
 
 .message {
-  display: flex;
-  align-items: center;
   font-size: 14px;
+  width: 100%;
+
+  p {
+    width: 100%;
+    margin: 14px 0;
+  }
 
   &.align-left {
     text-align: left;
   }
 
   &.align-right {
-    text-align: left;
+    text-align: right;
   }
 
   &.align-center {
-    text-align: left;
+    text-align: center;
   }
 }

@@ -2,7 +2,7 @@ import {Directive, inject, input, TemplateRef} from "@angular/core";
 
 import {FLEXI_MODAL_OPTIONS_DEFAULT} from "./flexi-modal-button.constants";
 import {IFlexiModalButtonOptions} from "./flexi-modal-button.models";
-import {generateRandomId} from "../../tools/utils";
+import {generateRandomId, isPlainObject} from "../../tools/utils";
 
 @Directive({
   selector: '[fmModalButton]',
@@ -36,11 +36,7 @@ export class FlexiModalButtonDirective {
     const options: Partial<IFlexiModalButtonOptions> = (
       typeof optionsOrVisible === 'boolean'
         ? { visible: optionsOrVisible }
-        : (
-          !!optionsOrVisible
-          && typeof optionsOrVisible === 'object'
-          && optionsOrVisible.constructor === Object
-        )
+        : isPlainObject(optionsOrVisible)
           ? optionsOrVisible
           : {}
     );

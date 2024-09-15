@@ -5,6 +5,7 @@ import {IFlexiModalExtension} from "../../flexi-modals.models";
 import {extendModalOptions} from "./flexi-modal-basic.helpers";
 
 export const flexiModalBasicExtension: IFlexiModalExtension<IFlexiModalBasicOptionsByTypes> = {
+
   error: {
     component: FlexiModalBasicComponent,
     convert: (config: IFlexiModalBasicOptionsByTypes['error']) => extendModalOptions({
@@ -15,6 +16,7 @@ export const flexiModalBasicExtension: IFlexiModalExtension<IFlexiModalBasicOpti
       },
     }, config)
   },
+
   warning: {
     component: FlexiModalBasicComponent,
     convert: (config: IFlexiModalBasicOptionsByTypes['warning']) => extendModalOptions({
@@ -25,6 +27,7 @@ export const flexiModalBasicExtension: IFlexiModalExtension<IFlexiModalBasicOpti
       },
     }, config)
   },
+
   success: {
     component: FlexiModalBasicComponent,
     convert: (config: IFlexiModalBasicOptionsByTypes['success']) => extendModalOptions({
@@ -35,6 +38,7 @@ export const flexiModalBasicExtension: IFlexiModalExtension<IFlexiModalBasicOpti
       },
     }, config)
   },
+
   info: {
     component: FlexiModalBasicComponent,
     convert: (config: IFlexiModalBasicOptionsByTypes['info']) => extendModalOptions({
@@ -45,6 +49,7 @@ export const flexiModalBasicExtension: IFlexiModalExtension<IFlexiModalBasicOpti
       },
     }, config)
   },
+
   confirm: {
     component: FlexiModalBasicComponent,
     convert: (config: IFlexiModalBasicOptionsByTypes['confirm']) => {

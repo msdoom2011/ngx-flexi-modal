@@ -2,7 +2,7 @@ export function generateRandomId(): number {
   return Math.round(new Date().valueOf() * Math.random() / 10000);
 }
 
-export function isPlainObject(obj: unknown): boolean {
+export function isPlainObject(obj: unknown): obj is object  {
   return (
     !!obj
     && typeof obj === 'object'

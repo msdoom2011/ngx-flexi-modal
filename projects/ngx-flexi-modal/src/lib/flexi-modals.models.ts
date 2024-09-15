@@ -6,6 +6,7 @@ import {FlexiModalButtonDirective} from "./directives/flexi-modal-button/flexi-m
 import {FlexiModalButton} from "./components/modal-container/flexi-modal-button";
 import {IFlexiModalBasicOptionsByTypes} from "./extensions/basic/flexi-modal-basic.models";
 import {modalWidthPresets, FlexiModalType} from "./flexi-modals.constants";
+import {FlexiModalEvent} from "./events/flexi-modal.event";
 import {
   FlexiComponentModalContainerComponent
 } from "./components/modal-container/container-types/component/flexi-component-modal-container.component";
@@ -39,7 +40,7 @@ extends IFlexiModalCreateOptions<ModalContainerT> {
   modal$: BehaviorSubject<ModalContainerT | null>;
 }
 
-export interface IFlexiModalCreateOptions<ModalContainerT> {
+export interface IFlexiModalCreateOptions<ModalContainerT extends FlexiModalContainer<any, any>> {
   // Can be optionally specified. Otherwise, a random id value will be generated instead.
   // Required to be specified in case if you have plans to listen to "(open)" event
   // of a modal defined with the template driven approach. Otherwise, this event
@@ -53,14 +54,17 @@ export interface IFlexiModalCreateOptions<ModalContainerT> {
   buttonsTpl?: Array<FlexiModalButtonDirective>; // Will be ignored if footerTpl is specified
   headerTpl?: TemplateRef<any> | undefined;
   footerTpl?: TemplateRef<any> | undefined;
-  onClose?: (modal: ModalContainerT) => unknown;
-  onOpen?: (modal: ModalContainerT) => unknown;
+  onClose?: ($event: FlexiModalEvent<ModalContainerT>) => unknown;
+  onOpen?: ($event: FlexiModalEvent<ModalContainerT>) => unknown;
   aliveUntil?: Observable<unknown>;
   width?: TFlexiModalWidth;
   height?: TFlexiModalHeight;
   scroll?: TFlexiModalScroll;
   closable?: boolean;
   classes?: Array<string>;
+  // Random data that can be used to read for example in event listeners.
+  // This object doesn't go to any renderable modal content
+  data?: {};
 }
 
 export interface IFlexiComponentModalConfig<ComponentT = any>

@@ -1,5 +1,5 @@
 @if (modals().length) {
-  <div class="fm-modals--overlay" @fadeInOut></div>
+  <div class="fm-modals--backdrop" @fadeInOut></div>
 
   @for(modal of modals(); track modal.id) {
     @switch (modal.type) {

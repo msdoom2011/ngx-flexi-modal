@@ -25,16 +25,17 @@ import {FlexiModalButtonDirective} from "../../directives/flexi-modal-button/fle
 import {FlexiModalButtonsComponent} from "./sections/section-types/flexi-modal-buttons.component";
 import {FlexiModalHeaderComponent} from "./sections/section-types/flexi-modal-header.component";
 import {FlexiModalFooterComponent} from "./sections/section-types/flexi-modal-footer.component";
-import {
-  IFlexiModalButtonConfig,
-  IFlexiModalCreateOptions,
-  TFlexiModalHeight, TFlexiModalScroll,
-  TFlexiModalWidth
-} from "../../flexi-modals.models";
 import {FlexiModalUpdateEvent} from "../../events/flexi-modal-update.event";
 import {FlexiModalEventType} from "../../flexi-modals.constants";
 import {FlexiModalEvent} from "../../events/flexi-modal.event";
 import {FlexiModalsService} from "../../flexi-modals.service";
+import {
+  IFlexiModalButtonConfig,
+  IFlexiModalCreateOptions,
+  TFlexiModalHeight,
+  TFlexiModalScroll,
+  TFlexiModalWidth
+} from "../../flexi-modals.models";
 
 @Component({
   selector: 'fm-modal',
@@ -173,35 +174,20 @@ export class FlexiModalComponent implements OnInit, DoCheck, OnChanges, AfterCon
   }
 
   public ngOnChanges(changes: SimpleChanges): void {
-    const { customId, title, width, height, scroll, closable, buttons } = changes;
+    const { customId } = changes;
     const options: Partial<IFlexiModalCreateOptions<any>> = {};
+    const optionNames: Array<keyof IFlexiModalCreateOptions<any>> = [
+      'title', 'width', 'height', 'scroll', 'closable', 'buttons'
+    ];
 
     if (customId) {
       this.id.set(customId.currentValue);
     }
 
-    if (title) {
-      options.title = title.currentValue;
-    }
-
-    if (width) {
-      options.width = width.currentValue;
-    }
-
-    if (height) {
-      options.height = height.currentValue;
-    }
-
-    if (scroll) {
-      options.scroll = scroll.currentValue;
-    }
-
-    if (closable) {
-      options.closable = closable.currentValue;
-    }
-
-    if (buttons) {
-      options.buttons = buttons.currentValue;
+    for (const optionName of optionNames) {
+      if (changes[optionName]) {
+        options[optionName] = changes[optionName].currentValue;
+      }
     }
 
     if (Object.keys(options).length > 0) {
@@ -247,7 +233,10 @@ export class FlexiModalComponent implements OnInit, DoCheck, OnChanges, AfterCon
         : undefined,
       classes: this._classes(),
     })
-      .pipe(take(1))
+      .pipe(
+        filter(Boolean),
+        take(1),
+      )
       .subscribe((modal) => {
         this.id.set(modal.id());
       });
