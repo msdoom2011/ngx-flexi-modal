@@ -4,8 +4,7 @@ import {NgComponentOutlet} from "@angular/common";
 import {FlexiModalContainerFooterComponent} from "./container-footer/flexi-modal-container-footer.component";
 import {FlexiModalContainerHeaderComponent} from "./container-header/flexi-modal-container-header.component";
 import {modalWidthPresets} from "../../../../flexi-modals.constants";
-import {IFlexiModalConfig} from "../../../../flexi-modals.models";
-import {FlexiModalContainer} from "../flexi-modal-container";
+import {FlexiModal} from "../../../../modals/flexi-modal";
 
 @Component({
   selector: 'fm-modal-container-layout',
@@ -22,16 +21,17 @@ import {FlexiModalContainer} from "../flexi-modal-container";
 export class FlexiModalContainerLayoutComponent {
 
   // Inputs
-  public config = input.required<IFlexiModalConfig<any>>();
-  public modal = input.required<FlexiModalContainer<any, any>>();
+  // public config = input.required<IFlexiModalConfig<any>>();
+  // public modal = input.required<FlexiModalContainer<any, any>>();
+  public modal = input.required<FlexiModal>();
 
 
   // Computed
 
   public isOverlayVisible = computed(() => {
     return (
-      this.modal().modalService.modals().length > 0
-      && this.modal().index() > 0
+      this.modal().service.modals().length > 0
+      && this.modal().index > 0
     );
   });
 
@@ -43,7 +43,7 @@ export class FlexiModalContainerLayoutComponent {
   });
 
   private _widthStyles = computed(() => {
-    const widthOpt = this.config()?.width || '';
+    const widthOpt = this.modal().config.width || '';
     const styles: Partial<CSSStyleDeclaration> = {
       minWidth: modalWidthPresets['tiny'],
       width: '100%',
@@ -72,8 +72,8 @@ export class FlexiModalContainerLayoutComponent {
   });
 
   private _heightStyles = computed(() => {
-    const heightOpt = this.config()?.height || '';
-    const scrollOpt = this.config()?.scroll || '';
+    const heightOpt = this.modal().config.height || '';
+    const scrollOpt = this.modal().config.scroll || '';
     const styles: Partial<CSSStyleDeclaration> = {
       minHeight: '120px',
     };

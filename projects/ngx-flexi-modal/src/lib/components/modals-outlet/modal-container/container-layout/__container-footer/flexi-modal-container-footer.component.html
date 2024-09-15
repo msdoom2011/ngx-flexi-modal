@@ -1,0 +1,39 @@
+@if (contentTpl()) {
+  <ng-container *ngTemplateOutlet="contentTpl() || null" />
+
+} @else if (buttonsTpl()) {
+  <div class="fm-modal-footer--buttons">
+    @for (buttonDirective of buttonsTpl(); track buttonDirective.id) {
+      @if (buttonDirective.options().visible) {
+        <div
+          [class]="[
+            'fm-modal-button-container',
+            'button-position-' + buttonDirective.options().position
+          ]"
+          (click)="onButtonTplClick(buttonDirective.options().closeOnClick)"
+        >
+          <ng-container *ngTemplateOutlet="buttonDirective.templateRef || null" />
+        </div>
+      }
+    }
+  </div>
+
+} @else if (buttons()) {
+  <div class="fm-modal-footer--buttons">
+    @for (buttonConfig of buttons(); track buttonConfig.id) {
+      <button
+        [id]="buttonConfig.id"
+        [disabled]="buttonConfig.disabled"
+        [class]="getButtonClasses(buttonConfig)"
+        (click)="onButtonClick($event, buttonConfig)"
+      >
+        @if (buttonConfig.icon) {
+          <span [class]="['icon', buttonConfig.icon]"></span>
+        }
+        <span class="label">
+          {{ buttonConfig.label }}
+        </span>
+      </button>
+    }
+  </div>
+}

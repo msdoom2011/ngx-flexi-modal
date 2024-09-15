@@ -30,7 +30,7 @@ import {FlexiModalEventType} from "../../flexi-modals.constants";
 import {FlexiModalsService} from "../../flexi-modals.service";
 import {
   IFlexiModalButtonConfig,
-  IFlexiModalCreateOptions,
+  IFlexiModalCreateOptions, IFlexiTemplateModalCreateOptions,
   TFlexiModalHeight,
   TFlexiModalScroll,
   TFlexiModalWidth
@@ -59,7 +59,7 @@ export class FlexiModalComponent implements OnInit, DoCheck, OnChanges, AfterCon
   public height = input<TFlexiModalHeight>();
   public scroll = input<TFlexiModalScroll>();
   public closable = input<boolean>(true);
-  public buttons = input<Array<IFlexiModalButtonConfig>>();
+  // public buttons = input<Array<IFlexiModalButtonConfig>>();
   public customId = input<string>('', { alias: 'id' });
 
   // Outputs
@@ -172,9 +172,10 @@ export class FlexiModalComponent implements OnInit, DoCheck, OnChanges, AfterCon
 
   public ngOnChanges(changes: SimpleChanges): void {
     const { customId } = changes;
-    const options: Partial<IFlexiModalCreateOptions<any>> = {};
-    const optionNames: Array<keyof IFlexiModalCreateOptions<any>> = [
-      'title', 'width', 'height', 'scroll', 'closable', 'buttons'
+    const options: Partial<IFlexiTemplateModalCreateOptions<any>> = {};
+    const optionNames: Array<keyof IFlexiTemplateModalCreateOptions<any>> = [
+      // 'title', 'width', 'height', 'scroll', 'closable', 'buttons'
+      'title', 'width', 'height', 'scroll', 'closable'
     ];
 
     if (customId) {
@@ -217,7 +218,7 @@ export class FlexiModalComponent implements OnInit, DoCheck, OnChanges, AfterCon
     this._modalService.showTemplate(this._bodyRef(), {
       id: this.customId(),
       title: this.title(),
-      buttons: this.buttons(),
+      // buttons: this.buttons(),
       width: this.width(),
       height: this.height(),
       scroll: this.scroll(),
@@ -257,18 +258,18 @@ export class FlexiModalComponent implements OnInit, DoCheck, OnChanges, AfterCon
         'so the last one was ignored.'
       );
     }
-
-    if (this.buttons() && (this._buttonsRef() || this._footerTpl())) {
-      const componentName = this._footerTpl()
-        ? '<fm-modal-footer />'
-        : '<fm-modal-buttons />';
-
-      console.warn(
-        `Specified both "${componentName}" component and the "buttons" property value ` +
-        `at the same time for the displaying modal. ` +
-        `The "${componentName}" takes precedence over the "buttons" property, ` +
-        `so the "buttons" bound value was ignored.`
-      );
-    }
+    //
+    // if (this.buttons() && (this._buttonsRef() || this._footerTpl())) {
+    //   const componentName = this._footerTpl()
+    //     ? '<fm-modal-footer />'
+    //     : '<fm-modal-buttons />';
+    //
+    //   console.warn(
+    //     `Specified both "${componentName}" component and the "buttons" property value ` +
+    //     `at the same time for the displaying modal. ` +
+    //     `The "${componentName}" takes precedence over the "buttons" property, ` +
+    //     `so the "buttons" bound value was ignored.`
+    //   );
+    // }
   }
 }

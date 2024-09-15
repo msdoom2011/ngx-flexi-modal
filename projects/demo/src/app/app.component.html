@@ -1,5 +1,18 @@
 <div class="container">
   <button (click)="openModal()">Open Modal</button>
 
+  @if (modalVisible()) {
+    <fm-modal title="Keyboard shortcuts" (close)="modalVisible.set(false)">
+      <div>
+        <p>sfjlskdfjlsdkfjlksdjflksdjf</p>
+      </div>
+
+      <fm-modal-buttons>
+        <button *fmModalButton="{ closeOnClick: false }" (click)="buttonVisible.set(!buttonVisible())">Toggle Button</button>
+        <button *fmModalButton="{ visible: buttonVisible() }">Hidden Button</button>
+      </fm-modal-buttons>
+    </fm-modal>
+  }
+
   <fm-modals-outlet />
 </div>

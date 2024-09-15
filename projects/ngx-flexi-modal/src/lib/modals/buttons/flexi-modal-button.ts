@@ -1,12 +1,13 @@
 import {Observable, tap} from "rxjs";
 
-import {FlexiModalContainer} from "./flexi-modal-container";
-import {IFlexiModalButtonConfig} from "../../../flexi-modals.models";
+import {IFlexiModalButtonConfig} from "../../flexi-modals.models";
+import {FlexiModal} from "../flexi-modal";
 
 export class FlexiModalButton {
 
   constructor(
-    public modal: FlexiModalContainer<any, any>,
+    // public modal: FlexiModalContainer<any, any>,
+    public modal: FlexiModal,
     public config: IFlexiModalButtonConfig,
   ) {}
 

@@ -1,14 +1,15 @@
 import {FlexiModalEventType} from "../../flexi-modals.constants";
-import {IFlexiModalConfig} from "../../flexi-modals.models";
+import {FlexiModal} from "../../modals/flexi-modal";
 
-export abstract class FlexiModalEvent {
+export abstract class FlexiModalEvent<ModalT extends FlexiModal> {
 
   public abstract type: FlexiModalEventType;
 
   private _stopped = false;
 
   constructor(
-    public config: IFlexiModalConfig<any>,
+    // public config: IFlexiModalConfig<any>,
+    public modal: ModalT,
   ) {}
 
   public get stopped() {
@@ -20,6 +21,7 @@ export abstract class FlexiModalEvent {
   }
 
   public get id(): string {
-    return <string>this.config.id;
+    // return <string>this.config.id;
+    return <string>this.modal.config.id;
   }
 }

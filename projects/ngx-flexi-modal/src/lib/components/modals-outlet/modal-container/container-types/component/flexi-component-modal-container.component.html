@@ -1,13 +1,25 @@
-<div class="fm-modal--viewport" [class.scrollable]="config().scroll === 'modal'">
-  <fm-modal-container-layout [config]="config()" [modal]="this">
-    <ng-container
-      *ngComponentOutlet="
-        config().component;
-        inputs: config().inputs;
-        injector: config().injector;
-        content: config().content;
-        ngModule: config().ngModule;
-      "
-    />
+@let config = modal().config;
+
+<div class="fm-modal--viewport" [class.scrollable]="config.scroll === 'modal'">
+  <fm-modal-container-layout [modal]="modal()">
+    @if (config.title) {
+      <fm-modal-container-header>
+        <fm-modal-component-container-header
+          class="fm-modal--header"
+          [title]="config.title"
+        />
+      </fm-modal-container-header>
+    }
+
+    <ng-container *ngComponentOutlet="modal().content; inputs: config.inputs" />
+
+    @if (modal().buttons.length) {
+      <fm-modal-container-footer>
+        <fm-modal-component-container-footer
+          class="fm-modal--footer"
+          [modal]="modal()"
+        />
+      </fm-modal-container-footer>
+    }
   </fm-modal-container-layout>
 </div>

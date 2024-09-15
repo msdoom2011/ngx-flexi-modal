@@ -1,23 +1,24 @@
 import {filter, Observable, ReplaySubject, take} from "rxjs";
 
-import {FlexiModalUpdateEvent} from "../../../events/flexi-modal-update.event";
-import {IFlexiModalButtonConfig} from "../../../flexi-modals.models";
-import {FlexiModalsService} from "../../../flexi-modals.service";
-import {FlexiModalContainer} from "./flexi-modal-container";
+import {FlexiModalUpdateEvent} from "../../events/flexi-modal-update.event";
+import {IFlexiModalButtonConfig} from "../../flexi-modals.models";
+import {FlexiModalsService} from "../../flexi-modals.service";
 import {FlexiModalButton} from "./flexi-modal-button";
+import {FlexiModal} from "../flexi-modal";
 
-export class FlexiModalButtons {
+export class FlexiModalButtons<ModalT extends FlexiModal<any, any, any>> {
 
   constructor(
-    private _modalService: FlexiModalsService,
-    private _modal: FlexiModalContainer<any, any>,
+    private _service: FlexiModalsService,
+    // private _modal: FlexiModalContainer<any, any>,
+    private _modal: ModalT,
   ) {}
 
 
   // Getters
 
   public get configs(): Array<IFlexiModalButtonConfig> {
-    return this._modal.config().buttons || [];
+    return this._modal.config.buttons || [];
   }
 
   public get length(): number {
@@ -85,11 +86,11 @@ export class FlexiModalButtons {
 
     buttonConfigs[buttonIndex] = buttonConfig;
 
-    this._modalService.events$
+    this._service.events$
       .pipe(
         filter($event => (
           $event instanceof FlexiModalUpdateEvent
-          && this._modal.id() === $event.id
+          && this._modal.id === $event.id
           && Object.keys($event.changes).length === 1
           && Object.keys($event.changes)[0] === 'buttons'
         )),
@@ -100,13 +101,13 @@ export class FlexiModalButtons {
         newButtonConfig$.complete();
       });
 
-    this._modalService.updateModal(this._modal.id(), { buttons: buttonConfigs });
+    this._service.updateModal(this._modal.id, { buttons: buttonConfigs });
 
     return newButtonConfig$.asObservable();
   }
 
   public replaceAll(buttonConfigs: Array<IFlexiModalButtonConfig>): void {
-    this._modalService.updateModal(this._modal.id(), { buttons: buttonConfigs });
+    this._service.updateModal(this._modal.id, { buttons: buttonConfigs });
   }
 
   public removeById(buttonId: string): void {
@@ -120,7 +121,7 @@ export class FlexiModalButtons {
 
     buttonConfigs.splice(buttonIndex, 1);
 
-    this._modalService.updateModal(this._modal.id(), { buttons: buttonConfigs });
+    this._service.updateModal(this._modal.id, { buttons: buttonConfigs });
   }
 
   public wrap(buttonConfig: IFlexiModalButtonConfig): FlexiModalButton {

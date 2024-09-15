@@ -1,6 +1,10 @@
 import {FlexiModalEvent} from "./flexi-modal.event";
+import {FlexiModal} from "../../modals/flexi-modal";
 
-export abstract class FlexiModalPreventableEvent extends FlexiModalEvent {
+export abstract class FlexiModalPreventableEvent<
+  ModalT extends FlexiModal
+>
+extends FlexiModalEvent<ModalT> {
 
   private _prevented = false;
 

@@ -7,7 +7,7 @@
       "projectType": "library",
       "root": "projects/ngx-flexi-modal",
       "sourceRoot": "projects/ngx-flexi-modal/src",
-      "prefix": "flexi",
+      "prefix": "fm",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:ng-packagr",

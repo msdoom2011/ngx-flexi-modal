@@ -22,11 +22,19 @@ export const modalWidthPresets = {
   tiny: '300px',
 }
 
-export const flexiModalOptionsDefault: Partial<IFlexiModalCreateOptions<any>> = {
-  closable: true,
+export const flexiModalOptionsDefault: IFlexiModalCreateOptions = {
+  id: '',
+  title: undefined,
+  buttons: undefined,
+  onClose: undefined,
+  onOpen: undefined,
   width: 'medium',
   height: 'fit-content',
   scroll: 'modal',
+  closable: true,
+  classes: undefined,
+  aliveUntil: undefined,
+  data: {},
 };
 
 export const flexiModalButtonOptionsDefault: Partial<IFlexiModalButtonConfig> = {

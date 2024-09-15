@@ -1,10 +1,25 @@
-<div class="fm-modal--viewport" [class.scrollable]="config().scroll === 'modal'">
-  <fm-modal-container-layout [config]="config()" [modal]="this">
-    <ng-container
-      *ngTemplateOutlet="
-          config().template;
-          context: config().context
-      "
-    />
+@let config = modal().config;
+
+<div class="fm-modal--viewport" [class.scrollable]="config.scroll === 'modal'">
+  <fm-modal-container-layout [modal]="modal()">
+    @if (config.title) {
+      <fm-modal-container-header>
+        <fm-modal-template-container-header
+          class="fm-modal--header"
+          [modal]="modal()"
+        />
+      </fm-modal-container-header>
+    }
+
+    <ng-container *ngTemplateOutlet="modal().content; context: config.context" />
+
+    @if (config.buttonsTpl || config.footerTpl) {
+      <fm-modal-container-footer>
+        <fm-modal-template-container-footer
+          class="fm-modal--footer"
+          [modal]="modal()"
+        />
+      </fm-modal-container-footer>
+    }
   </fm-modal-container-layout>
 </div>

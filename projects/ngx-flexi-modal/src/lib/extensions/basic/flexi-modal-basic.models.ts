@@ -1,6 +1,6 @@
 import {Observable} from "rxjs";
 
-import {FlexiModalButton} from "../../components/modals-outlet/modal-container/flexi-modal-button";
+import {FlexiModalButton} from "../../modals/buttons/flexi-modal-button";
 import {
   FlexiComponentModalContainerComponent
 } from "../../components/modals-outlet/modal-container/container-types/component/flexi-component-modal-container.component";

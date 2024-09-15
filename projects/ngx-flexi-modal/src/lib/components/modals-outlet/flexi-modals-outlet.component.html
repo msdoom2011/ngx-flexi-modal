@@ -6,7 +6,7 @@
       @case ('COMPONENT') {
         <fm-component-modal-container
           class="fm-modal-container"
-          [config]="$any(modal)"
+          [modal]="$any(modal)"
           @fadeInOut
           #modals
         />
@@ -14,7 +14,7 @@
       @case ('TEMPLATE') {
         <fm-template-modal-container
           class="fm-modal-container"
-          [config]="$any(modal)"
+          [modal]="$any(modal)"
           @fadeInOut
           #modals
         />

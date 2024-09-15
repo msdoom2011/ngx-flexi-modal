@@ -1,12 +1,21 @@
-import {Component, inject, OnInit} from '@angular/core';
-import {FlexiModalsOutletComponent, FlexiModalsService} from "ngx-flexi-modal";
+import {Component, inject, OnInit, signal} from '@angular/core';
+import {
+  FlexiModalButtonDirective,
+  FlexiModalButtonsComponent,
+  FlexiModalComponent,
+  FlexiModalsOutletComponent,
+  FlexiModalsService
+} from "ngx-flexi-modal";
 import {filter, Observable, Subject} from "rxjs";
 
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [
-    FlexiModalsOutletComponent
+    FlexiModalsOutletComponent,
+    FlexiModalButtonsComponent,
+    FlexiModalComponent,
+    FlexiModalButtonDirective,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
@@ -14,6 +23,10 @@ import {filter, Observable, Subject} from "rxjs";
 export class AppComponent implements OnInit {
 
   private modalsService = inject<FlexiModalsService>(FlexiModalsService);
+
+  public modalVisible = signal(false);
+  public buttonVisible = signal(true);
+
 
   public ngOnInit(): void {
     const observable = this.getObservable();
@@ -37,6 +50,8 @@ export class AppComponent implements OnInit {
   }
 
   public openModal(): void {
+    // this.modalVisible.set(true);
+
     this.modalsService.show('error', {
       title: 'Error: Network issues',
       message: [
@@ -50,7 +65,7 @@ export class AppComponent implements OnInit {
       ],
       onClose: () => {
         alert('CLOSE!!!');
-      }
+      },
       // messageAlign: 'left',
       // icon: null
     });

@@ -22,7 +22,7 @@ export class FlexiModalButtonDirective {
     IFlexiModalButtonOptions,
     Partial<IFlexiModalButtonOptions> | boolean | string
   >(FLEXI_MODAL_OPTIONS_DEFAULT, {
-    alias: 'swModalButton',
+    alias: 'fmModalButton',
     transform: (optionsOrVisible) => this._normalizeOptions(optionsOrVisible),
   });
 

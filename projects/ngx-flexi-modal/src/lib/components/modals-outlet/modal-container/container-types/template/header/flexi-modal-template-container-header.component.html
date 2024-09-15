@@ -1,0 +1,8 @@
+@let config = modal().config;
+
+@if (config.headerTpl) {
+  <ng-container *ngTemplateOutlet="config.headerTpl" />
+
+} @else if (config.title) {
+  <h3>{{ config.title }}</h3>
+}

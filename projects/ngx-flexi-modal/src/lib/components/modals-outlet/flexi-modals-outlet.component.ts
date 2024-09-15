@@ -4,6 +4,7 @@ import {NgComponentOutlet, NgForOf, NgTemplateOutlet} from "@angular/common";
 import {FlexiModalContainer} from "./modal-container/flexi-modal-container";
 import {fadeInOutAnimation} from "../../animations/fade-in-out.animation";
 import {FlexiModalsService} from "../../flexi-modals.service";
+import {FlexiModal} from "../../modals/flexi-modal";
 import {
   FlexiComponentModalContainerComponent
 } from "./modal-container/container-types/component/flexi-component-modal-container.component";
@@ -46,11 +47,12 @@ export class FlexiModalsOutletComponent {
   // Effects
 
   private _modalsRefEffect = effect(() => {
-    this._modalsRef().forEach(modalRef => {
-      const modal$ = modalRef.config().modal$;
+    this._modalsRef().forEach((modalRef: FlexiModalContainer<FlexiModal, any>) => {
+      // const modal$ = modalRef.config().modal$;
+      const container$ = modalRef.modal().container$;
 
-      modal$.next(modalRef);
-      modal$.complete();
+      container$.next(modalRef);
+      container$.complete();
     });
   }, {
     allowSignalWrites: true,

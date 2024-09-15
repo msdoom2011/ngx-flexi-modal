@@ -13,9 +13,8 @@ import {
 import {Subject, Subscription, takeUntil} from "rxjs";
 
 import {FlexiModalsService} from "../../../flexi-modals.service";
-import {IFlexiModalConfig} from "../../../flexi-modals.models";
-import {FlexiModalButtons} from "./flexi-modal-buttons";
 import {findFocusableElements} from "../../../tools/utils";
+import {FlexiModal} from "../../../modals/flexi-modal";
 
 @Directive({
   host: {
@@ -26,7 +25,8 @@ import {findFocusableElements} from "../../../tools/utils";
   },
 })
 export abstract class FlexiModalContainer<
-  ConfigT extends IFlexiModalConfig<any>,
+  // ConfigT extends IFlexiModalConfig<any>,
+  ModalT extends FlexiModal,
   ContentT
 >
 implements OnChanges, OnDestroy {
@@ -36,10 +36,11 @@ implements OnChanges, OnDestroy {
   private _elementRef = inject(ElementRef<HTMLElement>);
 
   // Inputs
-  public config!: InputSignal<ConfigT>;
+  // public config!: InputSignal<ConfigT>;
+  public modal!: InputSignal<ModalT>;
 
   // Public props
-  public buttons = new FlexiModalButtons(this.modalService, this);
+  // public buttons = new FlexiModalButtons(this.modalService, this);
   public contentRef = viewChild<ContentT>('content');
 
   // Private props
@@ -50,7 +51,8 @@ implements OnChanges, OnDestroy {
   // Computed
 
   public id = computed(() => {
-    return <string>this.config().id;
+    // return <string>this.config().id;
+    return <string>this.modal().id;
   });
 
   public index = computed(() => {
@@ -61,7 +63,8 @@ implements OnChanges, OnDestroy {
   public classes = computed(() => {
     return [
       'fm-modal',
-      ...(this.config().classes || [])
+      // ...(this.config().classes || [])
+      ...(this.modal().config.classes || [])
     ];
   });
 
@@ -107,16 +110,17 @@ implements OnChanges, OnDestroy {
 
   // Public methods
 
-  public close(): void {
-    this.modalService.closeModal(this.id());
-  }
+  // public close(): void {
+  //   this.modalService.closeModal(this.id());
+  // }
 
 
   // Callbacks
 
   public onEscapePress(): void {
-    if (this.isActive() && this.config()?.closable) {
-      this.close();
+    // if (this.isActive() && this.config()?.closable) {
+    if (this.isActive() && this.modal()?.config.closable) {
+      this.modal().close();
     }
   }
 
@@ -163,7 +167,8 @@ implements OnChanges, OnDestroy {
   // Internal implementation
 
   private _initialize(): void {
-    const modalDestroy$ = this.config().aliveUntil;
+    // const modalDestroy$ = this.config().aliveUntil;
+    const modalDestroy$ = this.modal().config.aliveUntil;
 
     if (!modalDestroy$) {
       return;
@@ -175,6 +180,6 @@ implements OnChanges, OnDestroy {
 
     this._destroySubscription = modalDestroy$
       .pipe(takeUntil(this._destroy$))
-      .subscribe(() => this.close());
+      .subscribe(() => this.modal().close());
   }
 }

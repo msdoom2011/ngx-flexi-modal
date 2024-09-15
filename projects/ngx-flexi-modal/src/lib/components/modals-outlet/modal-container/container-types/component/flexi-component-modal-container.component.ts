@@ -1,9 +1,17 @@
 import {ChangeDetectionStrategy, Component, input} from '@angular/core';
 import {NgComponentOutlet} from "@angular/common";
 
+import {FlexiModalComponentContainerHeaderComponent} from "./header/flexi-modal-component-container-header.component";
+import {FlexiModalComponentContainerFooterComponent} from "./footer/flexi-modal-component-container-footer.component";
 import {FlexiModalContainerLayoutComponent} from "../../container-layout/flexi-modal-container-layout.component";
-import {IFlexiComponentModalConfig} from "../../../../../flexi-modals.models";
+import {FlexiModalComponent} from "../../../../../modals/flexi-modal-component";
 import {FlexiModalContainer} from "../../flexi-modal-container";
+import {
+  FlexiModalContainerHeaderComponent
+} from "../../container-layout/container-header/flexi-modal-container-header.component";
+import {
+  FlexiModalContainerFooterComponent
+} from "../../container-layout/container-footer/flexi-modal-container-footer.component";
 
 @Component({
   selector: 'fm-component-modal-container',
@@ -13,14 +21,20 @@ import {FlexiModalContainer} from "../../flexi-modal-container";
   standalone: true,
   imports: [
     FlexiModalContainerLayoutComponent,
+    FlexiModalContainerHeaderComponent,
+    FlexiModalContainerFooterComponent,
+    FlexiModalComponentContainerHeaderComponent,
+    FlexiModalComponentContainerFooterComponent,
     NgComponentOutlet,
   ],
 })
-export class FlexiComponentModalContainerComponent<ContentT>
+export class FlexiComponentModalContainerComponent<ComponentT>
 extends FlexiModalContainer<
-  IFlexiComponentModalConfig<ContentT>,
-  ContentT
+  // IFlexiComponentModalConfig<ComponentT>,
+  FlexiModalComponent<ComponentT, any>,
+  ComponentT
 > {
 
-  public override config = input.required<IFlexiComponentModalConfig<ContentT>>();
+  // public override config = input.required<IFlexiComponentModalConfig<ContentT>>();
+  public override modal = input.required<FlexiModalComponent<ComponentT>>();
 }
