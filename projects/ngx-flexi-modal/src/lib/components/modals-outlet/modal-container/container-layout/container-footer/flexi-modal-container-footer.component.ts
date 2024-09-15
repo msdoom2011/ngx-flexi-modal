@@ -1,8 +1,8 @@
 import {ChangeDetectionStrategy, Component, input, TemplateRef} from '@angular/core';
 import {NgTemplateOutlet} from "@angular/common";
 
-import {FlexiModalButtonDirective} from "../../../../directives/flexi-modal-button/flexi-modal-button.directive";
-import {IFlexiModalButtonConfig} from "../../../../flexi-modals.models";
+import {FlexiModalButtonDirective} from "../../../../../directives/flexi-modal-button/flexi-modal-button.directive";
+import {IFlexiModalButtonConfig} from "../../../../../flexi-modals.models";
 import {FlexiModalContainer} from "../../flexi-modal-container";
 import {FlexiModalButton} from "../../flexi-modal-button";
 

@@ -27,7 +27,6 @@ import {FlexiModalHeaderComponent} from "./sections/section-types/flexi-modal-he
 import {FlexiModalFooterComponent} from "./sections/section-types/flexi-modal-footer.component";
 import {FlexiModalUpdateEvent} from "../../events/flexi-modal-update.event";
 import {FlexiModalEventType} from "../../flexi-modals.constants";
-import {FlexiModalEvent} from "../../events/flexi-modal.event";
 import {FlexiModalsService} from "../../flexi-modals.service";
 import {
   IFlexiModalButtonConfig,
@@ -36,6 +35,9 @@ import {
   TFlexiModalScroll,
   TFlexiModalWidth
 } from "../../flexi-modals.models";
+import {FlexiModalOpenEvent} from "../../events/flexi-modal-open.event";
+import {FlexiModalCloseEvent} from "../../events/flexi-modal-close.event";
+import {FlexiModalBeforeCloseEvent} from "../../events/flexi-modal-before-close.event";
 
 @Component({
   selector: 'fm-modal',
@@ -62,9 +64,9 @@ export class FlexiModalComponent implements OnInit, DoCheck, OnChanges, AfterCon
 
   // Outputs
   public changeEvent = output<FlexiModalUpdateEvent>({ alias: 'change' });
-  public openEvent = output<FlexiModalEvent>({ alias: 'open' });
-  public closeEvent = output<FlexiModalEvent>({ alias: 'close' });
-  public beforeCloseEvent = output<FlexiModalEvent>({ alias: 'beforeClose' });
+  public openEvent = output<FlexiModalOpenEvent>({ alias: 'open' });
+  public closeEvent = output<FlexiModalCloseEvent>({ alias: 'close' });
+  public beforeCloseEvent = output<FlexiModalBeforeCloseEvent>({ alias: 'beforeClose' });
 
   // Signals
   public id = signal<string>('');
@@ -108,22 +110,17 @@ export class FlexiModalComponent implements OnInit, DoCheck, OnChanges, AfterCon
         takeUntil(this._destroy$)
       )
       .subscribe($event => {
-        switch ($event.type) {
-          case FlexiModalEventType.Open:
-            this.openEvent.emit($event);
-            break;
+        if ($event instanceof FlexiModalOpenEvent) {
+          this.openEvent.emit($event);
 
-          case FlexiModalEventType.BeforeClose:
-            this.beforeCloseEvent.emit($event);
-            break;
+        } else if ($event instanceof FlexiModalBeforeCloseEvent) {
+          this.beforeCloseEvent.emit($event);
 
-          case FlexiModalEventType.Close:
-            this.closeEvent.emit($event);
-            break;
+        } else if ($event instanceof FlexiModalCloseEvent) {
+          this.closeEvent.emit($event);
 
-          case FlexiModalEventType.Update:
-            this.changeEvent.emit(<FlexiModalUpdateEvent>$event);
-            break;
+        } else if ($event instanceof FlexiModalUpdateEvent) {
+          this.changeEvent.emit(<FlexiModalUpdateEvent>$event);
         }
       });
 

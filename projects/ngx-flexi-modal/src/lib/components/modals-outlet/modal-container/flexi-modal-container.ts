@@ -12,10 +12,10 @@ import {
 } from '@angular/core';
 import {Subject, Subscription, takeUntil} from "rxjs";
 
-import {FlexiModalsService} from "../../flexi-modals.service";
-import {IFlexiModalConfig} from "../../flexi-modals.models";
+import {FlexiModalsService} from "../../../flexi-modals.service";
+import {IFlexiModalConfig} from "../../../flexi-modals.models";
 import {FlexiModalButtons} from "./flexi-modal-buttons";
-import {findFocusableElements} from "../../tools/utils";
+import {findFocusableElements} from "../../../tools/utils";
 
 @Directive({
   host: {

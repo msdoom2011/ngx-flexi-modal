@@ -1,22 +1,20 @@
 import {ChangeDetectionStrategy, Component, effect, inject, viewChildren} from '@angular/core';
 import {NgComponentOutlet, NgForOf, NgTemplateOutlet} from "@angular/common";
 
-import {FlexiModalContainer} from "./components/modal-container/flexi-modal-container";
-import {flexiModalBasicExtension} from "./extensions/basic/flexi-modal-basic.extension";
-import {fadeInOutAnimation} from "./animations/fade-in-out.animation";
-import {FLEXI_MODAL_EXTENSION} from "./flexi-modals.tokens";
-import {FlexiModalsService} from "./flexi-modals.service";
+import {FlexiModalContainer} from "./modal-container/flexi-modal-container";
+import {fadeInOutAnimation} from "../../animations/fade-in-out.animation";
+import {FlexiModalsService} from "../../flexi-modals.service";
 import {
   FlexiComponentModalContainerComponent
-} from "./components/modal-container/container-types/component/flexi-component-modal-container.component";
+} from "./modal-container/container-types/component/flexi-component-modal-container.component";
 import {
   FlexiTemplateModalContainerComponent
-} from "./components/modal-container/container-types/template/flexi-template-modal-container.component";
+} from "./modal-container/container-types/template/flexi-template-modal-container.component";
 
 @Component({
-  selector: 'fm-modals',
-  templateUrl: './flexi-modals.component.html',
-  styleUrl: './flexi-modals.component.scss',
+  selector: 'fm-modals-outlet',
+  templateUrl: './flexi-modals-outlet.component.html',
+  styleUrl: './flexi-modals-outlet.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [
@@ -26,14 +24,11 @@ import {
     FlexiTemplateModalContainerComponent,
     NgForOf,
   ],
-  providers: [
-    { provide: FLEXI_MODAL_EXTENSION, useValue: flexiModalBasicExtension, multi: true },
-  ],
   animations: [
     fadeInOutAnimation('fadeInOut'),
   ],
 })
-export class FlexiModalsComponent {
+export class FlexiModalsOutletComponent {
 
   // Dependencies
   private _modalService = inject(FlexiModalsService);

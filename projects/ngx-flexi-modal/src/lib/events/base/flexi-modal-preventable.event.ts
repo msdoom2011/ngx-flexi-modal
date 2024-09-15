@@ -1,9 +1,6 @@
-import {FlexiModalContainer} from "../components/modal-container/flexi-modal-container";
 import {FlexiModalEvent} from "./flexi-modal.event";
 
-export class FlexiModalBeforeEvent<
-  ContainerT extends FlexiModalContainer<any, any> = FlexiModalContainer<any, any>
-> extends FlexiModalEvent<ContainerT> {
+export abstract class FlexiModalPreventableEvent extends FlexiModalEvent {
 
   private _prevented = false;
 

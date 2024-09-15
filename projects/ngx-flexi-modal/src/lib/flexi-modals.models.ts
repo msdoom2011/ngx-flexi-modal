@@ -1,18 +1,22 @@
 import {Component, Injector, TemplateRef, Type} from "@angular/core";
 import {BehaviorSubject, Observable} from "rxjs";
 
-import {FlexiModalContainer} from "./components/modal-container/flexi-modal-container";
+import {FlexiModalContainer} from "./components/modals-outlet/modal-container/flexi-modal-container";
 import {FlexiModalButtonDirective} from "./directives/flexi-modal-button/flexi-modal-button.directive";
-import {FlexiModalButton} from "./components/modal-container/flexi-modal-button";
+import {FlexiModalButton} from "./components/modals-outlet/modal-container/flexi-modal-button";
 import {IFlexiModalBasicOptionsByTypes} from "./extensions/basic/flexi-modal-basic.models";
 import {modalWidthPresets, FlexiModalType} from "./flexi-modals.constants";
-import {FlexiModalEvent} from "./events/flexi-modal.event";
 import {
   FlexiComponentModalContainerComponent
-} from "./components/modal-container/container-types/component/flexi-component-modal-container.component";
+} from "./components/modals-outlet/modal-container/container-types/component/flexi-component-modal-container.component";
 import {
   FlexiTemplateModalContainerComponent
-} from "./components/modal-container/container-types/template/flexi-template-modal-container.component";
+} from "./components/modals-outlet/modal-container/container-types/template/flexi-template-modal-container.component";
+import {FlexiModalBeforeOpenEvent} from "./events/flexi-modal-before-open.event";
+import {FlexiModalOpenEvent} from "./events/flexi-modal-open.event";
+import {FlexiModalBeforeCloseEvent} from "./events/flexi-modal-before-close.event";
+import {FlexiModalCloseEvent} from "./events/flexi-modal-close.event";
+import {FlexiModalUpdateEvent} from "./events/flexi-modal-update.event";
 
 export type TFlexiModalWidth = 'fit-content' | 'fit-window' | (keyof typeof modalWidthPresets) | number;
 export type TFlexiModalHeight = 'fit-content' | number;
@@ -34,6 +38,14 @@ export interface IFlexiModalExtensionTypeConfig<
   convert: (config: ShortcutModalOptionsT) => IFlexiComponentModalCreateOptions<ComponentT>;
 }
 
+export type TFlexiModalEvent = (
+  FlexiModalBeforeOpenEvent
+  | FlexiModalOpenEvent
+  | FlexiModalBeforeCloseEvent
+  | FlexiModalCloseEvent
+  | FlexiModalUpdateEvent
+);
+
 export interface IFlexiModalConfig<ModalContainerT extends FlexiModalContainer<any, any>>
 extends IFlexiModalCreateOptions<ModalContainerT> {
   type: FlexiModalType;
@@ -54,8 +66,8 @@ export interface IFlexiModalCreateOptions<ModalContainerT extends FlexiModalCont
   buttonsTpl?: Array<FlexiModalButtonDirective>; // Will be ignored if footerTpl is specified
   headerTpl?: TemplateRef<any> | undefined;
   footerTpl?: TemplateRef<any> | undefined;
-  onClose?: ($event: FlexiModalEvent<ModalContainerT>) => unknown;
-  onOpen?: ($event: FlexiModalEvent<ModalContainerT>) => unknown;
+  onClose?: ($event: FlexiModalBeforeCloseEvent<ModalContainerT>) => unknown;
+  onOpen?: ($event: FlexiModalOpenEvent<ModalContainerT>) => unknown;
   aliveUntil?: Observable<unknown>;
   width?: TFlexiModalWidth;
   height?: TFlexiModalHeight;

@@ -3,8 +3,8 @@ import {NgComponentOutlet} from "@angular/common";
 
 import {FlexiModalContainerFooterComponent} from "./container-footer/flexi-modal-container-footer.component";
 import {FlexiModalContainerHeaderComponent} from "./container-header/flexi-modal-container-header.component";
-import {modalWidthPresets} from "../../../flexi-modals.constants";
-import {IFlexiModalConfig} from "../../../flexi-modals.models";
+import {modalWidthPresets} from "../../../../flexi-modals.constants";
+import {IFlexiModalConfig} from "../../../../flexi-modals.models";
 import {FlexiModalContainer} from "../flexi-modal-container";
 
 @Component({

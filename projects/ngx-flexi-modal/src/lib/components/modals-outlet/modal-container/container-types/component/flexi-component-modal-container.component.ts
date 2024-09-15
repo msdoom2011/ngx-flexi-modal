@@ -2,7 +2,7 @@ import {ChangeDetectionStrategy, Component, input} from '@angular/core';
 import {NgComponentOutlet} from "@angular/common";
 
 import {FlexiModalContainerLayoutComponent} from "../../container-layout/flexi-modal-container-layout.component";
-import {IFlexiComponentModalConfig} from "../../../../flexi-modals.models";
+import {IFlexiComponentModalConfig} from "../../../../../flexi-modals.models";
 import {FlexiModalContainer} from "../../flexi-modal-container";
 
 @Component({

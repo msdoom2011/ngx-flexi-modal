@@ -1,4 +1,4 @@
-import {EnvironmentProviders, makeEnvironmentProviders, Provider} from "@angular/core";
+import {EnvironmentProviders, makeEnvironmentProviders} from "@angular/core";
 
 import {flexiModalBasicExtension} from "./extensions/basic/flexi-modal-basic.extension";
 import {FLEXI_MODAL_EXTENSION} from "./flexi-modals.tokens";

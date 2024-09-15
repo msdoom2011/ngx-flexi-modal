@@ -1,9 +1,9 @@
 import {Observable} from "rxjs";
 
-import {FlexiModalButton} from "../../components/modal-container/flexi-modal-button";
+import {FlexiModalButton} from "../../components/modals-outlet/modal-container/flexi-modal-button";
 import {
   FlexiComponentModalContainerComponent
-} from "../../components/modal-container/container-types/component/flexi-component-modal-container.component";
+} from "../../components/modals-outlet/modal-container/container-types/component/flexi-component-modal-container.component";
 
 export type TFlexiModalBasicIcon = keyof IFlexiModalBasicOptionsByTypes | null;
 export type TFlexiModalBasicAlign = 'left' | 'center' | 'right';

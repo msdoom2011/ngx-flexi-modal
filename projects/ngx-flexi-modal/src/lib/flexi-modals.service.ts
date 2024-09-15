@@ -1,10 +1,9 @@
 import {inject, Injectable, Signal, signal, TemplateRef, Type} from "@angular/core";
-import {BehaviorSubject, filter, Observable, of, Subject, tap} from "rxjs";
+import {BehaviorSubject, filter, Observable, of, Subject, take, tap} from "rxjs";
 
 import {FlexiModalUpdateEvent} from "./events/flexi-modal-update.event";
-import {FlexiModalBeforeEvent} from "./events/flexi-modal-before.event";
+import {FlexiModalBeforeCloseEvent} from "./events/flexi-modal-before-close.event";
 import {FLEXI_MODAL_EXTENSION} from "./flexi-modals.tokens";
-import {FlexiModalEvent} from "./events/flexi-modal.event";
 import {generateRandomId} from "./tools/utils";
 import {
   flexiModalButtonOptionsDefault,
@@ -25,26 +24,45 @@ import {
 } from "./flexi-modals.models";
 import {
   FlexiComponentModalContainerComponent
-} from "./components/modal-container/container-types/component/flexi-component-modal-container.component";
+} from "./components/modals-outlet/modal-container/container-types/component/flexi-component-modal-container.component";
 import {
   FlexiTemplateModalContainerComponent
-} from "./components/modal-container/container-types/template/flexi-template-modal-container.component";
+} from "./components/modals-outlet/modal-container/container-types/template/flexi-template-modal-container.component";
+import {FlexiModalBeforeOpenEvent} from "./events/flexi-modal-before-open.event";
+import {FlexiModalOpenEvent} from "./events/flexi-modal-open.event";
+import {FlexiModalCloseEvent} from "./events/flexi-modal-close.event";
 
 @Injectable()
 export class FlexiModalsService<
   ExtensionOptionsByTypesT extends IFlexiModalExtensionOptionsByTypes = IFlexiModalExtensionOptionsByTypes
 > {
 
-  public readonly events$ = new Subject<FlexiModalEvent | FlexiModalBeforeEvent | FlexiModalUpdateEvent>();
-
   private readonly _extensionsArr = inject<Array<IFlexiModalExtension<ExtensionOptionsByTypesT>>>(FLEXI_MODAL_EXTENSION);
 
   private readonly _extensions: Record<keyof ExtensionOptionsByTypesT, IFlexiModalExtensionTypeConfig> = <any>{};
+
+  private readonly _events$ = new Subject<
+    FlexiModalBeforeOpenEvent
+    | FlexiModalOpenEvent
+    | FlexiModalBeforeCloseEvent
+    | FlexiModalCloseEvent
+    | FlexiModalUpdateEvent
+  >();
 
   private readonly _modals = signal<Array<IFlexiModalConfig<any>>>([]);
 
   public get modals(): Signal<Array<IFlexiModalConfig<any>>> {
     return this._modals.asReadonly();
+  }
+
+  public get events$(): Observable<
+    FlexiModalBeforeOpenEvent
+    | FlexiModalOpenEvent
+    | FlexiModalBeforeCloseEvent
+    | FlexiModalCloseEvent
+    | FlexiModalUpdateEvent
+  >{
+    return this._events$.pipe(filter($event => !$event.stopped));
   }
 
   constructor() {
@@ -84,15 +102,12 @@ export class FlexiModalsService<
       component,
       modal$,
     };
-    const $beforeOpenEvent = new FlexiModalBeforeEvent(
-      FlexiModalEventType.BeforeOpen,
-      modalConfig,
-    );
+    const $beforeOpenEvent = new FlexiModalBeforeOpenEvent(modalConfig);
 
     this._modals.set([ ...this._modals(), modalConfig ]);
-    this.events$.next($beforeOpenEvent);
+    this._events$.next($beforeOpenEvent);
 
-    if ($beforeOpenEvent.prevented) {
+    if ($beforeOpenEvent.prevented || $beforeOpenEvent.stopped) {
       return of(null);
     }
 
@@ -100,14 +115,13 @@ export class FlexiModalsService<
       .pipe(
         filter(modalContainerComponent => !!modalContainerComponent),
         tap((modalContainerComponent: FlexiComponentModalContainerComponent<ComponentT>) => {
-          const $openEvent = new FlexiModalEvent(
-            FlexiModalEventType.Open,
-            modalConfig,
-            modalContainerComponent,
-          );
+          const $openEvent = new FlexiModalOpenEvent(modalConfig, modalContainerComponent);
 
-          modalConfig.onOpen?.($openEvent);
-          this.events$.next($openEvent);
+          this._events$.next($openEvent);
+
+          if (!$openEvent.stopped) {
+            modalConfig.onOpen?.($openEvent);
+          }
         })
       );
   }
@@ -138,15 +152,12 @@ export class FlexiModalsService<
       template,
       modal$,
     };
-    const $beforeOpenEvent = new FlexiModalBeforeEvent(
-      FlexiModalEventType.BeforeOpen,
-      modalConfig,
-    );
+    const $beforeOpenEvent = new FlexiModalBeforeOpenEvent(modalConfig);
 
     this._modals.set([ ...this._modals(), modalConfig ]);
-    this.events$.next($beforeOpenEvent);
+    this._events$.next($beforeOpenEvent);
 
-    if ($beforeOpenEvent.prevented) {
+    if ($beforeOpenEvent.prevented || $beforeOpenEvent.stopped) {
       return of(null);
     }
 
@@ -154,14 +165,13 @@ export class FlexiModalsService<
       .pipe(
         filter(modalContainerComponent => !!modalContainerComponent),
         tap((modalContainerComponent: FlexiTemplateModalContainerComponent<ContextT>) => {
-          const $openEvent = new FlexiModalEvent(
-            FlexiModalEventType.Open,
-            modalConfig,
-            modalContainerComponent,
-          );
+          const $openEvent = new FlexiModalOpenEvent(modalConfig, modalContainerComponent);
 
-          modalConfig.onOpen?.($openEvent);
-          this.events$.next($openEvent);
+          this._events$.next($openEvent);
+
+          if (!$openEvent.stopped) {
+            modalConfig.onOpen?.($openEvent);
+          }
         })
       );
   }
@@ -208,7 +218,7 @@ export class FlexiModalsService<
       return;
     }
 
-    this.events$.next(new FlexiModalUpdateEvent(
+    this._events$.next(new FlexiModalUpdateEvent(
       modalConfig,
       modalConfig.modal$.getValue(),
       changes,
@@ -222,24 +232,25 @@ export class FlexiModalsService<
       return;
     }
 
-    const $beforeCloseEvent = new FlexiModalBeforeEvent(
-      FlexiModalEventType.BeforeClose,
+    const $beforeCloseEvent = new FlexiModalBeforeCloseEvent(
       modalConfig,
       modalConfig.modal$.getValue(),
     );
 
-    this.events$.next($beforeCloseEvent);
-    modalConfig.onClose?.($beforeCloseEvent);
+    this._events$.next($beforeCloseEvent);
 
-    if ($beforeCloseEvent.prevented) {
+    if (!$beforeCloseEvent.stopped) {
+      modalConfig.onClose?.($beforeCloseEvent);
+    }
+
+    if ($beforeCloseEvent.prevented || $beforeCloseEvent.stopped) {
       return;
     }
 
     this._modals.update(modals => modals.filter(modalConfig => modalConfig.id !== modalId));
 
     setTimeout(() => {
-      this.events$.next(new FlexiModalEvent(
-        FlexiModalEventType.Close,
+      this._events$.next(new FlexiModalCloseEvent(
         modalConfig,
         modalConfig.modal$.getValue(),
       ));
