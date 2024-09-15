@@ -17,12 +17,12 @@
       </div>
     }
 
-    <ng-content select="fm-modal-container-header" />
+    <ng-content select="fm-modal-layout-header" />
 
     <div class="fm-modal--content" [class.scrollable]="config.scroll === 'content'">
       <ng-content />
     </div>
 
-    <ng-content select="fm-modal-container-footer" />
+    <ng-content select="fm-modal-layout-footer" />
   </div>
 </div>

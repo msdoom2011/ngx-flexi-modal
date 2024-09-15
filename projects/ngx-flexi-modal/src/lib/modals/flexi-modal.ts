@@ -1,6 +1,5 @@
 import {BehaviorSubject} from "rxjs";
 
-import {FlexiModalContainer} from "../components/modals-outlet/modal-container/flexi-modal-container";
 import {flexiModalButtonOptionsDefault, flexiModalOptionsDefault} from "../flexi-modals.constants";
 import {IFlexiModalCreateOptions} from "../flexi-modals.models";
 import {FlexiModalButtons} from "./buttons/flexi-modal-buttons";
@@ -9,8 +8,8 @@ import {generateRandomId} from "../tools/utils";
 
 export abstract class FlexiModal<
   OptionsT extends IFlexiModalCreateOptions = IFlexiModalCreateOptions,
-  ContainerT extends FlexiModalContainer<any, any> = FlexiModalContainer<any, any>,
-  ContentT = unknown
+  ContentRenderedT = any,
+  ContentToRenderT = any
 > {
 
   public abstract readonly type: string;
@@ -23,10 +22,10 @@ export abstract class FlexiModal<
     public service: FlexiModalsService,
 
     // The content that appears inside the modal
-    public content: ContentT,
+    public content: ContentToRenderT,
 
-    // A modal container component that renders inside the outlet and represents the modal
-    public container$: BehaviorSubject<ContainerT | null>,
+    // The already rendered content inside the modal
+    public content$: BehaviorSubject<ContentRenderedT | null>,
 
     // Modal configuration options
     options: Partial<OptionsT>,
@@ -41,6 +40,10 @@ export abstract class FlexiModal<
 
   public get index(): number {
     return this.service.modals().findIndex(modalConfig => modalConfig.id === this.id);
+  }
+
+  public get active(): boolean {
+    return this.service.modals()[this.service.modals().length - 1]?.id === this.id;
   }
 
 

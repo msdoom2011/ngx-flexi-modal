@@ -1,4 +1,4 @@
-import {Component, inject, OnInit, signal} from '@angular/core';
+import {Component, effect, inject, OnInit, signal, viewChild} from '@angular/core';
 import {
   FlexiModalButtonDirective,
   FlexiModalButtonsComponent,
@@ -24,8 +24,14 @@ export class AppComponent implements OnInit {
 
   private modalsService = inject<FlexiModalsService>(FlexiModalsService);
 
+  private modalRef = viewChild('modal');
+
   public modalVisible = signal(false);
   public buttonVisible = signal(true);
+
+  private modalEffect = effect(() => {
+    console.log((<any>this.modalRef())?.modal());
+  });
 
 
   public ngOnInit(): void {
@@ -50,24 +56,27 @@ export class AppComponent implements OnInit {
   }
 
   public openModal(): void {
-    // this.modalVisible.set(true);
+    this.modalVisible.set(true);
 
-    this.modalsService.show('error', {
-      title: 'Error: Network issues',
-      message: [
-        'Oops! Something went wrong!',
-        'Oops! Something went wrong!',
-        'Oops! Something went wrong!',
-        'Oops! Something went wrong!',
-        'Oops! Something went wrong!',
-        'Oops! Something went wrong!',
-        'Oops! Something went wrong!',
-      ],
-      onClose: () => {
-        alert('CLOSE!!!');
-      },
-      // messageAlign: 'left',
-      // icon: null
-    });
+    // this.modalsService.show('error', {
+    //   title: 'Error: Network issues',
+    //   message: [
+    //     'Oops! Something went wrong!',
+    //     'Oops! Something went wrong!',
+    //     'Oops! Something went wrong!',
+    //     'Oops! Something went wrong!',
+    //     'Oops! Something went wrong!',
+    //     'Oops! Something went wrong!',
+    //     'Oops! Something went wrong!',
+    //   ],
+    //   onClose: () => {
+    //     // alert('CLOSE!!!');
+    //   },
+    //   // messageAlign: 'left',
+    //   // icon: null
+    // })
+    //   .subscribe((modal) => {
+    //     console.log(modal?.content$.getValue())
+    //   });
   }
 }

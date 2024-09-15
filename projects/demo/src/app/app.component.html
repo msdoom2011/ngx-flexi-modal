@@ -2,7 +2,7 @@
   <button (click)="openModal()">Open Modal</button>
 
   @if (modalVisible()) {
-    <fm-modal title="Keyboard shortcuts" (close)="modalVisible.set(false)">
+    <fm-modal id="test-custom-id" title="Keyboard shortcuts" (close)="modalVisible.set(false)" #modal>
       <div>
         <p>sfjlskdfjlsdkfjlksdjflksdjf</p>
       </div>

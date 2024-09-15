@@ -1,16 +1,14 @@
-import {ChangeDetectionStrategy, Component, effect, inject, viewChildren} from '@angular/core';
+import {ChangeDetectionStrategy, Component, effect, inject} from '@angular/core';
 import {NgComponentOutlet, NgForOf, NgTemplateOutlet} from "@angular/common";
 
-import {FlexiModalContainer} from "./modal-container/flexi-modal-container";
 import {fadeInOutAnimation} from "../../animations/fade-in-out.animation";
 import {FlexiModalsService} from "../../flexi-modals.service";
-import {FlexiModal} from "../../modals/flexi-modal";
 import {
-  FlexiComponentModalContainerComponent
-} from "./modal-container/container-types/component/flexi-component-modal-container.component";
+  FlexiModalComponentContainerComponent
+} from "./modal-container/container-types/component/flexi-modal-component-container.component";
 import {
-  FlexiTemplateModalContainerComponent
-} from "./modal-container/container-types/template/flexi-template-modal-container.component";
+  FlexiModalTemplateContainerComponent
+} from "./modal-container/container-types/template/flexi-modal-template-container.component";
 
 @Component({
   selector: 'fm-modals-outlet',
@@ -21,8 +19,8 @@ import {
   imports: [
     NgTemplateOutlet,
     NgComponentOutlet,
-    FlexiComponentModalContainerComponent,
-    FlexiTemplateModalContainerComponent,
+    FlexiModalComponentContainerComponent,
+    FlexiModalTemplateContainerComponent,
     NgForOf,
   ],
   animations: [
@@ -32,44 +30,30 @@ import {
 export class FlexiModalsOutletComponent {
 
   // Dependencies
-  private _modalService = inject(FlexiModalsService);
+  private _service = inject(FlexiModalsService);
 
   // Signals
-  public modals = this._modalService.modals;
-
-  // Queries
-  private _modalsRef = viewChildren<FlexiModalContainer<any, any>>('modals');
+  public modals = this._service.modals;
 
   // Private props
-  private _styleElement: HTMLStyleElement | null = null;
+  private _bodyStyle: HTMLStyleElement | null = null;
 
 
   // Effects
 
-  private _modalsRefEffect = effect(() => {
-    this._modalsRef().forEach((modalRef: FlexiModalContainer<FlexiModal, any>) => {
-      const container$ = modalRef.modal().container$;
-
-      container$.next(modalRef);
-      container$.complete();
-    });
-  }, {
-    allowSignalWrites: true,
-  });
-
   private _modalsEffect = effect(() => {
-    if (this.modals().length > 0 && !this._styleElement) {
-      this._styleElement = document.createElement('style');
+    if (this.modals().length > 0 && !this._bodyStyle) {
+      this._bodyStyle = document.createElement('style');
 
-      this._styleElement.id = 'fm-modals-styles';
-      this._styleElement.type = 'text/css';
-      this._styleElement.innerHTML = 'body { overflow: hidden }';
+      this._bodyStyle.id = 'fm-modals-styles';
+      this._bodyStyle.type = 'text/css';
+      this._bodyStyle.innerHTML = 'body { overflow: hidden }';
 
-      document.getElementsByTagName('head')[0].appendChild(this._styleElement);
+      document.getElementsByTagName('head')[0].appendChild(this._bodyStyle);
 
-    } else if (!this.modals().length && this._styleElement) {
-      this._styleElement.remove();
-      this._styleElement = null;
+    } else if (!this.modals().length && this._bodyStyle) {
+      this._bodyStyle.remove();
+      this._bodyStyle = null;
     }
   });
 }

@@ -1,25 +1,25 @@
 @let config = modal().config;
 
 <div class="fm-modal--viewport" [class.scrollable]="config.scroll === 'modal'">
-  <fm-modal-container-layout [modal]="modal()">
+  <fm-modal-layout [modal]="modal()">
     @if (config.title) {
-      <fm-modal-container-header>
+      <fm-modal-layout-header>
         <fm-modal-component-container-header
           class="fm-modal--header"
           [title]="config.title"
         />
-      </fm-modal-container-header>
+      </fm-modal-layout-header>
     }
 
-    <ng-container *ngComponentOutlet="modal().content; inputs: config.inputs" />
+    <div class="fm-modal--content-placeholder" #content></div>
 
     @if (modal().buttons.length) {
-      <fm-modal-container-footer>
+      <fm-modal-layout-footer>
         <fm-modal-component-container-footer
           class="fm-modal--footer"
           [modal]="modal()"
         />
-      </fm-modal-container-footer>
+      </fm-modal-layout-footer>
     }
-  </fm-modal-container-layout>
+  </fm-modal-layout>
 </div>

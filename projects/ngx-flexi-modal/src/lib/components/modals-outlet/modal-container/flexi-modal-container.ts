@@ -4,11 +4,13 @@ import {
   effect,
   ElementRef,
   inject,
+  Injector,
   InputSignal,
   OnChanges,
   OnDestroy,
   SimpleChanges,
-  viewChild
+  viewChild,
+  ViewContainerRef
 } from '@angular/core';
 import {Subject, Subscription, takeUntil} from "rxjs";
 
@@ -19,26 +21,23 @@ import {FlexiModal} from "../../../modals/flexi-modal";
 @Directive({
   host: {
     '[id]': 'id()',
-    '[class]': 'classes()',
+    '[class]': '_classes()',
     '(window:keydown.Escape)': 'onEscapePress()',
     '(window:keydown)': 'onTabPress($event)',
   },
 })
-export abstract class FlexiModalContainer<
-  ModalT extends FlexiModal,
-  ContentT
->
-implements OnChanges, OnDestroy {
+export abstract class FlexiModalContainer<ModalT extends FlexiModal> implements OnChanges, OnDestroy {
 
   // Dependencies
-  public modalService = inject(FlexiModalsService);
+  public service = inject(FlexiModalsService);
   private _elementRef = inject(ElementRef<HTMLElement>);
+  protected _injector = inject(Injector);
 
   // Inputs
   public modal!: InputSignal<ModalT>;
 
   // Public props
-  public contentRef = viewChild<ContentT>('content');
+  public contentRef = viewChild('content', { read: ViewContainerRef });
 
   // Private props
   private _destroy$ = new Subject<void>();
@@ -52,19 +51,15 @@ implements OnChanges, OnDestroy {
   });
 
   public index = computed(() => {
-    return this.modalService.modals()
+    return this.service.modals()
       .findIndex(modalConfig => modalConfig.id === this.id());
   });
 
-  public classes = computed(() => {
+  public _classes = computed(() => {
     return [
       'fm-modal',
       ...(this.modal().config.classes || [])
     ];
-  });
-
-  public isActive = computed(() => {
-    return this.modalService.modals()[this.modalService.modals().length - 1]?.id === this.id();
   });
 
   private _focusableElements = computed(() => {
@@ -74,9 +69,9 @@ implements OnChanges, OnDestroy {
 
   // Effects
 
-  private _isActiveEffect = effect(() => {
+  private _activeEffect = effect(() => {
     const focusInModal = this._elementRef.nativeElement.contains(document.activeElement);
-    const isActive = this.isActive();
+    const isActive = this.modal().active;
 
     if (!isActive && focusInModal) {
       (<any>document.activeElement).blur();
@@ -106,13 +101,13 @@ implements OnChanges, OnDestroy {
   // Callbacks
 
   public onEscapePress(): void {
-    if (this.isActive() && this.modal()?.config.closable) {
+    if (this.modal().active && this.modal()?.config.closable) {
       this.modal().close();
     }
   }
 
   public onTabPress($event: KeyboardEvent): void {
-    if (!this.isActive() || $event.key !== 'Tab') {
+    if (!this.modal().active || $event.key !== 'Tab') {
       return;
     }
 

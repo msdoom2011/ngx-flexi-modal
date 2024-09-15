@@ -1,24 +1,24 @@
 import {ChangeDetectionStrategy, Component, computed, input} from '@angular/core';
 import {NgComponentOutlet} from "@angular/common";
 
-import {FlexiModalContainerFooterComponent} from "./container-footer/flexi-modal-container-footer.component";
-import {FlexiModalContainerHeaderComponent} from "./container-header/flexi-modal-container-header.component";
+import {FlexiModalLayoutFooterComponent} from "./footer/flexi-modal-layout-footer.component";
+import {FlexiModalLayoutHeaderComponent} from "./header/flexi-modal-layout-header.component";
 import {modalWidthPresets} from "../../../../flexi-modals.constants";
 import {FlexiModal} from "../../../../modals/flexi-modal";
 
 @Component({
-  selector: 'fm-modal-container-layout',
+  selector: 'fm-modal-layout',
   standalone: true,
   imports: [
     NgComponentOutlet,
-    FlexiModalContainerFooterComponent,
-    FlexiModalContainerHeaderComponent
+    FlexiModalLayoutFooterComponent,
+    FlexiModalLayoutHeaderComponent
   ],
-  templateUrl: './flexi-modal-container-layout.component.html',
-  styleUrl: './flexi-modal-container-layout.component.scss',
+  templateUrl: './flexi-modal-layout.component.html',
+  styleUrl: './flexi-modal-layout.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FlexiModalContainerLayoutComponent {
+export class FlexiModalLayoutComponent {
 
   // Inputs
   public modal = input.required<FlexiModal>();

@@ -1,10 +1,5 @@
 import {IFlexiModalButtonConfig, IFlexiModalCreateOptions,} from "./flexi-modals.models";
 
-export enum FlexiModalType {
-  Component = 'COMPONENT',
-  Template = 'TEMPLATE',
-}
-
 export enum FlexiModalEventType {
   BeforeOpen = 'BEFORE_OPEN',
   Open = 'OPEN',

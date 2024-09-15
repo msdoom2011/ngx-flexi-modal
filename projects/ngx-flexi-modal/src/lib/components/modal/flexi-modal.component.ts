@@ -29,6 +29,7 @@ import {FlexiModalBeforeCloseEvent} from "../../events/flexi-modal-before-close.
 import {FlexiModalUpdateEvent} from "../../events/flexi-modal-update.event";
 import {FlexiModalCloseEvent} from "../../events/flexi-modal-close.event";
 import {FlexiModalOpenEvent} from "../../events/flexi-modal-open.event";
+import {FlexiModalTemplate} from "../../modals/flexi-modal-template";
 import {FlexiModalsService} from "../../flexi-modals.service";
 import {
   IFlexiTemplateModalCreateOptions,
@@ -66,7 +67,7 @@ export class FlexiModalComponent implements OnInit, DoCheck, OnChanges, AfterCon
   public beforeCloseEvent = output<FlexiModalBeforeCloseEvent>({ alias: 'beforeClose' });
 
   // Signals
-  public id = signal<string>('');
+  public modal = signal<FlexiModalTemplate | null>(null);
   private _classes = signal<Array<string> | undefined>(undefined);
   private _classesChanged = signal<boolean>(false);
 
@@ -82,6 +83,10 @@ export class FlexiModalComponent implements OnInit, DoCheck, OnChanges, AfterCon
 
 
   // Computed
+
+  public id = computed(() => {
+    return this.modal()?.id || '';
+  });
 
   private _headerTpl = computed(() => {
     return this._headerRef()?.templateRef();
@@ -168,15 +173,10 @@ export class FlexiModalComponent implements OnInit, DoCheck, OnChanges, AfterCon
   }
 
   public ngOnChanges(changes: SimpleChanges): void {
-    const { customId } = changes;
     const options: Partial<IFlexiTemplateModalCreateOptions<any>> = {};
     const optionNames: Array<keyof IFlexiTemplateModalCreateOptions<any>> = [
       'title', 'width', 'height', 'scroll', 'closable'
     ];
-
-    if (customId) {
-      this.id.set(customId.currentValue);
-    }
 
     for (const optionName of optionNames) {
       if (changes[optionName]) {
@@ -231,7 +231,7 @@ export class FlexiModalComponent implements OnInit, DoCheck, OnChanges, AfterCon
         take(1),
       )
       .subscribe((modal) => {
-        this.id.set(modal.id());
+        this.modal.set(modal);
       });
   }
 
