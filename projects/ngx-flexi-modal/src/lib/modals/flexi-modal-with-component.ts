@@ -3,7 +3,7 @@ import {ComponentRef, Type} from "@angular/core";
 import {IFlexiComponentModalCreateOptions} from "../flexi-modals.models";
 import {FlexiModal} from "./flexi-modal";
 
-export class FlexiModalComponent<
+export class FlexiModalWithComponent<
   ComponentT = any,
   InputsT extends object = Record<string, any>
 >

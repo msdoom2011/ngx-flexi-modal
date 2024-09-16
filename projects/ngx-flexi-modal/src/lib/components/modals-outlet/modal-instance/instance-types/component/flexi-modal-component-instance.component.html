@@ -1,25 +1,25 @@
 @let config = modal().config;
 
 <div class="fm-modal--viewport" [class.scrollable]="config.scroll === 'modal'">
-  <fm-modal-layout [modal]="modal()">
+  <fm-modal-instance-layout [modal]="modal()">
     @if (config.title) {
-      <fm-modal-layout-header>
-        <fm-modal-component-container-header
+      <fm-modal-instance-header>
+        <fm-modal-component-header
           class="fm-modal--header"
           [title]="config.title"
         />
-      </fm-modal-layout-header>
+      </fm-modal-instance-header>
     }
 
     <div class="fm-modal--content-placeholder" #content></div>
 
     @if (modal().buttons.length) {
-      <fm-modal-layout-footer>
-        <fm-modal-component-container-footer
+      <fm-modal-instance-footer>
+        <fm-modal-component-footer
           class="fm-modal--footer"
           [modal]="modal()"
         />
-      </fm-modal-layout-footer>
+      </fm-modal-instance-footer>
     }
-  </fm-modal-layout>
+  </fm-modal-instance-layout>
 </div>

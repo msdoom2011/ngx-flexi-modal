@@ -2,8 +2,8 @@ import {Observable} from "rxjs";
 
 import {FlexiModalButton} from "../../modals/buttons/flexi-modal-button";
 import {
-  FlexiModalComponentContainerComponent
-} from "../../components/modals-outlet/modal-container/container-types/component/flexi-modal-component-container.component";
+  FlexiModalComponentInstanceComponent
+} from "../../components/modals-outlet/modal-instance/instance-types/component/flexi-modal-component-instance.component";
 
 export type TFlexiModalBasicIcon = keyof IFlexiModalBasicOptionsByTypes | null;
 export type TFlexiModalBasicAlign = 'left' | 'center' | 'right';
@@ -18,7 +18,7 @@ export interface IFlexiModalBasicOptionsByTypes {
 
 export interface IFlexiModalBasicOptions extends IFlexiModalBasicInputs {
   title?: string;
-  onClose?: (modal: FlexiModalComponentContainerComponent<any>) => void;
+  onClose?: (modal: FlexiModalComponentInstanceComponent<any>) => void;
   aliveUntil?: Observable<unknown>;
 }
 

@@ -23,7 +23,7 @@ export const flexiModalOptionsDefault: IFlexiModalCreateOptions = {
   buttons: undefined,
   onClose: undefined,
   onOpen: undefined,
-  width: 'medium',
+  width: 'fit-content',
   height: 'fit-content',
   scroll: 'modal',
   closable: true,

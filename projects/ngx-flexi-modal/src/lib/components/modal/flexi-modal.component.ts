@@ -26,10 +26,10 @@ import {FlexiModalButtonsComponent} from "./sections/section-types/flexi-modal-b
 import {FlexiModalHeaderComponent} from "./sections/section-types/flexi-modal-header.component";
 import {FlexiModalFooterComponent} from "./sections/section-types/flexi-modal-footer.component";
 import {FlexiModalBeforeCloseEvent} from "../../events/flexi-modal-before-close.event";
+import {FlexiModalWithTemplate} from "../../modals/flexi-modal-with-template";
 import {FlexiModalUpdateEvent} from "../../events/flexi-modal-update.event";
 import {FlexiModalCloseEvent} from "../../events/flexi-modal-close.event";
 import {FlexiModalOpenEvent} from "../../events/flexi-modal-open.event";
-import {FlexiModalTemplate} from "../../modals/flexi-modal-template";
 import {FlexiModalsService} from "../../flexi-modals.service";
 import {
   IFlexiTemplateModalCreateOptions,
@@ -67,14 +67,14 @@ export class FlexiModalComponent implements OnInit, DoCheck, OnChanges, AfterCon
   public beforeCloseEvent = output<FlexiModalBeforeCloseEvent>({ alias: 'beforeClose' });
 
   // Signals
-  public modal = signal<FlexiModalTemplate | null>(null);
+  public modal = signal<FlexiModalWithTemplate | null>(null);
   private _classes = signal<Array<string> | undefined>(undefined);
   private _classesChanged = signal<boolean>(false);
 
   // Queries
   private _buttonItemsRef = contentChildren(FlexiModalButtonDirective, { descendants: true });
   private _buttonsRef = contentChild(FlexiModalButtonsComponent);
-  private _headerRef = contentChild(FlexiModalHeaderComponent);
+  private _headerRef = contentChild(FlexiModalHeaderComponent, { descendants: true });
   private _footerRef = contentChild(FlexiModalFooterComponent);
   private _bodyRef = viewChild.required<TemplateRef<any>>('body');
 
@@ -168,7 +168,7 @@ export class FlexiModalComponent implements OnInit, DoCheck, OnChanges, AfterCon
     }
 
     // Clean up the id attribute of the host element to prevent
-    // it duplication in addition to appropriate rendered modal container
+    // it duplication in addition to appropriate rendered modal component instance
     this.elementRef.nativeElement.removeAttribute('id');
   }
 

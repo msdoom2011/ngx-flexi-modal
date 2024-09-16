@@ -4,11 +4,11 @@ import {NgComponentOutlet, NgForOf, NgTemplateOutlet} from "@angular/common";
 import {fadeInOutAnimation} from "../../animations/fade-in-out.animation";
 import {FlexiModalsService} from "../../flexi-modals.service";
 import {
-  FlexiModalComponentContainerComponent
-} from "./modal-container/container-types/component/flexi-modal-component-container.component";
+  FlexiModalComponentInstanceComponent
+} from "./modal-instance/instance-types/component/flexi-modal-component-instance.component";
 import {
-  FlexiModalTemplateContainerComponent
-} from "./modal-container/container-types/template/flexi-modal-template-container.component";
+  FlexiModalTemplateInstanceComponent
+} from "./modal-instance/instance-types/template/flexi-modal-template-instance.component";
 
 @Component({
   selector: 'fm-modals-outlet',
@@ -19,8 +19,8 @@ import {
   imports: [
     NgTemplateOutlet,
     NgComponentOutlet,
-    FlexiModalComponentContainerComponent,
-    FlexiModalTemplateContainerComponent,
+    FlexiModalComponentInstanceComponent,
+    FlexiModalTemplateInstanceComponent,
     NgForOf,
   ],
   animations: [

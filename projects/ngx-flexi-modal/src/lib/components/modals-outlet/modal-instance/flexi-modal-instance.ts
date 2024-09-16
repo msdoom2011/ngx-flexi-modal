@@ -26,7 +26,7 @@ import {FlexiModal} from "../../../modals/flexi-modal";
     '(window:keydown)': 'onTabPress($event)',
   },
 })
-export abstract class FlexiModalContainer<ModalT extends FlexiModal> implements OnChanges, OnDestroy {
+export abstract class FlexiModalInstance<ModalT extends FlexiModal> implements OnChanges, OnDestroy {
 
   // Dependencies
   public service = inject(FlexiModalsService);

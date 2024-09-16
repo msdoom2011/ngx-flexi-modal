@@ -1,25 +1,24 @@
 import {ChangeDetectionStrategy, Component, input} from '@angular/core';
 import {NgTemplateOutlet} from "@angular/common";
 
-import {FlexiModalComponent} from "../../../../../../modals/flexi-modal-component";
-import {IFlexiModalButtonConfig} from "../../../../../../flexi-modals.models";
 import {FlexiModalButton} from "../../../../../../modals/buttons/flexi-modal-button";
-
+import {FlexiModalWithComponent} from "../../../../../../modals/flexi-modal-with-component";
+import {IFlexiModalButtonConfig} from "../../../../../../flexi-modals.models";
 
 @Component({
-  selector: 'fm-modal-component-container-footer',
+  selector: 'fm-modal-component-footer',
   standalone: true,
   imports: [
     NgTemplateOutlet
   ],
-  templateUrl: './flexi-modal-component-container-footer.component.html',
-  styleUrl: './flexi-modal-component-container-footer.component.scss',
+  templateUrl: './flexi-modal-component-footer.component.html',
+  styleUrl: './flexi-modal-component-footer.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FlexiModalComponentContainerFooterComponent {
+export class FlexiModalComponentFooterComponent {
 
   // Inputs
-  public modal = input.required<FlexiModalComponent>();
+  public modal = input.required<FlexiModalWithComponent>();
 
 
   // Callbacks

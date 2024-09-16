@@ -4,16 +4,16 @@
   @for(modal of modals(); track modal.id) {
     @switch (modal.type) {
       @case ('COMPONENT') {
-        <fm-modal-component-container
-          class="fm-modal-container"
+        <fm-modal-component-instance
+          class="fm-modal-instance"
           [modal]="$any(modal)"
           @fadeInOut
           #modals
         />
       }
       @case ('TEMPLATE') {
-        <fm-modal-template-container
-          class="fm-modal-container"
+        <fm-modal-template-instance
+          class="fm-modal-instance"
           [modal]="$any(modal)"
           @fadeInOut
           #modals

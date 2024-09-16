@@ -6,9 +6,9 @@ import {FlexiModalBeforeOpenEvent} from "./events/flexi-modal-before-open.event"
 import {FlexiModalUpdateEvent} from "./events/flexi-modal-update.event";
 import {FlexiModalCloseEvent} from "./events/flexi-modal-close.event";
 import {FlexiModalOpenEvent} from "./events/flexi-modal-open.event";
-import {FlexiModalComponent} from "./modals/flexi-modal-component";
+import {FlexiModalWithComponent} from "./modals/flexi-modal-with-component";
 import {flexiModalOptionsDefault} from "./flexi-modals.constants";
-import {FlexiModalTemplate} from "./modals/flexi-modal-template";
+import {FlexiModalWithTemplate} from "./modals/flexi-modal-with-template";
 import {FLEXI_MODAL_EXTENSION} from "./flexi-modals.tokens";
 import {FlexiModal} from "./modals/flexi-modal";
 import {
@@ -54,50 +54,50 @@ export class FlexiModalsService<
 
   public showComponent<ComponentT extends object = any>(
     component: Type<ComponentT>,
-  ): Observable<FlexiModalComponent<ComponentT> | null>;
+  ): Observable<FlexiModalWithComponent<ComponentT> | null>;
 
   public showComponent<ComponentT extends object = any>(
     component: Type<ComponentT>,
     takeUntil$: Observable<any>
-  ): Observable<FlexiModalComponent<ComponentT> | null>;
+  ): Observable<FlexiModalWithComponent<ComponentT> | null>;
 
   public showComponent<ComponentT extends object = any>(
     component: Type<ComponentT>,
     options: Partial<IFlexiComponentModalCreateOptions<ComponentT>>
-  ): Observable<FlexiModalComponent<ComponentT> | null>;
+  ): Observable<FlexiModalWithComponent<ComponentT> | null>;
 
   public showComponent<ComponentT extends object = any>(
     component: Type<ComponentT>,
     takeUntilOrOptions?: Observable<any> | Partial<IFlexiComponentModalCreateOptions<ComponentT>>
-  ): Observable<FlexiModalComponent<ComponentT> | null> {
+  ): Observable<FlexiModalWithComponent<ComponentT> | null> {
 
     const content$ = new BehaviorSubject<ComponentRef<ComponentT> | null>(null);
-    const modal = new FlexiModalComponent(this, component, content$, this._normalizeOptions(takeUntilOrOptions));
+    const modal = new FlexiModalWithComponent(this, component, content$, this._normalizeOptions(takeUntilOrOptions));
 
     return this._showModal(modal);
   }
 
   public showTemplate<ContextT extends object = {}>(
     template: TemplateRef<ContextT>,
-  ): Observable<FlexiModalTemplate<ContextT> | null>;
+  ): Observable<FlexiModalWithTemplate<ContextT> | null>;
 
   public showTemplate<ContextT extends object = {}>(
     template: TemplateRef<ContextT>,
     takeUntil$: Observable<unknown>,
-  ): Observable<FlexiModalTemplate<ContextT> | null>;
+  ): Observable<FlexiModalWithTemplate<ContextT> | null>;
 
   public showTemplate<ContextT extends object = {}>(
     template: TemplateRef<ContextT>,
     options: Partial<IFlexiTemplateModalCreateOptions<ContextT>>,
-  ): Observable<FlexiModalTemplate<ContextT> | null>;
+  ): Observable<FlexiModalWithTemplate<ContextT> | null>;
 
   public showTemplate<ContextT extends object = {}>(
     template: TemplateRef<ContextT>,
     takeUntilOrOptions?: Observable<any> | Partial<IFlexiTemplateModalCreateOptions<ContextT>>,
-  ): Observable<FlexiModalTemplate<ContextT> | null> {
+  ): Observable<FlexiModalWithTemplate<ContextT> | null> {
 
     const content$ = new BehaviorSubject<EmbeddedViewRef<ContextT> | null>(null);
-    const modal = new FlexiModalTemplate(this, template, content$, this._normalizeOptions(takeUntilOrOptions));
+    const modal = new FlexiModalWithTemplate(this, template, content$, this._normalizeOptions(takeUntilOrOptions));
 
     return this._showModal(modal);
   }
@@ -108,7 +108,7 @@ export class FlexiModalsService<
   >(
     modalType: T,
     options: ExtensionOptionsByTypesT[T]
-  ): Observable<FlexiModalComponent<ComponentT> | null> {
+  ): Observable<FlexiModalWithComponent<ComponentT> | null> {
 
     const modalTypeConfig = this._extensions[modalType];
 

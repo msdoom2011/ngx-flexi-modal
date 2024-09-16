@@ -1,22 +1,22 @@
 import {ChangeDetectionStrategy, Component, input} from '@angular/core';
 import {NgTemplateOutlet} from "@angular/common";
 
-import {FlexiModalTemplate} from "../../../../../../modals/flexi-modal-template";
+import {FlexiModalWithTemplate} from "../../../../../../modals/flexi-modal-with-template";
 
 @Component({
-  selector: 'fm-modal-template-container-footer',
+  selector: 'fm-modal-template-footer',
   standalone: true,
   imports: [
     NgTemplateOutlet
   ],
-  templateUrl: './flexi-modal-template-container-footer.component.html',
-  styleUrl: './flexi-modal-template-container-footer.component.scss',
+  templateUrl: './flexi-modal-template-footer.component.html',
+  styleUrl: './flexi-modal-template-footer.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FlexiModalTemplateContainerFooterComponent {
+export class FlexiModalTemplateFooterComponent {
 
   // Inputs
-  public modal = input.required<FlexiModalTemplate>();
+  public modal = input.required<FlexiModalWithTemplate>();
 
   // Callbacks
 

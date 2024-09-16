@@ -1,0 +1,33 @@
+<p>Templated modal with inline content and custom buttons</p>
+<button (click)="modalVisible.set(true)">Open Templated Modal</button>
+
+<p>Modal opened via modal service</p>
+<button (click)="onOpenComponentModal()">Open Service Modal</button>
+
+<p>Basic modal types</p>
+<button (click)="onOpenError()">Open Error</button>
+<button (click)="onOpenWarning()">Open Warning</button>
+<button (click)="onOpenSuccess()">Open Success</button>
+<button (click)="onOpenInfo()">Open Info</button>
+<button (click)="onOpenConfirm()">Open Confirm</button>
+
+@if (modalVisible()) {
+  <fm-modal id="test-custom-id" title="Templated Modal" (close)="modalVisible.set(false)" #modal>
+<!--    <fm-modal-header>-->
+<!--      <h3>fjsdklfjsdklfjlsdkf</h3>-->
+<!--    </fm-modal-header>-->
+
+    <div>
+      <p>sfjlskdfjlsdkfjlksdjflksdjf</p>
+    </div>
+
+<!--    <fm-modal-footer>-->
+<!--      <div>BUTTONS</div>-->
+<!--    </fm-modal-footer>-->
+
+    <fm-modal-buttons>
+      <button *fmModalButton="{ closeOnClick: false }" (click)="buttonVisible.set(!buttonVisible())">Toggle Button</button>
+      <button *fmModalButton="{ visible: buttonVisible() }">Hidden Button</button>
+    </fm-modal-buttons>
+  </fm-modal>
+}
