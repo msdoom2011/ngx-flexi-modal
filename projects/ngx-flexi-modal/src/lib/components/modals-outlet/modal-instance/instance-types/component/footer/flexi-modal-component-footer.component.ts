@@ -3,8 +3,8 @@ import {NgTemplateOutlet} from "@angular/common";
 
 import {FlexiModalWithComponent} from "../../../../../../modals/flexi-modal-with-component";
 import {FlexiButtonComponent} from "../../../../../common/button/flexi-button.component";
-import {FlexiModalButton} from "../../../../../../modals/buttons/flexi-modal-button";
-import {IFlexiModalButtonConfig} from "../../../../../../flexi-modals.models";
+import {FlexiModalAction} from "../../../../../../modals/actions/flexi-modal-action";
+import {IFlexiModalActionConfig} from "../../../../../../flexi-modals.models";
 
 @Component({
   selector: 'fm-modal-component-footer',
@@ -25,14 +25,14 @@ export class FlexiModalComponentFooterComponent {
 
   // Callbacks
 
-  public onButtonClick($event: MouseEvent, buttonConfig: IFlexiModalButtonConfig): void {
+  public onButtonClick($event: MouseEvent, actionConfig: IFlexiModalActionConfig): void {
     const modal = this.modal();
 
-    if (!!buttonConfig.onClick) {
-      buttonConfig.onClick($event, new FlexiModalButton(modal, buttonConfig));
+    if (!!actionConfig.onClick) {
+      actionConfig.onClick($event, new FlexiModalAction(modal, actionConfig));
     }
 
-    if (buttonConfig.closeOnClick) {
+    if (actionConfig.closeOnClick) {
       modal.close();
     }
   }
@@ -40,11 +40,11 @@ export class FlexiModalComponentFooterComponent {
 
   // Methods
 
-  public getButtonClasses(buttonConfig: IFlexiModalButtonConfig): Array<string> {
+  public getButtonClasses(actionConfig: IFlexiModalActionConfig): Array<string> {
     return [
-      buttonConfig.position,
-      buttonConfig.disabled ? 'disabled' : '',
-      ...(buttonConfig.classes || []),
+      actionConfig.position,
+      actionConfig.disabled ? 'disabled' : '',
+      ...(actionConfig.classes || []),
     ]
       .filter(Boolean);
   }

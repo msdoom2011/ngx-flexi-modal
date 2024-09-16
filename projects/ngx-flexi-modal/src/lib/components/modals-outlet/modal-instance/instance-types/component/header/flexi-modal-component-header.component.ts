@@ -9,6 +9,6 @@ import {ChangeDetectionStrategy, Component, input} from '@angular/core';
 })
 export class FlexiModalComponentHeaderComponent {
 
-  // Imports
+  // Inputs
   public title = input<string>();
 }

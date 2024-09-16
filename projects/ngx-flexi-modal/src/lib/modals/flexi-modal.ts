@@ -1,8 +1,8 @@
 import {BehaviorSubject} from "rxjs";
 
-import {flexiModalButtonOptionsDefault, flexiModalOptionsDefault} from "../flexi-modals.constants";
+import {flexiModalActionOptionsDefault, flexiModalOptionsDefault} from "../flexi-modals.constants";
 import {IFlexiModalConfig, IFlexiModalOptions} from "../flexi-modals.models";
-import {FlexiModalButtons} from "./buttons/flexi-modal-buttons";
+import {FlexiModalActions} from "./actions/flexi-modal-actions";
 import {FlexiModalsService} from "../flexi-modals.service";
 import {generateRandomId} from "../tools/utils";
 
@@ -17,7 +17,7 @@ export abstract class FlexiModal<
 
   public config!: ConfigT;
 
-  public buttons!: FlexiModalButtons<this>;
+  public actions!: FlexiModalActions<this>;
 
   constructor(
     public service: FlexiModalsService,
@@ -31,7 +31,7 @@ export abstract class FlexiModal<
     // Modal configuration options
     options: OptionsT,
   ) {
-    this.buttons = new FlexiModalButtons(this.service, this);
+    this.actions = new FlexiModalActions(this.service, this);
     this._setOptions(options);
   }
 
@@ -72,12 +72,12 @@ export abstract class FlexiModal<
       config.id = this._generateModalId();
     }
 
-    if (config.buttons && config.buttons.length > 0) {
-      for (let i = 0; i < config.buttons.length; i++) {
-        config.buttons[i] = {
-          ...flexiModalButtonOptionsDefault,
-          ...{ id: `fm-modal-button-${generateRandomId()}` },
-          ...config.buttons[i]
+    if (config.actions && config.actions.length > 0) {
+      for (let i = 0; i < config.actions.length; i++) {
+        config.actions[i] = {
+          ...flexiModalActionOptionsDefault,
+          ...{ id: `fm-modal-action-${generateRandomId()}` },
+          ...config.actions[i]
         }
       }
     }

@@ -19,7 +19,7 @@ import {
 } from '@angular/core';
 import {filter, Subject, takeUntil} from "rxjs";
 
-import {FlexiModalButtonDirective} from "../../directives/flexi-modal-button.directive";
+import {FlexiModalActionDirective} from "../../directives/flexi-modal-action.directive";
 import {FlexiModalHeaderDirective} from "../../directives/flexi-modal-header.directive";
 import {FlexiModalFooterDirective} from "../../directives/flexi-modal-footer.directive";
 import {FlexiModalBeforeCloseEvent} from "../../events/flexi-modal-before-close.event";
@@ -71,7 +71,7 @@ export class FlexiModalComponent implements DoCheck, OnChanges, AfterContentInit
   private _classesChanged = signal<boolean>(false);
 
   // Queries
-  private _buttonItemsRef = contentChildren(FlexiModalButtonDirective, { descendants: true });
+  private _actionsRef = contentChildren(FlexiModalActionDirective, { descendants: true });
   private _headerRef = contentChild(FlexiModalHeaderDirective);
   private _footerRef = contentChild(FlexiModalFooterDirective);
   private _bodyRef = contentChild(FlexiModalBodyDirective);
@@ -98,9 +98,9 @@ export class FlexiModalComponent implements DoCheck, OnChanges, AfterContentInit
     return this._footerRef()?.templateRef;
   });
 
-  private _buttonsTpl = computed(() => {
-    return this._buttonItemsRef()?.length
-      ? [...this._buttonItemsRef()]
+  private _actionsTpl = computed(() => {
+    return this._actionsRef()?.length
+      ? [...this._actionsRef()]
       : undefined;
   });
 
@@ -235,8 +235,8 @@ export class FlexiModalComponent implements DoCheck, OnChanges, AfterContentInit
       aliveUntil: this._destroy$,
       headerTpl: this._headerTpl(),
       footerTpl: this._footerTpl(),
-      buttonsTpl: !this._footerTpl()
-        ? this._buttonsTpl()
+      actionsTpl: !this._footerTpl()
+        ? this._actionsTpl()
         : undefined,
       classes: this._classes(),
     });
@@ -269,12 +269,12 @@ export class FlexiModalComponent implements DoCheck, OnChanges, AfterContentInit
       );
     }
 
-    if (this._footerTpl() && this._buttonsTpl()?.length) {
+    if (this._footerTpl() && this._actionsTpl()?.length) {
       console.warn(
-        'Specified both "*fmModalFooter" and "*fmModalButton" directives ' +
+        'Specified both "*fmModalFooter" and "*fmModalAction" directives ' +
         'at the same time for the displaying modal. ' +
-        'The "*fmModalFooter" directive content takes precedence over buttons specified ' +
-        'via the "*fmModalButton" directive, so the last one was ignored.'
+        'The "*fmModalFooter" directive content takes precedence over actions specified ' +
+        'via the "*fmModalAction" directive, so the last one was ignored.'
       );
     }
   }

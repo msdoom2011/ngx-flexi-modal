@@ -1,7 +1,7 @@
 import {Component, inject, signal} from '@angular/core';
 import {
   FlexiModalBodyDirective,
-  FlexiModalButtonDirective,
+  FlexiModalActionDirective,
   FlexiModalComponent,
   FlexiModalFooterDirective,
   FlexiModalHeaderDirective,
@@ -22,7 +22,7 @@ import {TemplateAwareComponent} from "../modal-content/template-aware/template-a
     FlexiModalBodyDirective,
     FlexiModalHeaderDirective,
     FlexiModalFooterDirective,
-    FlexiModalButtonDirective,
+    FlexiModalActionDirective,
     FlexiButtonComponent,
     ModalAwareComponent,
     TemplateAwareComponent,
@@ -43,7 +43,7 @@ export class ShowcaseComponent {
   public onOpenComponentModal(): void {
     this.modalsService.showComponent(ModalAwareComponent, {
       title: 'Modal title',
-      buttons: [
+      actions: [
         {
           label: 'Okay',
           onClick: () => alert('Okay!')

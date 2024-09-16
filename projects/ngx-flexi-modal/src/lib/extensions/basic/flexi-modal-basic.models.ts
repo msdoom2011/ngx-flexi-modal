@@ -1,6 +1,6 @@
 import {Observable} from "rxjs";
 
-import {FlexiModalButton} from "../../modals/buttons/flexi-modal-button";
+import {FlexiModalAction} from "../../modals/actions/flexi-modal-action";
 import {
   FlexiModalComponentInstanceComponent
 } from "../../components/modals-outlet/modal-instance/instance-types/component/flexi-modal-component-instance.component";
@@ -24,9 +24,9 @@ export interface IFlexiModalBasicOptions extends IFlexiModalBasicInputs {
 
 export interface IFlexiModalConfirmOptions extends IFlexiModalBasicOptions {
   onYesLabel?: string;
-  onYes?: ($event: MouseEvent, button: FlexiModalButton) => void,
+  onYes?: ($event: MouseEvent, action: FlexiModalAction) => void,
   onNoLabel?: string;
-  onNo?: ($event: MouseEvent, button: FlexiModalButton) => void,
+  onNo?: ($event: MouseEvent, action: FlexiModalAction) => void,
 }
 
 export interface IFlexiModalBasicInputs {

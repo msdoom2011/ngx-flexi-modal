@@ -16,24 +16,24 @@ const FLEXI_MODAL_OPTIONS_DEFAULT: IFlexiModalButtonDirectiveOptions = {
 };
 
 @Directive({
-  selector: '[fmModalButton]',
-  exportAs: 'fmModalButton',
+  selector: '[fmModalAction]',
+  exportAs: 'fmModalAction',
   standalone: true,
 })
-export class FlexiModalButtonDirective {
+export class FlexiModalActionDirective {
 
   // Dependencies
   public templateRef = inject(TemplateRef);
 
   // Private props
-  public id = 'fm-modal-button-' + generateRandomId();
+  public id = 'fm-modal-action-' + generateRandomId();
 
   // Inputs
   public options = input<
     IFlexiModalButtonDirectiveOptions,
     Partial<IFlexiModalButtonDirectiveOptions> | boolean | string
   >(FLEXI_MODAL_OPTIONS_DEFAULT, {
-    alias: 'fmModalButton',
+    alias: 'fmModalAction',
     transform: (optionsOrVisible) => this._normalizeOptions(optionsOrVisible),
   });
 

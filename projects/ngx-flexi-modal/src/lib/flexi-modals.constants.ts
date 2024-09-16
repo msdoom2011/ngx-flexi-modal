@@ -1,4 +1,4 @@
-import {IFlexiModalButtonConfig, IFlexiModalConfig,} from "./flexi-modals.models";
+import {IFlexiModalActionConfig, IFlexiModalConfig,} from "./flexi-modals.models";
 
 export enum FlexiModalEventType {
   BeforeOpen = 'BEFORE_OPEN',
@@ -20,7 +20,7 @@ export const modalWidthPresets = {
 export const flexiModalOptionsDefault: IFlexiModalConfig<any> = {
   id: '',
   title: undefined,
-  buttons: undefined,
+  actions: undefined,
   onClose: undefined,
   onOpen: undefined,
   width: 'fit-content',
@@ -32,7 +32,7 @@ export const flexiModalOptionsDefault: IFlexiModalConfig<any> = {
   data: {},
 };
 
-export const flexiModalButtonOptionsDefault: IFlexiModalButtonConfig = {
+export const flexiModalActionOptionsDefault: IFlexiModalActionConfig = {
   id: '',
   label: '',
   icon: undefined,

@@ -1,7 +1,7 @@
 import {InputSignal, TemplateRef, Type} from "@angular/core";
 import {Observable} from "rxjs";
 
-import {FlexiModalButtonDirective} from "./directives/flexi-modal-button.directive";
+import {FlexiModalActionDirective} from "./directives/flexi-modal-action.directive";
 import {IFlexiModalBasicOptionsByTypes} from "./extensions/basic/flexi-modal-basic.models";
 import {FlexiModalBeforeCloseEvent} from "./events/flexi-modal-before-close.event";
 import {FlexiModalBeforeOpenEvent} from "./events/flexi-modal-before-open.event";
@@ -9,7 +9,7 @@ import {FlexiModalWithComponent} from "./modals/flexi-modal-with-component";
 import {FlexiModalWithTemplate} from "./modals/flexi-modal-with-template";
 import {FlexiModalUpdateEvent} from "./events/flexi-modal-update.event";
 import {FlexiModalCloseEvent} from "./events/flexi-modal-close.event";
-import {FlexiModalButton} from "./modals/buttons/flexi-modal-button";
+import {FlexiModalAction} from "./modals/actions/flexi-modal-action";
 import {FlexiModalOpenEvent} from "./events/flexi-modal-open.event";
 import {modalWidthPresets} from "./flexi-modals.constants";
 import {FlexiModal} from "./modals/flexi-modal";
@@ -51,7 +51,7 @@ export type TFlexiModalEvent = (
 export interface IFlexiModalConfig<FlexiModalT extends FlexiModal> {
   id: string;
   title: string | undefined;
-  buttons: Array<IFlexiModalButtonConfig> | undefined;
+  actions: Array<IFlexiModalActionConfig> | undefined;
   onClose: (($event: FlexiModalBeforeCloseEvent<FlexiModalT>) => unknown) | undefined;
   onOpen: (($event: FlexiModalOpenEvent<FlexiModalT>) => unknown) | undefined;
   width: TFlexiModalWidth;
@@ -66,8 +66,8 @@ export interface IFlexiModalConfig<FlexiModalT extends FlexiModal> {
 }
 
 export type IFlexiModalOptions<FlexiModalT extends FlexiModal> = (
-  Partial<Omit<IFlexiModalConfig<FlexiModalT>, 'buttons'>>
-  & { buttons?: Array<IFlexiModalButtonOptions> }
+  Partial<Omit<IFlexiModalConfig<FlexiModalT>, 'actions'>>
+  & { actions?: Array<IFlexiModalActionOptions> }
 );
 
 export interface IFlexiModalComponentConfig<ComponentT, InputsT extends object = Record<string, any>>
@@ -76,8 +76,8 @@ extends IFlexiModalConfig<FlexiModalWithComponent<ComponentT>> {
 }
 
 export type IFlexiModalComponentOptions<ComponentT, InputsT extends object = Record<string, any>> = (
-  Partial<Omit<IFlexiModalComponentConfig<ComponentT, InputsT>, 'buttons'>>
-  & { buttons?: Array<IFlexiModalButtonOptions> }
+  Partial<Omit<IFlexiModalComponentConfig<ComponentT, InputsT>, 'actions'>>
+  & { actions?: Array<IFlexiModalActionOptions> }
 );
 
 export interface IFlexiModalTemplateConfig<ContextT extends object>
@@ -85,22 +85,22 @@ extends IFlexiModalConfig<FlexiModalWithTemplate<ContextT>> {
   context: ContextT | null,
   headerTpl: TemplateRef<any> | undefined;
   footerTpl: TemplateRef<any> | undefined;
-  buttonsTpl: Array<FlexiModalButtonDirective>;
+  actionsTpl: Array<FlexiModalActionDirective>;
 }
 
 export type IFlexiModalTemplateOptions<ContextT extends object> = (
-  Partial<Omit<IFlexiModalTemplateConfig<ContextT>, 'buttons'>>
-  & { buttons?: Array<IFlexiModalButtonOptions> }
+  Partial<Omit<IFlexiModalTemplateConfig<ContextT>, 'actions'>>
+  & { actions?: Array<IFlexiModalActionOptions> }
 );
 
-interface IFlexiModalButtonOptionsRequired {
+interface IFlexiModalActionOptionsRequired {
   label: string;
 }
 
-export interface IFlexiModalButtonConfig {
+export interface IFlexiModalActionConfig {
   id: string;
   label: string;
-  onClick: (($event: MouseEvent, button: FlexiModalButton) => unknown) | undefined;
+  onClick: (($event: MouseEvent, action: FlexiModalAction) => unknown) | undefined;
   disabled: boolean;
   closeOnClick: boolean;
   theme: TFlexiModalButtonTheme;
@@ -109,7 +109,7 @@ export interface IFlexiModalButtonConfig {
   icon: string | undefined;
 }
 
-export type IFlexiModalButtonOptions = (
-  Partial<Omit<IFlexiModalButtonConfig, 'label'>>
-  & IFlexiModalButtonOptionsRequired
+export type IFlexiModalActionOptions = (
+  Partial<Omit<IFlexiModalActionConfig, 'label'>>
+  & IFlexiModalActionOptionsRequired
 );

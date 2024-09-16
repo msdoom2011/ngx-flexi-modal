@@ -62,7 +62,7 @@ export const flexiModalBasicExtension: IFlexiModalExtension<IFlexiModalBasicOpti
         },
       }, config);
 
-      options.buttons = [
+      options.actions = [
         {
           id: MODAL_YES_BUTTON_ID,
           label: config.onYesLabel || 'Confirm',

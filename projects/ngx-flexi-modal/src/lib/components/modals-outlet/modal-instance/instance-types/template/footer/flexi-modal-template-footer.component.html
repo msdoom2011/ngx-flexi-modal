@@ -1,21 +1,21 @@
 @let footerTpl = modal().config.footerTpl;
-@let buttonsTpl = modal().config.buttonsTpl;
+@let actionsTpl = modal().config.actionsTpl;
 
 @if (footerTpl) {
   <ng-container *ngTemplateOutlet="footerTpl" />
 
-} @else if (buttonsTpl) {
-  <div class="fm-modal-footer--buttons">
-    @for (buttonDirective of buttonsTpl; track buttonDirective.id) {
-      @if (buttonDirective.options().visible) {
+} @else if (actionsTpl) {
+  <div class="fm-modal-footer--actions">
+    @for (actionDirective of actionsTpl; track actionDirective.id) {
+      @if (actionDirective.options().visible) {
         <div
-          (click)="onButtonTplClick(buttonDirective.options().closeOnClick)"
+          (click)="onButtonTplClick(actionDirective.options().closeOnClick)"
           [class]="[
-            'fm-modal-button-container',
-            buttonDirective.options().position
+            'fm-modal-action-container',
+            actionDirective.options().position
           ]"
         >
-          <ng-container *ngTemplateOutlet="buttonDirective.templateRef || null" />
+          <ng-container *ngTemplateOutlet="actionDirective.templateRef || null" />
         </div>
       }
     }

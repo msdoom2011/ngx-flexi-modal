@@ -15,6 +15,6 @@ import {FlexiModalWithTemplate} from "../../../../../../modals/flexi-modal-with-
 })
 export class FlexiModalTemplateHeaderComponent {
 
-  // Imports
+  // Inputs
   public modal = input.required<FlexiModalWithTemplate>();
 }
