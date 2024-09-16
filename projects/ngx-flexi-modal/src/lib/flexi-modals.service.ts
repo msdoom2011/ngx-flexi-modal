@@ -1,23 +1,23 @@
 import {ComponentRef, EmbeddedViewRef, inject, Injectable, Signal, signal, TemplateRef, Type} from "@angular/core";
-import {BehaviorSubject, filter, map, Observable, of, Subject, tap} from "rxjs";
+import {BehaviorSubject, filter, Observable, Subject} from "rxjs";
 
 import {FlexiModalBeforeCloseEvent} from "./events/flexi-modal-before-close.event";
 import {FlexiModalBeforeOpenEvent} from "./events/flexi-modal-before-open.event";
+import {FlexiModalWithComponent} from "./modals/flexi-modal-with-component";
+import {FlexiModalWithTemplate} from "./modals/flexi-modal-with-template";
 import {FlexiModalUpdateEvent} from "./events/flexi-modal-update.event";
 import {FlexiModalCloseEvent} from "./events/flexi-modal-close.event";
 import {FlexiModalOpenEvent} from "./events/flexi-modal-open.event";
-import {FlexiModalWithComponent} from "./modals/flexi-modal-with-component";
 import {flexiModalOptionsDefault} from "./flexi-modals.constants";
-import {FlexiModalWithTemplate} from "./modals/flexi-modal-with-template";
 import {FLEXI_MODAL_EXTENSION} from "./flexi-modals.tokens";
 import {FlexiModal} from "./modals/flexi-modal";
 import {
-  IFlexiComponentModalCreateOptions,
-  IFlexiModalCreateOptions,
+  IFlexiModalComponentOptions,
   IFlexiModalExtension,
   IFlexiModalExtensionOptionsByTypes,
   IFlexiModalExtensionTypeConfig,
-  IFlexiTemplateModalCreateOptions,
+  IFlexiModalOptions,
+  IFlexiModalTemplateOptions,
   TFlexiModalEvent
 } from "./flexi-modals.models";
 
@@ -54,22 +54,22 @@ export class FlexiModalsService<
 
   public showComponent<ComponentT extends object = any>(
     component: Type<ComponentT>,
-  ): Observable<FlexiModalWithComponent<ComponentT> | null>;
+  ): FlexiModalWithComponent<ComponentT> | null;
 
   public showComponent<ComponentT extends object = any>(
     component: Type<ComponentT>,
     takeUntil$: Observable<any>
-  ): Observable<FlexiModalWithComponent<ComponentT> | null>;
+  ): FlexiModalWithComponent<ComponentT> | null;
 
   public showComponent<ComponentT extends object = any>(
     component: Type<ComponentT>,
-    options: Partial<IFlexiComponentModalCreateOptions<ComponentT>>
-  ): Observable<FlexiModalWithComponent<ComponentT> | null>;
+    options: IFlexiModalComponentOptions<ComponentT>
+  ): FlexiModalWithComponent<ComponentT> | null;
 
   public showComponent<ComponentT extends object = any>(
     component: Type<ComponentT>,
-    takeUntilOrOptions?: Observable<any> | Partial<IFlexiComponentModalCreateOptions<ComponentT>>
-  ): Observable<FlexiModalWithComponent<ComponentT> | null> {
+    takeUntilOrOptions?: Observable<any> | IFlexiModalComponentOptions<ComponentT>
+  ): FlexiModalWithComponent<ComponentT> | null {
 
     const content$ = new BehaviorSubject<ComponentRef<ComponentT> | null>(null);
     const modal = new FlexiModalWithComponent(this, component, content$, this._normalizeOptions(takeUntilOrOptions));
@@ -79,22 +79,22 @@ export class FlexiModalsService<
 
   public showTemplate<ContextT extends object = {}>(
     template: TemplateRef<ContextT>,
-  ): Observable<FlexiModalWithTemplate<ContextT> | null>;
+  ): FlexiModalWithTemplate<ContextT> | null;
 
   public showTemplate<ContextT extends object = {}>(
     template: TemplateRef<ContextT>,
     takeUntil$: Observable<unknown>,
-  ): Observable<FlexiModalWithTemplate<ContextT> | null>;
+  ): FlexiModalWithTemplate<ContextT> | null;
 
   public showTemplate<ContextT extends object = {}>(
     template: TemplateRef<ContextT>,
-    options: Partial<IFlexiTemplateModalCreateOptions<ContextT>>,
-  ): Observable<FlexiModalWithTemplate<ContextT> | null>;
+    options: IFlexiModalTemplateOptions<ContextT>,
+  ): FlexiModalWithTemplate<ContextT> | null;
 
   public showTemplate<ContextT extends object = {}>(
     template: TemplateRef<ContextT>,
-    takeUntilOrOptions?: Observable<any> | Partial<IFlexiTemplateModalCreateOptions<ContextT>>,
-  ): Observable<FlexiModalWithTemplate<ContextT> | null> {
+    takeUntilOrOptions?: Observable<any> | IFlexiModalTemplateOptions<ContextT>,
+  ): FlexiModalWithTemplate<ContextT> | null {
 
     const content$ = new BehaviorSubject<EmbeddedViewRef<ContextT> | null>(null);
     const modal = new FlexiModalWithTemplate(this, template, content$, this._normalizeOptions(takeUntilOrOptions));
@@ -108,7 +108,7 @@ export class FlexiModalsService<
   >(
     modalType: T,
     options: ExtensionOptionsByTypesT[T]
-  ): Observable<FlexiModalWithComponent<ComponentT> | null> {
+  ): FlexiModalWithComponent<ComponentT> | null {
 
     const modalTypeConfig = this._extensions[modalType];
 
@@ -122,7 +122,7 @@ export class FlexiModalsService<
     );
   }
 
-  public updateModal(modalId: string, changes: Partial<IFlexiModalCreateOptions>): void {
+  public updateModal(modalId: string, changes: IFlexiModalOptions<any>): void {
     const modalIndex = this.getModalById(modalId)?.index || -1;
 
     if (modalIndex < 0) {
@@ -201,7 +201,7 @@ export class FlexiModalsService<
 
   // Private implementation
 
-  private _normalizeOptions<ModalOptionsT extends Partial<IFlexiModalCreateOptions>>(
+  private _normalizeOptions<ModalOptionsT extends Partial<IFlexiModalOptions<any>>>(
     takeUntilOrOptions: ModalOptionsT | Observable<unknown> | undefined
   ): ModalOptionsT {
     return <ModalOptionsT>{
@@ -214,29 +214,29 @@ export class FlexiModalsService<
     };
   }
 
-  private _showModal<ModalT extends FlexiModal>(modal: ModalT): Observable<ModalT | null> {
+  private _showModal<ModalT extends FlexiModal>(modal: ModalT): ModalT | null {
     const $beforeOpenEvent = new FlexiModalBeforeOpenEvent(modal);
 
-    this._modals.set([ ...this._modals(), modal ]);
     this._events$.next($beforeOpenEvent);
 
     if ($beforeOpenEvent.prevented || $beforeOpenEvent.stopped) {
-      return of(null);
+      return null;
     }
 
-    return modal.content$
-      .pipe(
-        filter(Boolean),
-        map(() => modal),
-        tap(() => {
-          const $openEvent = new FlexiModalOpenEvent(modal);
+    this._modals.set([ ...this._modals(), modal ]);
 
-          this._events$.next($openEvent);
+    modal.content$
+      .pipe(filter(Boolean))
+      .subscribe(() => {
+        const $openEvent = new FlexiModalOpenEvent(modal);
 
-          if (!$openEvent.stopped) {
-            modal.config.onOpen?.($openEvent);
-          }
-        })
-      );
+        this._events$.next($openEvent);
+
+        if (!$openEvent.stopped) {
+          modal.config.onOpen?.($openEvent);
+        }
+      });
+
+    return modal;
   }
 }

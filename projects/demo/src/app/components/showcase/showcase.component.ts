@@ -1,25 +1,31 @@
-import {Component, inject, signal, viewChild} from '@angular/core';
+import {Component, inject, signal} from '@angular/core';
 import {
+  FlexiModalBodyDirective,
   FlexiModalButtonDirective,
-  FlexiModalButtonsComponent,
   FlexiModalComponent,
+  FlexiModalFooterDirective,
+  FlexiModalHeaderDirective,
+  FlexiModalOpenEvent,
   FlexiModalsService,
-  FlexiModalHeaderComponent,
-  FlexiModalFooterComponent,
+  FlexiButtonComponent,
 } from "ngx-flexi-modal";
 
 import {ModalAwareComponent} from "../modal-content/modal-aware/modal-aware.component";
+import {TemplateAwareComponent} from "../modal-content/template-aware/template-aware.component";
 
 @Component({
   selector: 'app-showcase',
   standalone: true,
   imports: [
-    FlexiModalButtonsComponent,
     FlexiModalComponent,
-    FlexiModalHeaderComponent,
-    FlexiModalFooterComponent,
+    FlexiModalBodyDirective,
+    FlexiModalBodyDirective,
+    FlexiModalHeaderDirective,
+    FlexiModalFooterDirective,
     FlexiModalButtonDirective,
+    FlexiButtonComponent,
     ModalAwareComponent,
+    TemplateAwareComponent,
   ],
   templateUrl: './showcase.component.html',
   styleUrl: './showcase.component.scss'
@@ -29,17 +35,21 @@ export class ShowcaseComponent {
   // Dependencies
   private modalsService = inject<FlexiModalsService>(FlexiModalsService);
 
-  // Queries
-  private modalRef = viewChild('modal');
-
   // Signals
-  public modalVisible = signal(false);
   public buttonVisible = signal(true);
 
   // Callbacks
 
   public onOpenComponentModal(): void {
-    this.modalsService.showComponent(ModalAwareComponent);
+    this.modalsService.showComponent(ModalAwareComponent, {
+      title: 'Modal title',
+      buttons: [
+        {
+          label: 'Okay',
+          onClick: () => alert('Okay!')
+        }
+      ]
+    });
   }
 
   public onOpenError(): void {
@@ -76,5 +86,10 @@ export class ShowcaseComponent {
     this.modalsService.show('confirm', {
       message: 'You have unsaved changes. Are you really sure want to proceed and quit?'
     });
+  }
+
+  public onTemplateModalOpened($event: FlexiModalOpenEvent): void {
+    console.log($event);
+    console.log('TEMPLATE MODAL OPENED!!!');
   }
 }

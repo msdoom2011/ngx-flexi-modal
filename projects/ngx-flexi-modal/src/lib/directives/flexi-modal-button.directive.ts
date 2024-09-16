@@ -1,8 +1,19 @@
 import {Directive, inject, input, TemplateRef} from "@angular/core";
 
-import {FLEXI_MODAL_OPTIONS_DEFAULT} from "./flexi-modal-button.constants";
-import {IFlexiModalButtonOptions} from "./flexi-modal-button.models";
-import {generateRandomId, isPlainObject} from "../../tools/utils";
+import {generateRandomId, isPlainObject} from "../tools/utils";
+import {TFlexiModalButtonPosition} from "../flexi-modals.models";
+
+export interface IFlexiModalButtonDirectiveOptions {
+  visible?: boolean;
+  closeOnClick?: boolean;
+  position?: TFlexiModalButtonPosition;
+}
+
+const FLEXI_MODAL_OPTIONS_DEFAULT: IFlexiModalButtonDirectiveOptions = {
+  visible: true,
+  closeOnClick: true,
+  position: 'right',
+};
 
 @Directive({
   selector: '[fmModalButton]',
@@ -19,8 +30,8 @@ export class FlexiModalButtonDirective {
 
   // Inputs
   public options = input<
-    IFlexiModalButtonOptions,
-    Partial<IFlexiModalButtonOptions> | boolean | string
+    IFlexiModalButtonDirectiveOptions,
+    Partial<IFlexiModalButtonDirectiveOptions> | boolean | string
   >(FLEXI_MODAL_OPTIONS_DEFAULT, {
     alias: 'fmModalButton',
     transform: (optionsOrVisible) => this._normalizeOptions(optionsOrVisible),
@@ -30,10 +41,10 @@ export class FlexiModalButtonDirective {
   // Private implementation
 
   private _normalizeOptions(
-    optionsOrVisible: Partial<IFlexiModalButtonOptions> | boolean | string
-  ): IFlexiModalButtonOptions {
+    optionsOrVisible: Partial<IFlexiModalButtonDirectiveOptions> | boolean | string
+  ): IFlexiModalButtonDirectiveOptions {
 
-    const options: Partial<IFlexiModalButtonOptions> = (
+    const options: Partial<IFlexiModalButtonDirectiveOptions> = (
       typeof optionsOrVisible === 'boolean'
         ? { visible: optionsOrVisible }
         : isPlainObject(optionsOrVisible)
@@ -41,7 +52,7 @@ export class FlexiModalButtonDirective {
           : {}
     );
 
-    return <IFlexiModalButtonOptions>{
+    return <IFlexiModalButtonDirectiveOptions>{
       ...FLEXI_MODAL_OPTIONS_DEFAULT,
       ...options,
     };

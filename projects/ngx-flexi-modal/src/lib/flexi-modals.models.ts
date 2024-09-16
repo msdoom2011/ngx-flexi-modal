@@ -1,7 +1,7 @@
 import {InputSignal, TemplateRef, Type} from "@angular/core";
 import {Observable} from "rxjs";
 
-import {FlexiModalButtonDirective} from "./directives/flexi-modal-button/flexi-modal-button.directive";
+import {FlexiModalButtonDirective} from "./directives/flexi-modal-button.directive";
 import {IFlexiModalBasicOptionsByTypes} from "./extensions/basic/flexi-modal-basic.models";
 import {FlexiModalBeforeCloseEvent} from "./events/flexi-modal-before-close.event";
 import {FlexiModalBeforeOpenEvent} from "./events/flexi-modal-before-open.event";
@@ -12,6 +12,7 @@ import {FlexiModalCloseEvent} from "./events/flexi-modal-close.event";
 import {FlexiModalButton} from "./modals/buttons/flexi-modal-button";
 import {FlexiModalOpenEvent} from "./events/flexi-modal-open.event";
 import {modalWidthPresets} from "./flexi-modals.constants";
+import {FlexiModal} from "./modals/flexi-modal";
 
 export type TFlexiModalWidth = 'fit-content' | 'fit-window' | (keyof typeof modalWidthPresets) | number;
 export type TFlexiModalHeight = 'fit-content' | number;
@@ -36,7 +37,7 @@ export interface IFlexiModalExtensionTypeConfig<
   ComponentT = any
 > {
   component: Type<ComponentT>;
-  convert: (config: ShortcutModalOptionsT) => Partial<IFlexiComponentModalCreateOptions<ComponentT>>;
+  convert: (config: ShortcutModalOptionsT) => IFlexiModalComponentOptions<ComponentT>;
 }
 
 export type TFlexiModalEvent = (
@@ -47,16 +48,12 @@ export type TFlexiModalEvent = (
   | FlexiModalUpdateEvent
 );
 
-export interface IFlexiModalCreateOptions {
-  // Can be optionally specified. Otherwise, a random id value will be generated instead.
-  // Required to be specified in case if you have plans to listen to "(open)" event
-  // of a modal defined using the template driven approach. Otherwise, this event
-  // will never be triggered.
+export interface IFlexiModalConfig<FlexiModalT extends FlexiModal> {
   id: string;
   title: string | undefined;
   buttons: Array<IFlexiModalButtonConfig> | undefined;
-  onClose: (($event: FlexiModalBeforeCloseEvent<any>) => unknown) | undefined;
-  onOpen: (($event: FlexiModalOpenEvent<any>) => unknown) | undefined;
+  onClose: (($event: FlexiModalBeforeCloseEvent<FlexiModalT>) => unknown) | undefined;
+  onOpen: (($event: FlexiModalOpenEvent<FlexiModalT>) => unknown) | undefined;
   width: TFlexiModalWidth;
   height: TFlexiModalHeight;
   scroll: TFlexiModalScroll;
@@ -68,36 +65,51 @@ export interface IFlexiModalCreateOptions {
   data: {};
 }
 
-export interface IFlexiComponentModalCreateOptions<
-  ComponentT,
-  InputsT extends object = Record<string, any>
->
-extends IFlexiModalCreateOptions {
+export type IFlexiModalOptions<FlexiModalT extends FlexiModal> = (
+  Partial<Omit<IFlexiModalConfig<FlexiModalT>, 'buttons'>>
+  & { buttons?: Array<IFlexiModalButtonOptions> }
+);
+
+export interface IFlexiModalComponentConfig<ComponentT, InputsT extends object = Record<string, any>>
+extends IFlexiModalConfig<FlexiModalWithComponent<ComponentT>> {
   inputs: InputsT;
-  onClose: (($event: FlexiModalBeforeCloseEvent<FlexiModalWithComponent<ComponentT>>) => unknown) | undefined;
-  onOpen: (($event: FlexiModalOpenEvent<FlexiModalWithComponent<ComponentT>>) => unknown) | undefined;
 }
 
-export interface IFlexiTemplateModalCreateOptions<
-  ContextT extends object
->
-extends IFlexiModalCreateOptions {
+export type IFlexiModalComponentOptions<ComponentT, InputsT extends object = Record<string, any>> = (
+  Partial<Omit<IFlexiModalComponentConfig<ComponentT, InputsT>, 'buttons'>>
+  & { buttons?: Array<IFlexiModalButtonOptions> }
+);
+
+export interface IFlexiModalTemplateConfig<ContextT extends object>
+extends IFlexiModalConfig<FlexiModalWithTemplate<ContextT>> {
   context: ContextT | null,
   headerTpl: TemplateRef<any> | undefined;
   footerTpl: TemplateRef<any> | undefined;
-  buttonsTpl: Array<FlexiModalButtonDirective>; // Will be ignored if footerTpl is specified
-  onClose: (($event: FlexiModalBeforeCloseEvent<FlexiModalWithTemplate<ContextT>>) => unknown) | undefined;
-  onOpen: (($event: FlexiModalOpenEvent<FlexiModalWithTemplate<ContextT>>) => unknown) | undefined;
+  buttonsTpl: Array<FlexiModalButtonDirective>;
+}
+
+export type IFlexiModalTemplateOptions<ContextT extends object> = (
+  Partial<Omit<IFlexiModalTemplateConfig<ContextT>, 'buttons'>>
+  & { buttons?: Array<IFlexiModalButtonOptions> }
+);
+
+interface IFlexiModalButtonOptionsRequired {
+  label: string;
 }
 
 export interface IFlexiModalButtonConfig {
+  id: string;
   label: string;
-  onClick?: ($event: MouseEvent, button: FlexiModalButton) => unknown;
-  id?: string;
-  disabled?: boolean;
-  closeOnClick?: boolean;
-  theme?: TFlexiModalButtonTheme;
-  position?: TFlexiModalButtonPosition;
-  classes?: Array<string>;
-  icon?: string;
+  onClick: (($event: MouseEvent, button: FlexiModalButton) => unknown) | undefined;
+  disabled: boolean;
+  closeOnClick: boolean;
+  theme: TFlexiModalButtonTheme;
+  position: TFlexiModalButtonPosition;
+  classes: Array<string> | undefined;
+  icon: string | undefined;
 }
+
+export type IFlexiModalButtonOptions = (
+  Partial<Omit<IFlexiModalButtonConfig, 'label'>>
+  & IFlexiModalButtonOptionsRequired
+);

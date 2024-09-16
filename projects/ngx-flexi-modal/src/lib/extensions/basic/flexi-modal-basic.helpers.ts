@@ -1,21 +1,21 @@
 import {FlexiModalBasicComponent} from "./components/modal-basic/flexi-modal-basic.component";
 import {IFlexiModalBasicInputs, IFlexiModalBasicOptions} from "./flexi-modal-basic.models";
-import {IFlexiComponentModalCreateOptions} from "../../flexi-modals.models";
+import {IFlexiModalComponentOptions} from "../../flexi-modals.models";
 
 export function extendModalOptions(
-  basicOptions: Partial<IFlexiComponentModalCreateOptions<
+  basicOptions: IFlexiModalComponentOptions<
     FlexiModalBasicComponent,
     Partial<IFlexiModalBasicInputs>
-  >>,
+  >,
   userOptions: IFlexiModalBasicOptions,
-): Partial<IFlexiComponentModalCreateOptions<
+): IFlexiModalComponentOptions<
     FlexiModalBasicComponent,
     IFlexiModalBasicInputs
->> {
-  return <Partial<IFlexiComponentModalCreateOptions<
+> {
+  return <IFlexiModalComponentOptions<
     FlexiModalBasicComponent,
     IFlexiModalBasicInputs>
-  >>{
+  >{
     ...basicOptions,
     inputs: {
       ...(basicOptions.inputs || {}),

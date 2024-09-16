@@ -1,20 +1,21 @@
 import {BehaviorSubject} from "rxjs";
 
 import {flexiModalButtonOptionsDefault, flexiModalOptionsDefault} from "../flexi-modals.constants";
-import {IFlexiModalCreateOptions} from "../flexi-modals.models";
+import {IFlexiModalConfig, IFlexiModalOptions} from "../flexi-modals.models";
 import {FlexiModalButtons} from "./buttons/flexi-modal-buttons";
 import {FlexiModalsService} from "../flexi-modals.service";
 import {generateRandomId} from "../tools/utils";
 
 export abstract class FlexiModal<
-  OptionsT extends IFlexiModalCreateOptions = IFlexiModalCreateOptions,
+  ConfigT extends IFlexiModalConfig<any> = IFlexiModalConfig<any>,
+  OptionsT extends IFlexiModalOptions<any> = IFlexiModalOptions<any>,
   ContentRenderedT = any,
   ContentToRenderT = any
 > {
 
   public abstract readonly type: string;
 
-  public config!: OptionsT;
+  public config!: ConfigT;
 
   public buttons!: FlexiModalButtons<this>;
 
@@ -28,7 +29,7 @@ export abstract class FlexiModal<
     public content$: BehaviorSubject<ContentRenderedT | null>,
 
     // Modal configuration options
-    options: Partial<OptionsT>,
+    options: OptionsT,
   ) {
     this.buttons = new FlexiModalButtons(this.service, this);
     this._setOptions(options);
@@ -49,7 +50,7 @@ export abstract class FlexiModal<
 
   // Public methods
 
-  public update(options: Partial<OptionsT>): void {
+  public update(options: OptionsT): void {
     this._setOptions(options);
   }
 
@@ -64,8 +65,8 @@ export abstract class FlexiModal<
     return `flexi-modal-${generateRandomId()}`;
   }
 
-  protected _setOptions(options: Partial<OptionsT>): void {
-    const config = <OptionsT>{...(this.config || flexiModalOptionsDefault), ...options};
+  protected _setOptions(options: OptionsT): void {
+    const config = <ConfigT>{...(this.config || flexiModalOptionsDefault), ...options};
 
     if (!config.id) {
       config.id = this._generateModalId();
@@ -74,8 +75,8 @@ export abstract class FlexiModal<
     if (config.buttons && config.buttons.length > 0) {
       for (let i = 0; i < config.buttons.length; i++) {
         config.buttons[i] = {
-          id: `fm-modal-button-${generateRandomId()}`,
           ...flexiModalButtonOptionsDefault,
+          ...{ id: `fm-modal-button-${generateRandomId()}` },
           ...config.buttons[i]
         }
       }

@@ -1,20 +1,23 @@
-import {Component, input, OnInit} from '@angular/core';
-import {FlexiModalHeaderComponent, FlexiModalWithComponent, IFlexiModalAware} from "ngx-flexi-modal";
+import {Component, input, OnDestroy, OnInit} from '@angular/core';
+import {IFlexiModalAware, FlexiModalWithComponent} from "ngx-flexi-modal";
 
 @Component({
   selector: 'app-modal-aware',
   standalone: true,
-  imports: [
-    FlexiModalHeaderComponent,
-  ],
+  imports: [],
   templateUrl: './modal-aware.component.html',
   styleUrl: './modal-aware.component.scss'
 })
-export class ModalAwareComponent implements OnInit, IFlexiModalAware {
+export class ModalAwareComponent implements OnInit, OnDestroy, IFlexiModalAware {
 
   public modal = input.required<FlexiModalWithComponent>();
 
   public ngOnInit() {
-    console.log(this.modal());
+    console.log('SERVICE MODAL INITIALIZED!!!');
+    console.log('MODAL INSTANCE: ', this.modal());
+  }
+
+  public ngOnDestroy(): void {
+    console.log('SERVICE MODAL DESTROYED!!!');
   }
 }

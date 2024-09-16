@@ -11,19 +11,15 @@
 }
 
 .fm-modal-button-container {
-  margin: 0 9px;
-}
-
-.fm-modal-button-container {
   display: inline-flex;
   align-items: center;
   height: 100%;
-}
 
-.button-position-left {
-  float: left;
-}
+  &.left {
+    float: left;
+  }
 
-.button-position-right {
-  float: right;
+  &.right {
+    float: right;
+  }
 }

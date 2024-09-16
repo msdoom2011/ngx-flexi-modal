@@ -1,9 +1,11 @@
 <div class="fm-modal-footer--buttons">
   @for (buttonConfig of modal().buttons.configs; track buttonConfig.id) {
     <button
+      fm-button
       [id]="buttonConfig.id"
       [disabled]="buttonConfig.disabled"
       [class]="getButtonClasses(buttonConfig)"
+      [fm-button-primary]="buttonConfig.theme === 'primary'"
       (click)="onButtonClick($event, buttonConfig)"
     >
       @if (buttonConfig.icon) {

@@ -10,29 +10,27 @@ import {
   ElementRef,
   inject,
   input,
+  model,
   OnChanges,
   OnDestroy,
-  OnInit,
   output,
   signal,
-  SimpleChanges,
-  TemplateRef,
-  viewChild
+  SimpleChanges
 } from '@angular/core';
-import {filter, Subject, take, takeUntil} from "rxjs";
+import {filter, Subject, takeUntil} from "rxjs";
 
-import {FlexiModalButtonDirective} from "../../directives/flexi-modal-button/flexi-modal-button.directive";
-import {FlexiModalButtonsComponent} from "./sections/section-types/flexi-modal-buttons.component";
-import {FlexiModalHeaderComponent} from "./sections/section-types/flexi-modal-header.component";
-import {FlexiModalFooterComponent} from "./sections/section-types/flexi-modal-footer.component";
+import {FlexiModalButtonDirective} from "../../directives/flexi-modal-button.directive";
+import {FlexiModalHeaderDirective} from "../../directives/flexi-modal-header.directive";
+import {FlexiModalFooterDirective} from "../../directives/flexi-modal-footer.directive";
 import {FlexiModalBeforeCloseEvent} from "../../events/flexi-modal-before-close.event";
+import {FlexiModalBodyDirective} from "../../directives/flexi-modal-body.directive";
 import {FlexiModalWithTemplate} from "../../modals/flexi-modal-with-template";
 import {FlexiModalUpdateEvent} from "../../events/flexi-modal-update.event";
 import {FlexiModalCloseEvent} from "../../events/flexi-modal-close.event";
 import {FlexiModalOpenEvent} from "../../events/flexi-modal-open.event";
 import {FlexiModalsService} from "../../flexi-modals.service";
 import {
-  IFlexiTemplateModalCreateOptions,
+  IFlexiModalTemplateConfig,
   TFlexiModalHeight,
   TFlexiModalScroll,
   TFlexiModalWidth
@@ -42,17 +40,18 @@ import {
   selector: 'fm-modal',
   standalone: true,
   imports: [],
-  templateUrl: './flexi-modal.component.html',
+  template: '',
   styleUrl: './flexi-modal.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FlexiModalComponent implements OnInit, DoCheck, OnChanges, AfterContentInit, OnDestroy {
+export class FlexiModalComponent implements DoCheck, OnChanges, AfterContentInit, OnDestroy {
 
   // Dependencies
   public service = inject(FlexiModalsService);
   public elementRef = inject(ElementRef<any>);
 
   // Inputs
+  public opened = model<boolean>(false);
   public title = input<string>();
   public width = input<TFlexiModalWidth>();
   public height = input<TFlexiModalHeight>();
@@ -73,10 +72,9 @@ export class FlexiModalComponent implements OnInit, DoCheck, OnChanges, AfterCon
 
   // Queries
   private _buttonItemsRef = contentChildren(FlexiModalButtonDirective, { descendants: true });
-  private _buttonsRef = contentChild(FlexiModalButtonsComponent);
-  private _headerRef = contentChild(FlexiModalHeaderComponent, { descendants: true });
-  private _footerRef = contentChild(FlexiModalFooterComponent);
-  private _bodyRef = viewChild.required<TemplateRef<any>>('body');
+  private _headerRef = contentChild(FlexiModalHeaderDirective);
+  private _footerRef = contentChild(FlexiModalFooterDirective);
+  private _bodyRef = contentChild(FlexiModalBodyDirective);
 
   // Private props
   private _destroy$ = new Subject<void>();
@@ -88,12 +86,16 @@ export class FlexiModalComponent implements OnInit, DoCheck, OnChanges, AfterCon
     return this.modal()?.id || '';
   });
 
+  private _bodyTpl = computed(() => {
+    return this._bodyRef()?.templateRef;
+  });
+
   private _headerTpl = computed(() => {
-    return this._headerRef()?.templateRef();
+    return this._headerRef()?.templateRef;
   });
 
   private _footerTpl = computed(() => {
-    return this._footerRef()?.templateRef();
+    return this._footerRef()?.templateRef;
   });
 
   private _buttonsTpl = computed(() => {
@@ -105,7 +107,11 @@ export class FlexiModalComponent implements OnInit, DoCheck, OnChanges, AfterCon
 
   // Effects
 
-  private _idChangeEffect = effect((onCleanup) => {
+  private _modalChangeEffect = effect((onCleanup) => {
+    if (!this.modal()) {
+      return;
+    }
+
     const subscription = this.service.events$
       .pipe(
         filter($event => $event.id === this.id()),
@@ -119,6 +125,9 @@ export class FlexiModalComponent implements OnInit, DoCheck, OnChanges, AfterCon
           this.beforeCloseEvent.emit($event);
 
         } else if ($event instanceof FlexiModalCloseEvent) {
+          this.opened.set(false);
+          this.modal.set(null);
+
           this.closeEvent.emit($event);
 
         } else if ($event instanceof FlexiModalUpdateEvent) {
@@ -147,16 +156,6 @@ export class FlexiModalComponent implements OnInit, DoCheck, OnChanges, AfterCon
 
   // Lifecycle Hooks
 
-  public ngOnInit(): void {
-    // @ts-ignore
-    if (!this.customId() && this.openEvent.listeners?.length) {
-      console.warn(
-        'Your "(open)" event listener will never be invoked. ' +
-        'To make it callable specify an "id" property to your "<fm-modal />" component'
-      );
-    }
-  }
-
   public ngDoCheck(): void {
     const classesStrNew = this.elementRef.nativeElement.className.replace(/\s+/g, ' ');
     const classesStrOld = (this._classes() || []).join(' ');
@@ -173,8 +172,22 @@ export class FlexiModalComponent implements OnInit, DoCheck, OnChanges, AfterCon
   }
 
   public ngOnChanges(changes: SimpleChanges): void {
-    const options: Partial<IFlexiTemplateModalCreateOptions<any>> = {};
-    const optionNames: Array<keyof IFlexiTemplateModalCreateOptions<any>> = [
+    const { opened } = changes;
+
+    if (!opened?.currentValue) {
+      return;
+
+    } else if (opened?.currentValue && !this.modal()) {
+      const timeout = setTimeout(() => {
+        clearTimeout(timeout);
+        this.open();
+      });
+
+      return;
+    }
+
+    const options: Partial<IFlexiModalTemplateConfig<any>> = {};
+    const optionNames: Array<keyof IFlexiModalTemplateConfig<any>> = [
       'title', 'width', 'height', 'scroll', 'closable'
     ];
 
@@ -190,7 +203,9 @@ export class FlexiModalComponent implements OnInit, DoCheck, OnChanges, AfterCon
   }
 
   public ngAfterContentInit(): void {
-    this._show();
+    if (this.opened()) {
+      this.open();
+    }
   }
 
   public ngOnDestroy(): void {
@@ -201,17 +216,16 @@ export class FlexiModalComponent implements OnInit, DoCheck, OnChanges, AfterCon
 
   // Public methods
 
-  public close(): void {
-    this.service.closeModal(this.id());
-  }
+  public open(): void {
+    const bodyTpl = this._bodyTpl();
 
+    if (this.modal() || !bodyTpl) {
+      return;
+    }
 
-  // Internal implementation
-
-  private _show(): void {
     this._validateInputs();
 
-    this.service.showTemplate(this._bodyRef(), {
+    const modal = this.service.showTemplate(bodyTpl, {
       id: this.customId(),
       title: this.title(),
       width: this.width(),
@@ -221,36 +235,46 @@ export class FlexiModalComponent implements OnInit, DoCheck, OnChanges, AfterCon
       aliveUntil: this._destroy$,
       headerTpl: this._headerTpl(),
       footerTpl: this._footerTpl(),
-      buttonsTpl: this._buttonsRef() && !this._footerTpl()
+      buttonsTpl: !this._footerTpl()
         ? this._buttonsTpl()
         : undefined,
       classes: this._classes(),
-    })
-      .pipe(
-        filter(Boolean),
-        take(1),
-      )
-      .subscribe((modal) => {
-        this.modal.set(modal);
-      });
+    });
+
+    if (modal) {
+      this.modal.set(modal);
+
+      modal.content$
+        .pipe(filter(Boolean))
+        .subscribe(() => this.opened.set(true));
+    }
   }
+
+  public close(): void {
+    if (this.opened()) {
+      this.service.closeModal(this.id());
+    }
+  }
+
+
+  // Internal implementation
 
   private _validateInputs(): void {
     if (this.title() && this._headerTpl()) {
       console.warn(
-        'Specified both "<fm-modal-header />" component and the "title" property value ' +
+        'Specified both "*fmModalHeader" directive and the "title" property value ' +
         'at the same time for the displaying modal. ' +
-        'The "<fm-modal-header />" takes precedence over the "title" property, ' +
+        'The "*fmModalHeader" directive content takes precedence over the "title" property, ' +
         'so the "title" bound value was ignored.'
       );
     }
 
-    if (this._footerTpl() && this._buttonsRef()) {
+    if (this._footerTpl() && this._buttonsTpl()?.length) {
       console.warn(
-        'Specified both "<fm-modal-footer />" and "<fm-modal-buttons />" components ' +
+        'Specified both "*fmModalFooter" and "*fmModalButton" directives ' +
         'at the same time for the displaying modal. ' +
-        'The "<fm-modal-footer />" component takes precedence over the "<fm-modal-buttons />" component, ' +
-        'so the last one was ignored.'
+        'The "*fmModalFooter" directive content takes precedence over buttons specified ' +
+        'via the "*fmModalButton" directive, so the last one was ignored.'
       );
     }
   }

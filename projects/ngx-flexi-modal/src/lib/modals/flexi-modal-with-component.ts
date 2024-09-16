@@ -1,6 +1,6 @@
 import {ComponentRef, Type} from "@angular/core";
 
-import {IFlexiComponentModalCreateOptions} from "../flexi-modals.models";
+import {IFlexiModalComponentConfig, IFlexiModalComponentOptions} from "../flexi-modals.models";
 import {FlexiModal} from "./flexi-modal";
 
 export class FlexiModalWithComponent<
@@ -8,7 +8,8 @@ export class FlexiModalWithComponent<
   InputsT extends object = Record<string, any>
 >
 extends FlexiModal<
-  IFlexiComponentModalCreateOptions<ComponentT, InputsT>,
+  IFlexiModalComponentConfig<ComponentT, InputsT>,
+  IFlexiModalComponentOptions<ComponentT, InputsT>,
   ComponentRef<ComponentT>,
   Type<ComponentT>
 >{
