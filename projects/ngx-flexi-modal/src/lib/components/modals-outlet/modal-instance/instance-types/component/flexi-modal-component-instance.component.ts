@@ -44,7 +44,7 @@ implements AfterViewInit {
 
     if (componentRef && componentInputs) {
       for (const inputName in componentInputs) {
-        if (componentInputs.hasOwnProperty(inputName)) {
+        if (Object.hasOwnProperty.call(componentInputs, inputName)) {
           componentRef.setInput(inputName, componentInputs[inputName]);
         }
       }

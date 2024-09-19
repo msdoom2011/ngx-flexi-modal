@@ -47,7 +47,7 @@ export class FlexiModalInstanceLayoutComponent {
       width: '100%',
     };
 
-    if (modalWidthPresets.hasOwnProperty(widthOpt)) {
+    if (widthOpt in modalWidthPresets) {
       styles.maxWidth = modalWidthPresets[<keyof typeof modalWidthPresets>widthOpt];
 
     } else if (typeof widthOpt === 'number') {
@@ -78,9 +78,8 @@ export class FlexiModalInstanceLayoutComponent {
 
     if (scrollOpt === 'modal') {
       return styles;
-    }
 
-    if (heightOpt === 'fit-content') {
+    } else if (heightOpt === 'fit-content') {
       styles.maxHeight = '100%';
 
     } else if (typeof heightOpt === 'number') {

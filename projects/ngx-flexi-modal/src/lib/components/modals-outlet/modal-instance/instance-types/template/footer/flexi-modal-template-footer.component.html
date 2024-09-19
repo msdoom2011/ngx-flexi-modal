@@ -8,6 +8,7 @@
   <div class="fm-modal-footer--actions">
     @for (actionDirective of actionsTpl; track actionDirective.id) {
       @if (actionDirective.options().visible) {
+        <!-- eslint-disable-next-line -->
         <div
           (click)="onButtonTplClick(actionDirective.options().closeOnClick)"
           [class]="[

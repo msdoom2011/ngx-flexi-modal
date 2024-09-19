@@ -48,7 +48,7 @@ export class FlexiModalComponent implements DoCheck, OnChanges, AfterContentInit
 
   // Dependencies
   public service = inject(FlexiModalsService);
-  public elementRef = inject(ElementRef<any>);
+  public elementRef = inject(ElementRef);
 
   // Inputs
   public opened = model<boolean>(false);

@@ -2,6 +2,11 @@
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
   "newProjectRoot": "projects",
+  "cli": {
+    "schematicCollections": [
+      "@angular-eslint/schematics"
+    ]
+  },
   "projects": {
     "ngx-flexi-modal": {
       "projectType": "library",
@@ -32,6 +37,16 @@
               "zone.js",
               "zone.js/testing"
             ]
+          }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "projects/ngx-flexi-modal/**/*.ts",
+              "projects/ngx-flexi-modal/**/*.html"
+            ],
+            "eslintConfig": "projects/ngx-flexi-modal/eslint.config.js"
           }
         }
       }

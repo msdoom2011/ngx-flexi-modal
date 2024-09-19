@@ -1,6 +1,7 @@
 import {booleanAttribute, Component, input} from '@angular/core';
 
 @Component({
+  // eslint-disable-next-line @angular-eslint/component-selector
   selector: '[fm-button]',
   standalone: true,
   imports: [],

@@ -28,9 +28,7 @@ export class FlexiModalComponentFooterComponent {
   public onButtonClick($event: MouseEvent, actionConfig: IFlexiModalActionConfig): void {
     const modal = this.modal();
 
-    if (!!actionConfig.onClick) {
-      actionConfig.onClick($event, new FlexiModalAction(modal, actionConfig));
-    }
+    actionConfig.onClick?.($event, new FlexiModalAction(modal, actionConfig));
 
     if (actionConfig.closeOnClick) {
       modal.close();

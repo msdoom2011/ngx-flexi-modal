@@ -43,9 +43,9 @@ export class FlexiModalsService<
   }
 
   constructor() {
-    this._extensions = (
+    this._extensions = <Record<keyof ExtensionOptionsByTypesT, IFlexiModalExtensionTypeConfig>>(
       this._extensionsArr.reduce((result, extension) => ({...result, ...extension}), {})
-    ) as Record<keyof ExtensionOptionsByTypesT, IFlexiModalExtensionTypeConfig>;
+    );
   }
 
   public registerExtension(extension: IFlexiModalExtension<any>): void {

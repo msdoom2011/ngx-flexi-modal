@@ -5,13 +5,19 @@
 }
 
 @if (config.closable) {
+  <!-- eslint-disable-next-line -->
   <div class="fm-modal--closing-layer" (click)="modal().close()"></div>
 }
 
 <div class="fm-modal--body-wrapper" [style]="bodyStyles()">
   <div class="fm-modal--body">
     @if (config.closable) {
-      <div class="fm-modal-close-btn" (click)="modal().close()">
+      <div
+        tabindex="0"
+        class="fm-modal-close-btn"
+        (click)="modal().close()"
+        (keydown.enter)="modal().close()"
+      >
         <span class="line"></span>
         <span class="line"></span>
       </div>

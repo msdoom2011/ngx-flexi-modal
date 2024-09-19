@@ -26,7 +26,9 @@ export interface IFlexiModalAware {
   modal: InputSignal<FlexiModalWithComponent>;
 }
 
-export interface IFlexiModalExtensionOptionsByTypes extends IFlexiModalBasicOptionsByTypes {}
+export interface IFlexiModalExtensionOptionsByTypes extends IFlexiModalBasicOptionsByTypes {
+  // Must be empty here
+}
 
 export type IFlexiModalExtension<ModalTypeT extends IFlexiModalExtensionOptionsByTypes> = {
   [K in keyof ModalTypeT]: IFlexiModalExtensionTypeConfig;
@@ -83,8 +85,8 @@ export type IFlexiModalComponentOptions<ComponentT, InputsT extends object = Rec
 export interface IFlexiModalTemplateConfig<ContextT extends object>
 extends IFlexiModalConfig<FlexiModalWithTemplate<ContextT>> {
   context: ContextT | null,
-  headerTpl: TemplateRef<any> | undefined;
-  footerTpl: TemplateRef<any> | undefined;
+  headerTpl: TemplateRef<unknown> | undefined;
+  footerTpl: TemplateRef<unknown> | undefined;
   actionsTpl: Array<FlexiModalActionDirective>;
 }
 
