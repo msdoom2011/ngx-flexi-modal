@@ -1,5 +1,4 @@
 import {IFlexiModalActionConfig, IFlexiModalConfig,} from "./flexi-modals.models";
-import {FLEXI_MODAL_DEFAULT_THEME} from "./services/theme/themes/flexi-modal-default.theme";
 
 export enum FlexiModalEventType {
   BeforeOpen = 'BEFORE_OPEN',

@@ -1,9 +1,8 @@
 import {computed, Inject, Injectable, Optional, Signal, signal} from "@angular/core";
 
-import {FLEXI_MODAL_DEFAULT_THEME, flexiModalDefaultColors} from "./themes/flexi-modal-default.theme";
+import {FLEXI_MODAL_DEFAULT_THEME, flexiModalCssVars, flexiModalDefaultColors} from "./flexi-modal-theme.constants";
 import {IFlexiModalColorScheme, IFlexiModalTheme, IFlexiModalThemes} from "./flexi-modal-theme.models";
 import {FLEXI_MODAL_COLOR_SCHEME, FLEXI_MODAL_THEME} from "../../flexi-modals.tokens";
-import {flexiModalCssVars} from "./flexi-modal-theme.constants";
 
 @Injectable({
   providedIn: "root",
