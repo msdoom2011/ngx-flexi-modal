@@ -20,16 +20,16 @@
   width: 24px;
   height: 24px;
   border-radius: 100%;
-  background: white;
+  background: var(--fm-color-body-bg);
   opacity: 0.5;
-  transition: opacity 200ms ease;
+  transition: opacity 200ms ease, background 200ms ease;
 
   .line {
     display: block;
     width: 13px;
     height: 1px;
     position: absolute;
-    background: #333;
+    background: var(--fm-color-body-text);
     transform: rotate(45deg);
 
     & + .line {
@@ -43,7 +43,7 @@
 }
 
 .fm-modals--backdrop {
-  background: rgba(4, 67, 81, 0.5);
+  background: var(--fm-color-backdrop);
   position: absolute;
   left: 0;
   top: 0;
@@ -71,9 +71,11 @@
   display: flex;
   flex-direction: column;
   position: relative;
-  background: white;
+  background: var(--fm-color-body-bg);
   border-radius: 8px;
-  box-shadow: 0 5px 20px 0 rgba(0, 0, 0, 0.3)
+  box-shadow:
+    0 5px 20px 0 rgba(0, 0, 0, 0.3),
+    0 0 0 1px var(--fm-color-border);
 }
 
 .fm-modal--content {

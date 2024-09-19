@@ -20,6 +20,7 @@ export interface IFlexiModalBasicOptions extends IFlexiModalBasicInputs {
   title?: string;
   onClose?: (modal: FlexiModalComponentInstanceComponent<any>) => void;
   aliveUntil?: Observable<unknown>;
+  theme?: string;
 }
 
 export interface IFlexiModalConfirmOptions extends IFlexiModalBasicOptions {

@@ -30,7 +30,7 @@ import {FlexiModalCloseEvent} from "../../events/flexi-modal-close.event";
 import {FlexiModalOpenEvent} from "../../events/flexi-modal-open.event";
 import {FlexiModalsService} from "../../flexi-modals.service";
 import {
-  IFlexiModalTemplateConfig,
+  IFlexiModalTemplateConfig, IFlexiModalTemplateOptions,
   TFlexiModalHeight,
   TFlexiModalScroll,
   TFlexiModalWidth
@@ -58,6 +58,7 @@ export class FlexiModalComponent implements DoCheck, OnChanges, AfterContentInit
   public scroll = input<TFlexiModalScroll>();
   public closable = input<boolean>(true);
   public customId = input<string>('', { alias: 'id' });
+  public data = input<any>();
 
   // Outputs
   public changeEvent = output<FlexiModalUpdateEvent>({ alias: 'change' });
@@ -186,9 +187,9 @@ export class FlexiModalComponent implements DoCheck, OnChanges, AfterContentInit
       return;
     }
 
-    const options: Partial<IFlexiModalTemplateConfig<any>> = {};
+    const options: IFlexiModalTemplateOptions<any> = {};
     const optionNames: Array<keyof IFlexiModalTemplateConfig<any>> = [
-      'title', 'width', 'height', 'scroll', 'closable'
+      'title', 'width', 'height', 'scroll', 'closable', 'data',
     ];
 
     for (const optionName of optionNames) {
@@ -235,10 +236,9 @@ export class FlexiModalComponent implements DoCheck, OnChanges, AfterContentInit
       aliveUntil: this._destroy$,
       headerTpl: this._headerTpl(),
       footerTpl: this._footerTpl(),
-      actionsTpl: !this._footerTpl()
-        ? this._actionsTpl()
-        : undefined,
+      actionsTpl: !this._footerTpl() ? this._actionsTpl() : undefined,
       classes: this._classes(),
+      data: this.data(),
     });
 
     if (modal) {

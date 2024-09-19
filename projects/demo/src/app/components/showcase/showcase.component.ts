@@ -14,7 +14,7 @@ import {ModalAwareComponent} from "../modal-content/modal-aware/modal-aware.comp
 import {TemplateAwareComponent} from "../modal-content/template-aware/template-aware.component";
 
 @Component({
-  selector: 'app-showcase',
+  selector: 'fm-app-showcase',
   standalone: true,
   imports: [
     FlexiModalComponent,
@@ -47,7 +47,18 @@ export class ShowcaseComponent {
         {
           label: 'Okay',
           onClick: () => alert('Okay!')
-        }
+        },
+        {
+          closeOnClick: false,
+          label: 'Show error',
+          theme: 'secondary',
+          onClick: () => {
+            this.modalsService.replaceWith('error', {
+              message: 'Some internal error',
+              theme: 'light'
+            });
+          }
+        },
       ]
     });
   }

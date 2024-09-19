@@ -5,16 +5,18 @@
   border: 0;
   padding: 0 12px;
   margin: 0 9px;
-  background: white;
-  color: #6DA6AD;
+  background: var(--fm-color-action-bg);
+  color: var(--fm-color-action-text);
   font-weight: bold;
   cursor: pointer;
-  transition: background 200ms ease,
-  box-shadow 200ms ease,
-  filter 200ms ease;
+  transition:
+    background 200ms ease,
+    color 200ms ease,
+    box-shadow 200ms ease,
+    filter 200ms ease;
 
   &:hover {
-    background-color: #e8f6f8;
+    filter: brightness(0.95);
   }
 
   &:active {
@@ -22,9 +24,8 @@
   }
 
   &.primary {
-    color: #fff;
-    background-color: #6DA6AD;
-    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.25);
+    color: var(--fm-color-action-primary-text);
+    background-color: var(--fm-color-action-primary-bg);
 
     &:hover {
       filter: brightness(1.1);
@@ -37,6 +38,6 @@
 
   &:focus {
     outline: none;
-    box-shadow: 0 0 0 4px rgba(109, 166, 173, 0.4);
+    box-shadow: 0 0 0 4px var(--fm-color-action-focus-outline);
   }
 }

@@ -1,4 +1,5 @@
 import {IFlexiModalActionConfig, IFlexiModalConfig,} from "./flexi-modals.models";
+import {FLEXI_MODAL_DEFAULT_THEME} from "./services/theme/themes/flexi-modal-default.theme";
 
 export enum FlexiModalEventType {
   BeforeOpen = 'BEFORE_OPEN',
@@ -27,8 +28,13 @@ export const flexiModalOptionsDefault: IFlexiModalConfig<any> = {
   height: 'fit-content',
   scroll: 'modal',
   closable: true,
+  closeBtn: {
+    label: undefined,
+    position: 'outside',
+  },
   classes: undefined,
   aliveUntil: undefined,
+  theme: undefined,
   data: {},
 };
 

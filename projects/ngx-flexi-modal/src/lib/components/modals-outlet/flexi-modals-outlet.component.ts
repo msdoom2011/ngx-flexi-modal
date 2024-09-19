@@ -1,6 +1,7 @@
-import {ChangeDetectionStrategy, Component, effect, inject} from '@angular/core';
+import {ChangeDetectionStrategy, Component, effect, ElementRef, inject} from '@angular/core';
 import {NgComponentOutlet, NgForOf, NgTemplateOutlet} from "@angular/common";
 
+import {FlexiModalThemeService} from "../../services/theme/flexi-modal-theme.service";
 import {fadeInOutAnimation} from "../../animations/fade-in-out.animation";
 import {FlexiModalsService} from "../../flexi-modals.service";
 import {
@@ -31,9 +32,12 @@ export class FlexiModalsOutletComponent {
 
   // Dependencies
   private _service = inject(FlexiModalsService);
+  private _themes = inject(FlexiModalThemeService);
+  private _elementRef = inject(ElementRef<HTMLElement>);
 
   // Signals
   public modals = this._service.modals;
+  public theme = this._themes.theme;
 
   // Private props
   private _bodyStyle: HTMLStyleElement | null = null;
@@ -55,5 +59,9 @@ export class FlexiModalsOutletComponent {
       this._bodyStyle.remove();
       this._bodyStyle = null;
     }
+  });
+
+  private _themeEffect = effect(() => {
+    this._themes.applyTheme(this._elementRef.nativeElement);
   });
 }

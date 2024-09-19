@@ -1,8 +1,8 @@
 import {InputSignal, TemplateRef, Type} from "@angular/core";
 import {Observable} from "rxjs";
 
-import {FlexiModalActionDirective} from "./directives/flexi-modal-action.directive";
 import {IFlexiModalBasicOptionsByTypes} from "./extensions/basic/flexi-modal-basic.models";
+import {FlexiModalActionDirective} from "./directives/flexi-modal-action.directive";
 import {FlexiModalBeforeCloseEvent} from "./events/flexi-modal-before-close.event";
 import {FlexiModalBeforeOpenEvent} from "./events/flexi-modal-before-open.event";
 import {FlexiModalWithComponent} from "./modals/flexi-modal-with-component";
@@ -19,12 +19,26 @@ export type TFlexiModalHeight = 'fit-content' | number;
 export type TFlexiModalScroll = 'modal' | 'content';
 export type TFlexiModalButtonTheme = 'primary' | 'secondary';
 export type TFlexiModalButtonPosition = 'left' | 'center' | 'right';
+export type TFlexiModalCloseButtonPosition = 'outside' | 'inside';
+export type TFlexiModalEvent = (
+  FlexiModalBeforeOpenEvent
+  | FlexiModalOpenEvent
+  | FlexiModalBeforeCloseEvent
+  | FlexiModalCloseEvent
+  | FlexiModalUpdateEvent
+);
+
+
+// Modal aware component interface
 
 // Applicable only for components that will be opened via showComponent method
 // Implementing this interface provides access to the modal instance inside the rendered component.
 export interface IFlexiModalAware {
   modal: InputSignal<FlexiModalWithComponent>;
 }
+
+
+// Extensions
 
 export interface IFlexiModalExtensionOptionsByTypes extends IFlexiModalBasicOptionsByTypes {
   // Must be empty here
@@ -42,13 +56,8 @@ export interface IFlexiModalExtensionTypeConfig<
   convert: (config: ShortcutModalOptionsT) => IFlexiModalComponentOptions<ComponentT>;
 }
 
-export type TFlexiModalEvent = (
-  FlexiModalBeforeOpenEvent
-  | FlexiModalOpenEvent
-  | FlexiModalBeforeCloseEvent
-  | FlexiModalCloseEvent
-  | FlexiModalUpdateEvent
-);
+
+// Modal config
 
 export interface IFlexiModalConfig<FlexiModalT extends FlexiModal> {
   id: string;
@@ -60,6 +69,10 @@ export interface IFlexiModalConfig<FlexiModalT extends FlexiModal> {
   height: TFlexiModalHeight;
   scroll: TFlexiModalScroll;
   closable: boolean;
+  // TODO: needs to be implemented
+  closeBtn: IFlexiModalCloseButtonConfig | boolean | undefined;
+  // TODO: needs to be implemented
+  theme: string | undefined;
   classes: Array<string> | undefined;
   aliveUntil: Observable<unknown> | undefined;
   // Random data that can be used to read for example in event listeners.
@@ -67,20 +80,32 @@ export interface IFlexiModalConfig<FlexiModalT extends FlexiModal> {
   data: {};
 }
 
-export type IFlexiModalOptions<FlexiModalT extends FlexiModal> = (
-  Partial<Omit<IFlexiModalConfig<FlexiModalT>, 'actions'>>
-  & { actions?: Array<IFlexiModalActionOptions> }
+type TModalOptions<ConfigT extends IFlexiModalConfig<any>> = (
+  Partial<Omit<ConfigT, 'actions' | 'closeBtn'>>
+  & {
+    actions?: Array<IFlexiModalActionOptions>,
+    closeBtn?: Partial<IFlexiModalCloseButtonConfig>
+  }
 );
+
+export type IFlexiModalOptions<
+  FlexiModalT extends FlexiModal
+> = TModalOptions<IFlexiModalConfig<FlexiModalT>>;
+
+
+// Component Modals
 
 export interface IFlexiModalComponentConfig<ComponentT, InputsT extends object = Record<string, any>>
 extends IFlexiModalConfig<FlexiModalWithComponent<ComponentT>> {
   inputs: InputsT;
 }
 
-export type IFlexiModalComponentOptions<ComponentT, InputsT extends object = Record<string, any>> = (
-  Partial<Omit<IFlexiModalComponentConfig<ComponentT, InputsT>, 'actions'>>
-  & { actions?: Array<IFlexiModalActionOptions> }
-);
+export type IFlexiModalComponentOptions<
+  ComponentT, InputsT extends object = Record<string, any>
+> = TModalOptions<IFlexiModalComponentConfig<ComponentT, InputsT>>;
+
+
+// Template Modals
 
 export interface IFlexiModalTemplateConfig<ContextT extends object>
 extends IFlexiModalConfig<FlexiModalWithTemplate<ContextT>> {
@@ -90,10 +115,20 @@ extends IFlexiModalConfig<FlexiModalWithTemplate<ContextT>> {
   actionsTpl: Array<FlexiModalActionDirective>;
 }
 
-export type IFlexiModalTemplateOptions<ContextT extends object> = (
-  Partial<Omit<IFlexiModalTemplateConfig<ContextT>, 'actions'>>
-  & { actions?: Array<IFlexiModalActionOptions> }
-);
+export type IFlexiModalTemplateOptions<
+  ContextT extends object
+> = TModalOptions<IFlexiModalTemplateConfig<ContextT>>;
+
+
+// CloseBtn config
+
+export interface IFlexiModalCloseButtonConfig {
+  label: string | undefined;
+  position: TFlexiModalCloseButtonPosition;
+}
+
+
+// Actions
 
 interface IFlexiModalActionOptionsRequired {
   label: string;

@@ -4,7 +4,7 @@ import {FlexiModalsOutletComponent} from "ngx-flexi-modal";
 import {ShowcaseComponent} from "./components/showcase/showcase.component";
 
 @Component({
-  selector: 'app-root',
+  selector: 'fm-app-root',
   standalone: true,
   imports: [
     FlexiModalsOutletComponent,

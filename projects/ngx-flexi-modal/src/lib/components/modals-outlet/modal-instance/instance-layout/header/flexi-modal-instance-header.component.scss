@@ -5,5 +5,6 @@
   height: 40px;
   padding: 8px 18px;
   border-radius: 8px 8px 0 0;
-  background-color: #d9d9d9;
+  background-color: var(--fm-color-header-bg);
+  border-bottom: 1px solid var(--fm-color-border);
 }

@@ -1,6 +1,7 @@
 import {ComponentRef, EmbeddedViewRef, inject, Injectable, Signal, signal, TemplateRef, Type} from "@angular/core";
 import {BehaviorSubject, filter, Observable, Subject} from "rxjs";
 
+import {FLEXI_MODAL_DEFAULT_OPTIONS, FLEXI_MODAL_EXTENSION} from "./flexi-modals.tokens";
 import {FlexiModalBeforeCloseEvent} from "./events/flexi-modal-before-close.event";
 import {FlexiModalBeforeOpenEvent} from "./events/flexi-modal-before-open.event";
 import {FlexiModalWithComponent} from "./modals/flexi-modal-with-component";
@@ -9,8 +10,8 @@ import {FlexiModalUpdateEvent} from "./events/flexi-modal-update.event";
 import {FlexiModalCloseEvent} from "./events/flexi-modal-close.event";
 import {FlexiModalOpenEvent} from "./events/flexi-modal-open.event";
 import {flexiModalOptionsDefault} from "./flexi-modals.constants";
-import {FLEXI_MODAL_EXTENSION} from "./flexi-modals.tokens";
 import {FlexiModal} from "./modals/flexi-modal";
+import {isPlainObject} from "./tools/utils";
 import {
   IFlexiModalComponentOptions,
   IFlexiModalExtension,
@@ -21,12 +22,16 @@ import {
   TFlexiModalEvent
 } from "./flexi-modals.models";
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class FlexiModalsService<
   ExtensionOptionsByTypesT extends IFlexiModalExtensionOptionsByTypes = IFlexiModalExtensionOptionsByTypes
 > {
 
   private readonly _extensionsArr = inject<Array<IFlexiModalExtension<ExtensionOptionsByTypesT>>>(FLEXI_MODAL_EXTENSION);
+
+  private readonly _defaultOptions = inject<IFlexiModalOptions<any> | undefined>(FLEXI_MODAL_DEFAULT_OPTIONS, { optional: true });
 
   private readonly _extensions: Record<keyof ExtensionOptionsByTypesT, IFlexiModalExtensionTypeConfig> = <any>{};
 
@@ -46,6 +51,14 @@ export class FlexiModalsService<
     this._extensions = <Record<keyof ExtensionOptionsByTypesT, IFlexiModalExtensionTypeConfig>>(
       this._extensionsArr.reduce((result, extension) => ({...result, ...extension}), {})
     );
+
+    if (this._defaultOptions && !isPlainObject(this._defaultOptions)) {
+      throw new Error(
+        'Provided invalid default options object using injection token ' +
+        '"FLEXI_MODAL_DEFAULT_OPTIONS" for the ngx-flexi-modal library. ' +
+        'It should be a plain object.'
+      );
+    }
   }
 
   public registerExtension(extension: IFlexiModalExtension<any>): void {
@@ -77,6 +90,29 @@ export class FlexiModalsService<
     return this._showModal(modal);
   }
 
+  public replaceWithComponent<ComponentT extends object = any>(
+    component: Type<ComponentT>,
+  ): FlexiModalWithComponent<ComponentT> | null;
+
+  public replaceWithComponent<ComponentT extends object = any>(
+    component: Type<ComponentT>,
+    takeUntil$: Observable<any>
+  ): FlexiModalWithComponent<ComponentT> | null;
+
+  public replaceWithComponent<ComponentT extends object = any>(
+    component: Type<ComponentT>,
+    options: IFlexiModalComponentOptions<ComponentT>
+  ): FlexiModalWithComponent<ComponentT> | null;
+
+  public replaceWithComponent<ComponentT extends object = any>(
+    component: Type<ComponentT>,
+    takeUntilOrOptions?: Observable<any> | IFlexiModalComponentOptions<ComponentT>
+  ): FlexiModalWithComponent<ComponentT> | null {
+    this.closeAll();
+
+    return this.showComponent<ComponentT>(component, <any>takeUntilOrOptions);
+  }
+
   public showTemplate<ContextT extends object = {}>(
     template: TemplateRef<ContextT>,
   ): FlexiModalWithTemplate<ContextT> | null;
@@ -102,6 +138,29 @@ export class FlexiModalsService<
     return this._showModal(modal);
   }
 
+  public replaceWithTemplate<ContextT extends object = {}>(
+    template: TemplateRef<ContextT>,
+  ): FlexiModalWithTemplate<ContextT> | null;
+
+  public replaceWithTemplate<ContextT extends object = {}>(
+    template: TemplateRef<ContextT>,
+    takeUntil$: Observable<unknown>,
+  ): FlexiModalWithTemplate<ContextT> | null;
+
+  public replaceWithTemplate<ContextT extends object = {}>(
+    template: TemplateRef<ContextT>,
+    options: IFlexiModalTemplateOptions<ContextT>,
+  ): FlexiModalWithTemplate<ContextT> | null;
+
+  public replaceWithTemplate<ContextT extends object = {}>(
+    template: TemplateRef<ContextT>,
+    takeUntilOrOptions?: Observable<any> | IFlexiModalTemplateOptions<ContextT>,
+  ): FlexiModalWithTemplate<ContextT> | null {
+    this.closeAll();
+
+    return this.showTemplate<ContextT>(template, <any>takeUntilOrOptions);
+  }
+
   public show<
     ComponentT extends object,
     T extends keyof ExtensionOptionsByTypesT
@@ -120,6 +179,18 @@ export class FlexiModalsService<
       modalTypeConfig.component,
       modalTypeConfig.convert(options),
     );
+  }
+
+  public replaceWith<
+    ComponentT extends object,
+    T extends keyof ExtensionOptionsByTypesT
+  >(
+    modalType: T,
+    options: ExtensionOptionsByTypesT[T]
+  ): FlexiModalWithComponent<ComponentT> | null {
+    this.closeAll();
+
+    return this.show(modalType, options);
   }
 
   public updateModal(modalId: string, changes: IFlexiModalOptions<any>): void {
@@ -204,14 +275,26 @@ export class FlexiModalsService<
   private _normalizeOptions<ModalOptionsT extends Partial<IFlexiModalOptions<any>>>(
     takeUntilOrOptions: ModalOptionsT | Observable<unknown> | undefined
   ): ModalOptionsT {
-    return <ModalOptionsT>{
+    const options = <ModalOptionsT>{
       ...flexiModalOptionsDefault,
+      ...(this._defaultOptions || {}),
       ...(
         takeUntilOrOptions instanceof Observable
           ? { aliveUntil: takeUntilOrOptions }
           : (takeUntilOrOptions || {})
       )
     };
+
+    for (const optName in options) {
+      if (
+        Object.prototype.hasOwnProperty.call(options, optName)
+        && options[optName] === undefined
+      ) {
+        delete options[optName];
+      }
+    }
+
+    return options;
   }
 
   private _showModal<ModalT extends FlexiModal>(modal: ModalT): ModalT | null {

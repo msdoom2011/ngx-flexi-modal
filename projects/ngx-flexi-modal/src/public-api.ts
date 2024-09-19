@@ -6,6 +6,7 @@ export * from './lib/flexi-modals.providers';
 export * from './lib/flexi-modals.service';
 export * from './lib/flexi-modals.models';
 export * from './lib/flexi-modals.constants';
+export * from './lib/services/theme/flexi-modal-theme.service';
 export * from './lib/events/flexi-modal-open.event';
 export * from './lib/events/flexi-modal-update.event';
 export * from './lib/modals/flexi-modal';

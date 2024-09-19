@@ -7,13 +7,14 @@ import {
   Injector,
   InputSignal,
   OnChanges,
-  OnDestroy,
+  OnDestroy, OnInit,
   SimpleChanges,
   viewChild,
   ViewContainerRef
 } from '@angular/core';
 import {Subject, Subscription, takeUntil} from "rxjs";
 
+import {FlexiModalThemeService} from "../../../services/theme/flexi-modal-theme.service";
 import {FlexiModalsService} from "../../../flexi-modals.service";
 import {findFocusableElements} from "../../../tools/utils";
 import {FlexiModal} from "../../../modals/flexi-modal";
@@ -30,7 +31,8 @@ export abstract class FlexiModalInstance<ModalT extends FlexiModal> implements O
 
   // Dependencies
   public service = inject(FlexiModalsService);
-  private _elementRef = inject(ElementRef<HTMLElement>);
+  protected _themeService = inject(FlexiModalThemeService);
+  protected _elementRef = inject(ElementRef<HTMLElement>);
   protected _injector = inject(Injector);
 
   // Inputs
@@ -42,6 +44,7 @@ export abstract class FlexiModalInstance<ModalT extends FlexiModal> implements O
   // Private props
   private _destroy$ = new Subject<void>();
   private _destroySubscription!: Subscription;
+  private _theme: string = this._themeService.themeName();
 
 
   // Computed
@@ -69,7 +72,7 @@ export abstract class FlexiModalInstance<ModalT extends FlexiModal> implements O
 
   // Effects
 
-  private _activeEffect = effect(() => {
+  private _modalActiveEffect = effect(() => {
     const focusInModal = this._elementRef.nativeElement.contains(document.activeElement);
     const isActive = this.modal().active;
 
@@ -81,10 +84,20 @@ export abstract class FlexiModalInstance<ModalT extends FlexiModal> implements O
     }
   });
 
+  private _modalConfigEffect = effect(() => {
+    const theme = this.modal().config.theme;
+
+    if (!theme || theme === this._theme) {
+      return;
+    }
+
+    this._themeService.applyTheme(this._elementRef.nativeElement, theme);
+  });
+
 
   // Lifecycle hooks
 
-  public ngOnChanges(changes: SimpleChanges) {
+  public ngOnChanges(changes: SimpleChanges): void {
     const { config } = changes;
 
     if (config?.currentValue) {
