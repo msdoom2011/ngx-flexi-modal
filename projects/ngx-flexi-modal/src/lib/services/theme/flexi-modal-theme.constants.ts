@@ -1,16 +1,16 @@
-import {IFlexiModalColorScheme} from "./flexi-modal-theme.models";
+import {IFlexiModalStylingConfig, IFlexiModalColorScheme} from "./flexi-modal-theme.models";
 
 export const FLEXI_MODAL_DEFAULT_THEME = 'default';
 
 export const flexiModalDefaultColors: IFlexiModalColorScheme = {
-  border: 'transparent',
+  border: '#ccc',
   backdrop: 'rgba(4, 67, 81, 0.5)',
   headerText: '#333',
-  headerBg: '#d9d9d9',
+  headerBg: '#fff',
   bodyText: '#333',
   bodyBg: '#fff',
   footerText: '#333',
-  footerBg: '#d9d9d9',
+  footerBg: '#fff',
   actionBorder: 'transparent',
   actionText: '#6da6ad',
   actionBg: '#fff',
@@ -19,7 +19,17 @@ export const flexiModalDefaultColors: IFlexiModalColorScheme = {
   actionFocusOutline: 'rgba(109, 166, 173, 0.4)',
 }
 
-export const flexiModalCssVars: Record<keyof IFlexiModalColorScheme, string> = {
+export const flexiModalDefaultStyles: IFlexiModalStylingConfig = {
+  frameShadow: '0 5px 20px rgba(0, 0, 0, 0.3)',
+  frameBorder: false,
+  frameRounding: 4,
+  closeBtn: {
+    label: undefined,
+    position: 'inside',
+  },
+};
+
+export const flexiModalCssColorsVars: Record<keyof IFlexiModalColorScheme, string> = {
   border: '--fm-color-border',
   backdrop: '--fm-color-backdrop',
   headerText: '--fm-color-header-text',
@@ -35,3 +45,23 @@ export const flexiModalCssVars: Record<keyof IFlexiModalColorScheme, string> = {
   actionPrimaryBg: '--fm-color-action-primary-bg',
   actionFocusOutline: '--fm-color-action-focus-outline',
 };
+
+export const flexiModalCssStylesVars: (
+  Record<keyof IFlexiModalStylingConfig, string>
+) = {
+  frameRounding: '--fm-frame-border-radius',
+  frameShadow: '--fm-frame-box-shadow',
+  frameBorder: '',
+  closeBtn: '',
+};
+
+export const flexiModalCssStylesValueGetters: (
+  Record<keyof IFlexiModalStylingConfig, ((value: any) => string) | undefined>
+) = {
+  frameRounding: (rounding: number | undefined) => {
+    return typeof rounding === 'number' ? rounding + 'px' : '0';
+  },
+  frameShadow: undefined,
+  frameBorder: undefined,
+  closeBtn: undefined,
+}

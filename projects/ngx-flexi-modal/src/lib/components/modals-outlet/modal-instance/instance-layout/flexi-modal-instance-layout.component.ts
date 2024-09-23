@@ -1,46 +1,54 @@
-import {ChangeDetectionStrategy, Component, computed, input} from '@angular/core';
-import {NgComponentOutlet} from "@angular/common";
+import {ChangeDetectionStrategy, Component, computed, inject, input} from '@angular/core';
+import {NgComponentOutlet, NgTemplateOutlet} from "@angular/common";
 
 import {FlexiModalInstanceFooterComponent} from "./footer/flexi-modal-instance-footer.component";
 import {FlexiModalInstanceHeaderComponent} from "./header/flexi-modal-instance-header.component";
+import {FlexiModalThemeService} from "../../../../services/theme/flexi-modal-theme.service";
 import {modalWidthPresets} from "../../../../flexi-modals.constants";
 import {FlexiModal} from "../../../../modals/flexi-modal";
 
 @Component({
   selector: 'fm-modal-instance-layout',
+  templateUrl: './flexi-modal-instance-layout.component.html',
+  styleUrl: './flexi-modal-instance-layout.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [
     NgComponentOutlet,
     FlexiModalInstanceFooterComponent,
-    FlexiModalInstanceHeaderComponent
+    FlexiModalInstanceHeaderComponent,
+    NgTemplateOutlet
   ],
-  templateUrl: './flexi-modal-instance-layout.component.html',
-  styleUrl: './flexi-modal-instance-layout.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FlexiModalInstanceLayoutComponent {
 
+  // Dependencies
+  private readonly _themeService = inject(FlexiModalThemeService);
+
   // Inputs
-  public modal = input.required<FlexiModal>();
+  public readonly modal = input.required<FlexiModal>();
+
+  // Signals
+  public readonly theme = this._themeService.theme;
 
 
   // Computed
 
-  public isOverlayVisible = computed(() => {
+  public readonly isOverlayVisible = computed(() => {
     return (
       this.modal().service.modals().length > 0
       && this.modal().index > 0
     );
   });
 
-  public bodyStyles = computed(() => {
+  public readonly bodyStyles = computed(() => {
     return {
       ...this._widthStyles(),
       ...this._heightStyles(),
     };
   });
 
-  private _widthStyles = computed(() => {
+  private readonly _widthStyles = computed(() => {
     const widthOpt = this.modal().config.width || '';
     const styles: Partial<CSSStyleDeclaration> = {
       minWidth: modalWidthPresets['tiny'],
@@ -69,7 +77,7 @@ export class FlexiModalInstanceLayoutComponent {
     return styles;
   });
 
-  private _heightStyles = computed(() => {
+  private readonly _heightStyles = computed(() => {
     const heightOpt = this.modal().config.height || '';
     const scrollOpt = this.modal().config.scroll || '';
     const styles: Partial<CSSStyleDeclaration> = {

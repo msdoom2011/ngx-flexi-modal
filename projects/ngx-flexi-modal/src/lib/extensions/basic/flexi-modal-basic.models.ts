@@ -1,9 +1,8 @@
 import {Observable} from "rxjs";
 
+import {FlexiModalBeforeCloseEvent} from "../../events/flexi-modal-before-close.event";
+import {FlexiModalWithComponent} from "../../modals/flexi-modal-with-component";
 import {FlexiModalAction} from "../../modals/actions/flexi-modal-action";
-import {
-  FlexiModalComponentInstanceComponent
-} from "../../components/modals-outlet/modal-instance/instance-types/component/flexi-modal-component-instance.component";
 
 export type TFlexiModalBasicIcon = keyof IFlexiModalBasicOptionsByTypes | null;
 export type TFlexiModalBasicAlign = 'left' | 'center' | 'right';
@@ -18,7 +17,8 @@ export interface IFlexiModalBasicOptionsByTypes {
 
 export interface IFlexiModalBasicOptions extends IFlexiModalBasicInputs {
   title?: string;
-  onClose?: (modal: FlexiModalComponentInstanceComponent<any>) => void;
+  onOpen?: (($event: FlexiModalBeforeCloseEvent<FlexiModalWithComponent>) => unknown) | undefined;
+  onClose?: (($event: FlexiModalBeforeCloseEvent<FlexiModalWithComponent>) => unknown) | undefined;
   aliveUntil?: Observable<unknown>;
   theme?: string;
 }

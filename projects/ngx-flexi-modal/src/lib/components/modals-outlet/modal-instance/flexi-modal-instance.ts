@@ -91,7 +91,7 @@ export abstract class FlexiModalInstance<ModalT extends FlexiModal> implements O
       return;
     }
 
-    this._themeService.applyTheme(this._elementRef.nativeElement, theme);
+    this._themeService.applyThemeStyles(this._elementRef.nativeElement, theme);
   });
 
 

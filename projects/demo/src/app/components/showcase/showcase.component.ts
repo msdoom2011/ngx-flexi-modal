@@ -1,4 +1,4 @@
-import {Component, inject, signal} from '@angular/core';
+import {Component, computed, inject, signal} from '@angular/core';
 import {
   FlexiModalBodyDirective,
   FlexiModalActionDirective,
@@ -8,6 +8,7 @@ import {
   FlexiModalOpenEvent,
   FlexiModalsService,
   FlexiButtonComponent,
+  FlexiModalThemeService,
 } from "ngx-flexi-modal";
 
 import {ModalAwareComponent} from "../modal-content/modal-aware/modal-aware.component";
@@ -34,11 +35,38 @@ export class ShowcaseComponent {
 
   // Dependencies
   private modalsService = inject<FlexiModalsService>(FlexiModalsService);
+  private modalsThemeService = inject<FlexiModalThemeService>(FlexiModalThemeService);
 
   // Signals
   public buttonVisible = signal(true);
+  public themesConfigs = this.modalsThemeService.themes;
+  public themeActive = this.modalsThemeService.themeName;
+
+
+  // Computed
+
+  public themes = computed(() => {
+    const themesConfigs = this.themesConfigs();
+    const themes = [];
+
+    for (const themeName in themesConfigs) {
+      if (Object.prototype.hasOwnProperty.call(themesConfigs, themeName)) {
+        themes.push({
+          name: themeName,
+          default: this.modalsThemeService.themeName() === themeName,
+          ...themesConfigs[themeName],
+        })
+      }
+    }
+
+    return themes;
+  });
 
   // Callbacks
+
+  public onThemeChange(themeName: string): void {
+    this.modalsThemeService.setTheme(themeName);
+  }
 
   public onOpenComponentModal(): void {
     this.modalsService.showComponent(ModalAwareComponent, {
@@ -53,7 +81,8 @@ export class ShowcaseComponent {
           label: 'Show error',
           theme: 'secondary',
           onClick: () => {
-            this.modalsService.replaceWith('error', {
+            this.modalsService.closeAll();
+            this.modalsService.show('error', {
               message: 'Some internal error',
               theme: 'light'
             });

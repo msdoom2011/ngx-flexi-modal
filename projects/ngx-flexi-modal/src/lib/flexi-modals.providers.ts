@@ -1,9 +1,14 @@
 import {EnvironmentProviders, makeEnvironmentProviders, Provider} from "@angular/core";
 
-import {IFlexiModalColorScheme, IFlexiModalTheme} from "./services/theme/flexi-modal-theme.models";
 import {flexiModalBasicExtension} from "./extensions/basic/flexi-modal-basic.extension";
 import {IFlexiModalOptions} from "./flexi-modals.models";
 import {
+  IFlexiModalStylingOptions,
+  IFlexiModalColorScheme,
+  IFlexiModalThemeOptions
+} from "./services/theme/flexi-modal-theme.models";
+import {
+  FLEXI_MODAL_STYLING_OPTIONS,
   FLEXI_MODAL_COLOR_SCHEME,
   FLEXI_MODAL_DEFAULT_OPTIONS,
   FLEXI_MODAL_EXTENSION,
@@ -41,7 +46,13 @@ export function withColorScheme(colors: Partial<IFlexiModalColorScheme>): Array<
   ];
 }
 
-export function withThemes(themes: Array<IFlexiModalTheme>): Array<Provider> {
+export function withStyling(options: IFlexiModalStylingOptions): Array<Provider> {
+  return [
+    { provide: FLEXI_MODAL_STYLING_OPTIONS, useValue: options },
+  ];
+}
+
+export function withThemes(themes: Array<IFlexiModalThemeOptions>): Array<Provider> {
   return [
     ...themes.map(themeConfig => (
       { provide: FLEXI_MODAL_THEME, useValue: themeConfig, multi: true }

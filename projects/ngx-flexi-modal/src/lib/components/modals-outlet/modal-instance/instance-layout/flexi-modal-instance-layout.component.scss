@@ -13,8 +13,8 @@
   justify-content: center;
   align-items: center;
   position: absolute;
-  top: -24px;
-  right: -24px;
+  top: -26px;
+  right: -26px;
   z-index: 10;
   cursor: pointer;
   width: 24px;
@@ -60,6 +60,50 @@
   bottom: 0;
 }
 
+.fm-modal--header-wrapper {
+  display: flex;
+  background-color: var(--fm-color-header-bg);
+  border-bottom: 1px solid var(--fm-color-border);
+  border-radius: var(--fm-frame-border-radius) var(--fm-frame-border-radius) 0 0;
+
+  .fm-modal--header-content {
+    width: calc(100% - 40px);
+    flex-grow: 1;
+  }
+
+  .fm-modal--header-actions {
+    min-width: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-left: 1px solid var(--fm-color-border);
+  }
+
+  .fm-modal-close-btn {
+    background-color: var(--fm-color-header-bg);
+    border-radius: 0 var(--fm-frame-border-radius) 0 0;
+    position: static;
+    width: 100%;
+    height: 100%;
+
+    .line {
+      width: 18px;
+    }
+
+    &:hover {
+      filter: brightness(0.9);
+    }
+  }
+
+  &::ng-deep {
+    .fm-modal--header-content fm-modal-instance-header {
+      background: none;
+      border-radius: 0;
+      border: 0;
+    }
+  }
+}
+
 .fm-modal--body-wrapper {
   position: relative;
   z-index: 10;
@@ -72,10 +116,22 @@
   flex-direction: column;
   position: relative;
   background: var(--fm-color-body-bg);
-  border-radius: 8px;
+  border-radius: var(--fm-frame-border-radius);
   box-shadow:
-    0 5px 20px 0 rgba(0, 0, 0, 0.3),
+    var(--fm-frame-box-shadow),
     0 0 0 1px var(--fm-color-border);
+
+  &.no-shadow {
+    box-shadow: 0 0 0 1px var(--fm-color-border);
+  }
+
+  &.no-border {
+    box-shadow: var(--fm-frame-box-shadow);
+  }
+
+  &.no-shadow.no-border {
+    box-shadow: none;
+  }
 }
 
 .fm-modal--content {

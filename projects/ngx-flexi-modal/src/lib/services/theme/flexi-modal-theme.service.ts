@@ -1,8 +1,22 @@
 import {computed, Inject, Injectable, Optional, Signal, signal} from "@angular/core";
 
-import {FLEXI_MODAL_DEFAULT_THEME, flexiModalCssVars, flexiModalDefaultColors} from "./flexi-modal-theme.constants";
-import {IFlexiModalColorScheme, IFlexiModalTheme, IFlexiModalThemes} from "./flexi-modal-theme.models";
-import {FLEXI_MODAL_COLOR_SCHEME, FLEXI_MODAL_THEME} from "../../flexi-modals.tokens";
+import {FLEXI_MODAL_STYLING_OPTIONS, FLEXI_MODAL_COLOR_SCHEME, FLEXI_MODAL_THEME} from "../../flexi-modals.tokens";
+import {normalizeOptions} from "../../tools/utils";
+import {
+  flexiModalCssStylesValueGetters,
+  flexiModalDefaultStyles,
+  flexiModalCssStylesVars,
+  flexiModalCssColorsVars,
+  flexiModalDefaultColors,
+  FLEXI_MODAL_DEFAULT_THEME
+} from "./flexi-modal-theme.constants";
+import {
+  IFlexiModalStylingOptions,
+  IFlexiModalColorScheme,
+  IFlexiModalTheme,
+  IFlexiModalThemeOptions,
+  IFlexiModalThemes
+} from "./flexi-modal-theme.models";
 
 @Injectable({
   providedIn: "root",
@@ -13,7 +27,7 @@ export class FlexiModalThemeService {
 
   private readonly _themeName = signal<string>('');
 
-  public readonly theme = computed<IFlexiModalColorScheme>(() => {
+  public readonly theme = computed<IFlexiModalTheme>(() => {
     return this._themes()[this._themeName()];
   });
 
@@ -21,14 +35,19 @@ export class FlexiModalThemeService {
     return this._themeName.asReadonly();
   }
 
+  public get themes(): Signal<IFlexiModalThemes> {
+    return this._themes.asReadonly();
+  }
+
   constructor(
-    @Optional() @Inject(FLEXI_MODAL_THEME) themeConfigs: Array<IFlexiModalTheme>,
+    @Optional() @Inject(FLEXI_MODAL_THEME) themeConfigs: Array<IFlexiModalThemeOptions>,
     @Optional() @Inject(FLEXI_MODAL_COLOR_SCHEME) defaultColorScheme: IFlexiModalColorScheme,
+    @Optional() @Inject(FLEXI_MODAL_STYLING_OPTIONS) defaultStylingOptions: IFlexiModalStylingOptions,
   ) {
-    if (themeConfigs?.length && defaultColorScheme) {
+    if (themeConfigs?.length && (defaultColorScheme || defaultStylingOptions)) {
       console.warn(
-        `Specified both providers "FLEXI_MODAL_COLOR_SCHEME" and "FLEXI_MODAL_THEME". ` +
-        `The "FLEXI_MODAL_COLOR_SCHEME" provider was ignored.`
+        `Specified both providers "FLEXI_MODAL_COLOR_SCHEME" or "FLEXI_MODAL_STYLING_OPTIONS" ` +
+        `and "FLEXI_MODAL_THEME". The "FLEXI_MODAL_COLOR_SCHEME" provider was ignored.`
       );
     }
 
@@ -36,7 +55,7 @@ export class FlexiModalThemeService {
       this._initializeWithThemes(themeConfigs);
 
     } else if (defaultColorScheme) {
-      this._initializeWithColors(defaultColorScheme);
+      this._initializeWithOptions(defaultColorScheme, defaultStylingOptions);
 
     } else {
       this._initializeWithDefaults();
@@ -55,50 +74,74 @@ export class FlexiModalThemeService {
     this._themeName.set(themeName);
   }
 
-  public applyTheme(element: HTMLElement, themeName?: string): void {
+  public registerTheme(themeOptions: IFlexiModalThemeOptions): void {
+    if (this.isThemeExist(themeOptions.name)) {
+      throw new Error(`The flexi modal theme with name "${themeOptions.name}" is already registered!`);
+    }
+
+    this._themes.update(themes => {
+      return {
+        ...themes,
+        [themeOptions.name]: this._composeThemeConfig(themeOptions.colors, themeOptions.styling)
+      };
+    });
+  }
+
+  public applyThemeStyles(targetElement: HTMLElement, themeName?: string): void {
     if (
-      !element
+      !targetElement
       || (themeName && !this.isThemeExist(themeName))
     ) {
       return;
     }
 
-    const colors = themeName ? this._themes()[themeName] : this.theme();
+    const theme = themeName ? this._themes()[themeName] : this.theme();
 
-    for (const propName in colors) {
-      if (!Object.prototype.hasOwnProperty.call(colors, propName)) {
-        continue;
-      }
+    this._applyThemeStyles(
+      targetElement,
+      theme.colors,
+      flexiModalCssColorsVars
+    );
 
-      const colorPropName = <keyof IFlexiModalColorScheme>propName;
-
-      element.style.setProperty(
-        flexiModalCssVars[colorPropName],
-        colors[colorPropName]
-      );
-    }
+    this._applyThemeStyles(
+      targetElement,
+      theme.styling,
+      flexiModalCssStylesVars,
+      flexiModalCssStylesValueGetters
+    );
   }
 
   private _initializeWithDefaults(): void {
     this._themeName.set(FLEXI_MODAL_DEFAULT_THEME);
-    this._themes.set({ [FLEXI_MODAL_DEFAULT_THEME]: flexiModalDefaultColors });
+    this._themes.set({
+      [FLEXI_MODAL_DEFAULT_THEME]: {
+        colors: flexiModalDefaultColors,
+        styling: flexiModalDefaultStyles,
+      }
+    });
   }
 
-  private _initializeWithColors(colorsScheme: IFlexiModalColorScheme): void {
+  private _initializeWithOptions(
+    colorsScheme: IFlexiModalColorScheme,
+    stylingOptions: IFlexiModalStylingOptions,
+  ): void {
+
     this._themeName.set(FLEXI_MODAL_DEFAULT_THEME);
-    this._themes.set({ [FLEXI_MODAL_DEFAULT_THEME]: { ...flexiModalDefaultColors, ...colorsScheme }});
+    this._themes.set({
+      [FLEXI_MODAL_DEFAULT_THEME]: this._composeThemeConfig(colorsScheme, stylingOptions),
+    });
   }
 
-  private _initializeWithThemes(themeConfigs: Array<IFlexiModalTheme>): void {
+  private _initializeWithThemes(themeConfigs: Array<IFlexiModalThemeOptions>): void {
     const themes: IFlexiModalThemes = {};
     let themeDefault = '';
 
-    themeConfigs.forEach((themeConfig: IFlexiModalTheme) => {
+    themeConfigs.forEach((themeConfig: IFlexiModalThemeOptions) => {
       if (!this._validateThemeConfig(themeConfig)) {
         return;
       }
 
-      themes[themeConfig.name] = themeConfig.colors;
+      themes[themeConfig.name] = this._composeThemeConfig(themeConfig.colors, themeConfig.styling);
 
       if (themeConfig.default) {
         themeDefault = themeConfig.name;
@@ -109,7 +152,7 @@ export class FlexiModalThemeService {
     this._themeName.set(themeDefault || themeConfigs[0].name);
   }
 
-  private _validateThemeConfig(themeConfig: IFlexiModalTheme): boolean {
+  private _validateThemeConfig(themeConfig: IFlexiModalThemeOptions): boolean {
     if (!themeConfig.name || typeof themeConfig.name !== 'string') {
       console.warn(`"${themeConfig.name}" is not a valid theme name. This theme was skipped.`);
 
@@ -117,5 +160,51 @@ export class FlexiModalThemeService {
     }
 
     return true;
+  }
+
+  private _applyThemeStyles<SchemeT extends Record<string, any>>(
+    targetElement: HTMLElement,
+    scheme: SchemeT,
+    schemeMap: Record<keyof SchemeT, string>,
+    schemeValuesMap?: Record<keyof SchemeT, ((value: any) => string) | undefined>,
+  ): void {
+
+    for (const propName in scheme) {
+      const colorPropName = <keyof SchemeT>propName;
+
+      if (
+        !scheme[colorPropName]
+        || !Object.prototype.hasOwnProperty.call(scheme, propName)
+      ) {
+        continue;
+      }
+
+      targetElement.style.setProperty(
+        schemeMap[colorPropName],
+        schemeValuesMap?.[colorPropName]
+          ? schemeValuesMap[colorPropName](scheme[colorPropName])
+          : scheme[colorPropName]
+      );
+    }
+  }
+
+  private _composeThemeConfig(
+    colorsScheme: Partial<IFlexiModalColorScheme> | undefined,
+    stylingOptions: IFlexiModalStylingOptions | undefined
+  ): IFlexiModalTheme {
+
+    return {
+      colors: {
+        ...flexiModalDefaultColors,
+        ...(colorsScheme || {}),
+      },
+      styling: {
+        ...flexiModalDefaultStyles,
+        ...(stylingOptions
+          ? normalizeOptions(stylingOptions, ['closeBtn', 'frameShadow'])
+          : {}
+        )
+      },
+    }
   }
 }

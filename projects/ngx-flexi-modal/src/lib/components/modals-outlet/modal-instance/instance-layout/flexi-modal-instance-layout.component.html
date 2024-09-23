@@ -10,20 +10,28 @@
 }
 
 <div class="fm-modal--body-wrapper" [style]="bodyStyles()">
-  <div class="fm-modal--body">
-    @if (config.closable) {
-      <div
-        tabindex="0"
-        class="fm-modal-close-btn"
-        (click)="modal().close()"
-        (keydown.enter)="modal().close()"
-      >
-        <span class="line"></span>
-        <span class="line"></span>
+  <div
+    class="fm-modal--body"
+    [class.no-border]="!theme().styling.frameBorder"
+    [class.no-shadow]="!theme().styling.frameShadow"
+  >
+    @if (config.closable && $any(theme().styling.closeBtn)?.position === 'inside') {
+      <div class="fm-modal--header-wrapper">
+        <div class="fm-modal--header-content">
+          <ng-container *ngTemplateOutlet="headerTpl" />
+        </div>
+        <div class="fm-modal--header-actions">
+          <ng-container *ngTemplateOutlet="closeBtnTpl" />
+        </div>
       </div>
-    }
 
-    <ng-content select="fm-modal-instance-header" />
+    } @else {
+      @if (config.closable && !!theme().styling.closeBtn) {
+        <ng-container *ngTemplateOutlet="closeBtnTpl" />
+      }
+
+      <ng-container *ngTemplateOutlet="headerTpl" />
+    }
 
     <div class="fm-modal--content" [class.scrollable]="config.scroll === 'content'">
       <ng-content />
@@ -32,3 +40,19 @@
     <ng-content select="fm-modal-instance-footer" />
   </div>
 </div>
+
+<ng-template #closeBtnTpl>
+  <div
+    tabindex="0"
+    class="fm-modal-close-btn"
+    (click)="modal().close()"
+    (keydown.enter)="modal().close()"
+  >
+    <span class="line"></span>
+    <span class="line"></span>
+  </div>
+</ng-template>
+
+<ng-template #headerTpl>
+  <ng-content select="fm-modal-instance-header" />
+</ng-template>

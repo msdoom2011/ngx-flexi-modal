@@ -10,7 +10,7 @@ import {
   ElementRef,
   inject,
   input,
-  model,
+  model, NgZone,
   OnChanges,
   OnDestroy,
   output,
@@ -30,7 +30,8 @@ import {FlexiModalCloseEvent} from "../../events/flexi-modal-close.event";
 import {FlexiModalOpenEvent} from "../../events/flexi-modal-open.event";
 import {FlexiModalsService} from "../../flexi-modals.service";
 import {
-  IFlexiModalTemplateConfig, IFlexiModalTemplateOptions,
+  IFlexiModalTemplateConfig,
+  IFlexiModalTemplateOptions,
   TFlexiModalHeight,
   TFlexiModalScroll,
   TFlexiModalWidth
@@ -49,6 +50,7 @@ export class FlexiModalComponent implements DoCheck, OnChanges, AfterContentInit
   // Dependencies
   public service = inject(FlexiModalsService);
   public elementRef = inject(ElementRef);
+  private _zone = inject(NgZone);
 
   // Inputs
   public opened = model<boolean>(false);
@@ -56,6 +58,8 @@ export class FlexiModalComponent implements DoCheck, OnChanges, AfterContentInit
   public width = input<TFlexiModalWidth>();
   public height = input<TFlexiModalHeight>();
   public scroll = input<TFlexiModalScroll>();
+  public border = input<boolean>();
+  public rounding = input<number | boolean>();
   public closable = input<boolean>(true);
   public customId = input<string>('', { alias: 'id' });
   public data = input<any>();
@@ -179,9 +183,14 @@ export class FlexiModalComponent implements DoCheck, OnChanges, AfterContentInit
       return;
 
     } else if (opened?.currentValue && !this.modal()) {
-      const timeout = setTimeout(() => {
-        clearTimeout(timeout);
-        this.open();
+      this._zone.runOutsideAngular(() => {
+        const timeout = setTimeout(() => {
+          clearTimeout(timeout);
+
+          this._zone.run(() => {
+            this.open();
+          });
+        });
       });
 
       return;

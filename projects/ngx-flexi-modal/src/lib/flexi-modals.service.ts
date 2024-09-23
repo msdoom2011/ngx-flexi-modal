@@ -1,4 +1,14 @@
-import {ComponentRef, EmbeddedViewRef, inject, Injectable, Signal, signal, TemplateRef, Type} from "@angular/core";
+import {
+  ComponentRef,
+  EmbeddedViewRef,
+  inject,
+  Injectable,
+  NgZone,
+  Signal,
+  signal,
+  TemplateRef,
+  Type
+} from "@angular/core";
 import {BehaviorSubject, filter, Observable, Subject} from "rxjs";
 
 import {FLEXI_MODAL_DEFAULT_OPTIONS, FLEXI_MODAL_EXTENSION} from "./flexi-modals.tokens";
@@ -10,8 +20,8 @@ import {FlexiModalUpdateEvent} from "./events/flexi-modal-update.event";
 import {FlexiModalCloseEvent} from "./events/flexi-modal-close.event";
 import {FlexiModalOpenEvent} from "./events/flexi-modal-open.event";
 import {flexiModalOptionsDefault} from "./flexi-modals.constants";
+import {isPlainObject, normalizeOptions} from "./tools/utils";
 import {FlexiModal} from "./modals/flexi-modal";
-import {isPlainObject} from "./tools/utils";
 import {
   IFlexiModalComponentOptions,
   IFlexiModalExtension,
@@ -28,6 +38,8 @@ import {
 export class FlexiModalsService<
   ExtensionOptionsByTypesT extends IFlexiModalExtensionOptionsByTypes = IFlexiModalExtensionOptionsByTypes
 > {
+
+  private readonly _zone = inject(NgZone);
 
   private readonly _extensionsArr = inject<Array<IFlexiModalExtension<ExtensionOptionsByTypesT>>>(FLEXI_MODAL_EXTENSION);
 
@@ -90,29 +102,6 @@ export class FlexiModalsService<
     return this._showModal(modal);
   }
 
-  public replaceWithComponent<ComponentT extends object = any>(
-    component: Type<ComponentT>,
-  ): FlexiModalWithComponent<ComponentT> | null;
-
-  public replaceWithComponent<ComponentT extends object = any>(
-    component: Type<ComponentT>,
-    takeUntil$: Observable<any>
-  ): FlexiModalWithComponent<ComponentT> | null;
-
-  public replaceWithComponent<ComponentT extends object = any>(
-    component: Type<ComponentT>,
-    options: IFlexiModalComponentOptions<ComponentT>
-  ): FlexiModalWithComponent<ComponentT> | null;
-
-  public replaceWithComponent<ComponentT extends object = any>(
-    component: Type<ComponentT>,
-    takeUntilOrOptions?: Observable<any> | IFlexiModalComponentOptions<ComponentT>
-  ): FlexiModalWithComponent<ComponentT> | null {
-    this.closeAll();
-
-    return this.showComponent<ComponentT>(component, <any>takeUntilOrOptions);
-  }
-
   public showTemplate<ContextT extends object = {}>(
     template: TemplateRef<ContextT>,
   ): FlexiModalWithTemplate<ContextT> | null;
@@ -138,29 +127,6 @@ export class FlexiModalsService<
     return this._showModal(modal);
   }
 
-  public replaceWithTemplate<ContextT extends object = {}>(
-    template: TemplateRef<ContextT>,
-  ): FlexiModalWithTemplate<ContextT> | null;
-
-  public replaceWithTemplate<ContextT extends object = {}>(
-    template: TemplateRef<ContextT>,
-    takeUntil$: Observable<unknown>,
-  ): FlexiModalWithTemplate<ContextT> | null;
-
-  public replaceWithTemplate<ContextT extends object = {}>(
-    template: TemplateRef<ContextT>,
-    options: IFlexiModalTemplateOptions<ContextT>,
-  ): FlexiModalWithTemplate<ContextT> | null;
-
-  public replaceWithTemplate<ContextT extends object = {}>(
-    template: TemplateRef<ContextT>,
-    takeUntilOrOptions?: Observable<any> | IFlexiModalTemplateOptions<ContextT>,
-  ): FlexiModalWithTemplate<ContextT> | null {
-    this.closeAll();
-
-    return this.showTemplate<ContextT>(template, <any>takeUntilOrOptions);
-  }
-
   public show<
     ComponentT extends object,
     T extends keyof ExtensionOptionsByTypesT
@@ -179,18 +145,6 @@ export class FlexiModalsService<
       modalTypeConfig.component,
       modalTypeConfig.convert(options),
     );
-  }
-
-  public replaceWith<
-    ComponentT extends object,
-    T extends keyof ExtensionOptionsByTypesT
-  >(
-    modalType: T,
-    options: ExtensionOptionsByTypesT[T]
-  ): FlexiModalWithComponent<ComponentT> | null {
-    this.closeAll();
-
-    return this.show(modalType, options);
   }
 
   public updateModal(modalId: string, changes: IFlexiModalOptions<any>): void {
@@ -239,8 +193,12 @@ export class FlexiModalsService<
 
     this._modals.update(modals => modals.filter(modalConfig => modalConfig.id !== modalId));
 
-    setTimeout(() => {
-      this._events$.next(new FlexiModalCloseEvent(modal));
+    this._zone.runOutsideAngular(() => {
+      setTimeout(() => {
+        this._zone.run(() => {
+          this._events$.next(new FlexiModalCloseEvent(modal));
+        });
+      });
     });
   }
 
@@ -285,16 +243,7 @@ export class FlexiModalsService<
       )
     };
 
-    for (const optName in options) {
-      if (
-        Object.prototype.hasOwnProperty.call(options, optName)
-        && options[optName] === undefined
-      ) {
-        delete options[optName];
-      }
-    }
-
-    return options;
+    return <ModalOptionsT>normalizeOptions(options);
   }
 
   private _showModal<ModalT extends FlexiModal>(modal: ModalT): ModalT | null {

@@ -62,6 +62,6 @@ export class FlexiModalsOutletComponent {
   });
 
   private _themeEffect = effect(() => {
-    this._themes.applyTheme(this._elementRef.nativeElement);
+    this._themes.applyThemeStyles(this._elementRef.nativeElement);
   });
 }

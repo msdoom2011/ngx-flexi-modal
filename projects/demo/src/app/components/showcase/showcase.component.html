@@ -1,3 +1,19 @@
+<p>Themes switcher</p>
+<div class="themes-switcher">
+  @for (theme of themes(); track theme.name) {
+    <label class="theme-option">
+      <input
+        type="radio"
+        name="themeActive"
+        [value]="theme.name"
+        [checked]="theme.name === themeActive()"
+        (change)="onThemeChange(theme.name)"
+      />
+      {{ theme.name }}
+    </label>
+  }
+</div>
+
 <p>Templated modal with inline content and custom buttons</p>
 <button (click)="modal.open()">Open Templated Modal</button>
 
@@ -13,8 +29,8 @@
 
 <fm-modal
   id="test-custom-id"
-  title="Templated Modal"
-  [closable]="false"
+  title="Templated Modal And Another Very Long Title I Want That User Can See All The Time And Another Very Long Title I Want That User Can See All The Time"
+  [closable]="true"
   (open)="onTemplateModalOpened($event)"
   #modal
 >

@@ -27,10 +27,6 @@ export const flexiModalOptionsDefault: IFlexiModalConfig<any> = {
   height: 'fit-content',
   scroll: 'modal',
   closable: true,
-  closeBtn: {
-    label: undefined,
-    position: 'outside',
-  },
   classes: undefined,
   aliveUntil: undefined,
   theme: undefined,

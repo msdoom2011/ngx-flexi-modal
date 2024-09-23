@@ -3,7 +3,7 @@
   align-items: center;
   height: 64px;
   padding: 14px 18px;
-  border-radius: 0 0 8px 8px;
-  background: var(--fm-color-footer-bg);
+  border-radius: 0 0 var(--fm-frame-border-radius) var(--fm-frame-border-radius);
   border-top: 1px solid var(--fm-color-border);
+  background: var(--fm-color-footer-bg);
 }

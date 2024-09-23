@@ -19,7 +19,6 @@ export type TFlexiModalHeight = 'fit-content' | number;
 export type TFlexiModalScroll = 'modal' | 'content';
 export type TFlexiModalButtonTheme = 'primary' | 'secondary';
 export type TFlexiModalButtonPosition = 'left' | 'center' | 'right';
-export type TFlexiModalCloseButtonPosition = 'outside' | 'inside';
 export type TFlexiModalEvent = (
   FlexiModalBeforeOpenEvent
   | FlexiModalOpenEvent
@@ -69,11 +68,8 @@ export interface IFlexiModalConfig<FlexiModalT extends FlexiModal> {
   height: TFlexiModalHeight;
   scroll: TFlexiModalScroll;
   closable: boolean;
-  // TODO: needs to be implemented
-  closeBtn: IFlexiModalCloseButtonConfig | boolean | undefined;
-  // TODO: needs to be implemented
-  theme: string | undefined;
   classes: Array<string> | undefined;
+  theme: string | undefined;
   aliveUntil: Observable<unknown> | undefined;
   // Random data that can be used to read for example in event listeners.
   // This object doesn't go to any renderable modal content
@@ -81,11 +77,8 @@ export interface IFlexiModalConfig<FlexiModalT extends FlexiModal> {
 }
 
 type TModalOptions<ConfigT extends IFlexiModalConfig<any>> = (
-  Partial<Omit<ConfigT, 'actions' | 'closeBtn'>>
-  & {
-    actions?: Array<IFlexiModalActionOptions>,
-    closeBtn?: Partial<IFlexiModalCloseButtonConfig>
-  }
+  Partial<Omit<ConfigT, 'actions'>>
+  & { actions?: Array<IFlexiModalActionOptions> }
 );
 
 export type IFlexiModalOptions<
@@ -118,14 +111,6 @@ extends IFlexiModalConfig<FlexiModalWithTemplate<ContextT>> {
 export type IFlexiModalTemplateOptions<
   ContextT extends object
 > = TModalOptions<IFlexiModalTemplateConfig<ContextT>>;
-
-
-// CloseBtn config
-
-export interface IFlexiModalCloseButtonConfig {
-  label: string | undefined;
-  position: TFlexiModalCloseButtonPosition;
-}
 
 
 // Actions

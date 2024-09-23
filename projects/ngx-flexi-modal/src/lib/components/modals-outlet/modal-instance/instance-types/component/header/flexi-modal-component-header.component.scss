@@ -1,3 +1,9 @@
+:host {
+  overflow: hidden;
+}
+
 h3 {
   font-size: 16px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

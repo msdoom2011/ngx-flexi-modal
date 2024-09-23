@@ -1,10 +1,6 @@
 :host {
-  font-family: Arial, Helvetica, Tahoma, sans-serif;
-  font-size: 14px;
-  line-height: 1.5;
-  box-sizing: border-box;
-  overflow: hidden;
   color: var(--fm-color-body-text);
+  box-sizing: border-box;
 
   &::ng-deep * {
     box-sizing: border-box;
