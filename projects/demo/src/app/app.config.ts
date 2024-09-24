@@ -8,7 +8,7 @@ export const appConfig: ApplicationConfig = {
     provideAnimationsAsync(),
     provideFlexiModals(
       withDefaultOptions({
-        // closable: true
+        position: 'top'
       }),
       // withStyling({
         // frameShadow: '20px 20px 20px 0 rgba(255, 0, 0, 0.3)',
@@ -41,7 +41,7 @@ export const appConfig: ApplicationConfig = {
           default: true,
           colors: {
             border: 'black',
-            backdrop: 'rgba(4, 67, 81, 0.5)',
+            backdrop: 'transparent',
             headerText: '#333',
             headerBg: 'red',
             bodyText: '#333',
@@ -66,6 +66,11 @@ export const appConfig: ApplicationConfig = {
         {
           name: 'light',
           default: true,
+          colors: {
+            headerBg: '#f0f0f0',
+            footerBg: '#f0f0f0',
+            actionBg: '#f0f0f0',
+          }
         },
       ])
     ),

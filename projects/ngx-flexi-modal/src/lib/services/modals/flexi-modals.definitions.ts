@@ -1,15 +1,15 @@
 import {InputSignal, TemplateRef, Type} from "@angular/core";
 import {Observable} from "rxjs";
 
-import {IFlexiModalBasicOptionsByTypes} from "../../extensions/basic/flexi-modal-basic.definitions";
 import {FlexiModalActionDirective} from "../../components/modal/directives/flexi-modal-action.directive";
+import {IFlexiModalBasicOptionsByTypes} from "../../extensions/basic/flexi-modal-basic.definitions";
 import {FlexiModalBeforeCloseEvent} from "./events/flexi-modal-before-close.event";
 import {FlexiModalBeforeOpenEvent} from "./events/flexi-modal-before-open.event";
 import {FlexiModalWithComponent} from "../../models/flexi-modal-with-component";
 import {FlexiModalWithTemplate} from "../../models/flexi-modal-with-template";
+import {FlexiModalAction} from "../../models/actions/flexi-modal-action";
 import {FlexiModalUpdateEvent} from "./events/flexi-modal-update.event";
 import {FlexiModalCloseEvent} from "./events/flexi-modal-close.event";
-import {FlexiModalAction} from "../../models/actions/flexi-modal-action";
 import {FlexiModalOpenEvent} from "./events/flexi-modal-open.event";
 import {modalWidthPresets} from "./flexi-modals.constants";
 import {FlexiModal} from "../../models/flexi-modal";
@@ -18,6 +18,7 @@ export type TFlexiModalWidth = 'fit-content' | 'fit-window' | (keyof typeof moda
 export type TFlexiModalHeight = 'fit-content' | number;
 export type TFlexiModalScroll = 'modal' | 'content';
 export type TFlexiModalButtonPosition = 'left' | 'center' | 'right';
+export type TFlexiModalPosition = 'top' | 'center' | 'bottom';
 export type TFlexiModalEvent = (
   FlexiModalBeforeOpenEvent
   | FlexiModalOpenEvent
@@ -60,16 +61,18 @@ export interface IFlexiModalExtensionTypeConfig<
 export interface IFlexiModalConfig<FlexiModalT extends FlexiModal> {
   id: string;
   title: string | undefined;
+  aliveUntil: Observable<unknown> | undefined;
   actions: Array<IFlexiModalActionConfig> | undefined;
   onClose: (($event: FlexiModalBeforeCloseEvent<FlexiModalT>) => unknown) | undefined;
   onOpen: (($event: FlexiModalOpenEvent<FlexiModalT>) => unknown) | undefined;
-  width: TFlexiModalWidth;
-  height: TFlexiModalHeight;
+  position: TFlexiModalPosition;
   scroll: TFlexiModalScroll;
-  closable: boolean;
+  height: TFlexiModalHeight;
+  width: TFlexiModalWidth;
+  stretch: boolean;
   classes: Array<string> | undefined;
   theme: string | undefined;
-  aliveUntil: Observable<unknown> | undefined;
+  closable: boolean;
   // Random data that can be used to read for example in event listeners.
   // This object doesn't go to any renderable modal content
   data: {};

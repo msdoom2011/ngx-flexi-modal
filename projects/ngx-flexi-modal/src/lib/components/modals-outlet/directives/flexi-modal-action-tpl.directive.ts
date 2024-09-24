@@ -1,29 +1,28 @@
 import {Directive, inject, TemplateRef} from "@angular/core";
-import {IFlexiModalTheme} from "../../../services/theme/flexi-modals-theme.definitions";
 
-interface IFlexiModalActionButtonDirectiveContext {
+interface IFlexiModalActionTplDirectiveContext {
   $id: string;
   $label: string;
   $icon: string | undefined;
   $disabled: boolean;
   $primary: boolean;
   $theme: string;
-  $classes: Array<string> | undefined;
+  $classes: string;
   $onClick: ($event: MouseEvent) => void;
 }
 
 @Directive({
-  selector: '[fmActionButton]',
+  selector: '[fmModalActionTpl]',
   standalone: true,
 })
-export class FlexiModalActionButtonDirective {
+export class FlexiModalActionTplDirective {
 
   public templateRef = inject(TemplateRef);
 
   static ngTemplateContextGuard(
-    dir: FlexiModalActionButtonDirective,
+    dir: FlexiModalActionTplDirective,
     ctx: any
-  ): ctx is IFlexiModalActionButtonDirectiveContext {
+  ): ctx is IFlexiModalActionTplDirectiveContext {
     return true;
   }
 }

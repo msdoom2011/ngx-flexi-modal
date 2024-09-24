@@ -36,7 +36,7 @@ implements AfterViewInit {
     const modal = this.modal();
     const content$ = modal.content$;
     const componentRef = this.contentRef()?.createComponent(modal.content, { injector: this._injector });
-    const componentInputs = modal.config.inputs;
+    const componentInputs = modal.config().inputs;
 
     if (componentRef?.instance.modal && componentRef.instance.modal[SIGNAL]) {
       componentRef.setInput('modal', modal);

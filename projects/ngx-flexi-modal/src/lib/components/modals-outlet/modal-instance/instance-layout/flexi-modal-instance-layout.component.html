@@ -1,4 +1,4 @@
-@let config = modal().config;
+@let config = modal().config();
 
 @if (isOverlayVisible()) {
   <div class="fm-modals--backdrop"></div>
@@ -9,17 +9,18 @@
   <div class="fm-modal--closing-layer" (click)="modal().close()"></div>
 }
 
-<div class="fm-modal--body-wrapper" [style]="bodyStyles()">
+<div class="fm-modal--body-wrapper" [class]="bodyClasses()" [style]="bodyStyles()">
   <div
     class="fm-modal--body"
     [class.no-border]="!theme().styling.frameBorder"
     [class.no-shadow]="!theme().styling.frameShadow"
   >
-    @if (config.closable && theme().styling.closeBtn === 'inside') {
+    @if (config.closable && (theme().styling.closeBtn === 'inside' || config.stretch)) {
       <div class="fm-modal--header-wrapper">
         <div class="fm-modal--header-content">
           <ng-container *ngTemplateOutlet="headerTpl" />
         </div>
+
         <div class="fm-modal--header-actions">
           <ng-container *ngTemplateOutlet="closeBtnTpl" />
         </div>
@@ -33,7 +34,10 @@
       <ng-container *ngTemplateOutlet="headerTpl" />
     }
 
-    <div class="fm-modal--content" [class.scrollable]="config.scroll === 'content'">
+    <div
+      class="fm-modal--content"
+      [class.scrollable]="config.scroll === 'content' || config.stretch"
+    >
       <ng-content />
     </div>
 

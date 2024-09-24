@@ -19,6 +19,9 @@ import {FlexiModal} from "../../../../models/flexi-modal";
     FlexiModalInstanceHeaderComponent,
     NgTemplateOutlet
   ],
+  host: {
+    '[class]': 'hostClasses()'
+  }
 })
 export class FlexiModalInstanceLayoutComponent {
 
@@ -35,10 +38,34 @@ export class FlexiModalInstanceLayoutComponent {
   // Computed
 
   public readonly isOverlayVisible = computed(() => {
+    const modal = this.modal();
+
     return (
-      this.modal().service.modals().length > 0
-      && this.modal().index > 0
+      !modal.config().stretch
+      && modal.service.modals().length > 0
+      && modal.index > 0
     );
+  });
+
+  public readonly hostClasses = computed(() => {
+    return 'position-' + this.modal().config().position;
+  });
+
+  public readonly bodyClasses = computed(() => {
+    const { width, height, scroll, stretch } = this.modal().config();
+
+    if (stretch) {
+      return [
+        'stretched',
+        'scroll-content',
+      ];
+    }
+
+    return [
+      `scroll-${scroll}`,
+      ...(height && typeof height === 'string' ? [ `height-${height}` ] : []),
+      ...(width && typeof width === 'string' ? [ `width-${height}` ] : []),
+    ];
   });
 
   public readonly bodyStyles = computed(() => {
@@ -49,17 +76,26 @@ export class FlexiModalInstanceLayoutComponent {
   });
 
   private readonly _widthStyles = computed(() => {
-    const widthOpt = this.modal().config.width || '';
+    const { width: widthOpt, stretch: stretchOpt } = this.modal().config();
+
+    if (stretchOpt) {
+      return {
+        width: '100%',
+        minWidth: '100%',
+        maxWidth: '100%'
+      };
+    }
+
     const styles: Partial<CSSStyleDeclaration> = {
       minWidth: modalWidthPresets['tiny'],
       width: '100%',
     };
 
     if (widthOpt in modalWidthPresets) {
-      styles.maxWidth = modalWidthPresets[<keyof typeof modalWidthPresets>widthOpt];
+      styles.maxWidth = `min(${modalWidthPresets[<keyof typeof modalWidthPresets>widthOpt]}, 100%)`;
 
     } else if (typeof widthOpt === 'number') {
-      styles.maxWidth = widthOpt + 'px';
+      styles.maxWidth = `min(${widthOpt}px, 100%)`;
 
     } else {
       switch (widthOpt) {
@@ -69,7 +105,8 @@ export class FlexiModalInstanceLayoutComponent {
           break;
 
         case 'fit-window':
-          styles.minWidth = '100%';
+          styles.maxWidth = '100%';
+          styles.width = '100%';
           break;
       }
     }
@@ -78,8 +115,16 @@ export class FlexiModalInstanceLayoutComponent {
   });
 
   private readonly _heightStyles = computed(() => {
-    const heightOpt = this.modal().config.height || '';
-    const scrollOpt = this.modal().config.scroll || '';
+    const { height: heightOpt, scroll: scrollOpt, stretch: stretchOpt } = this.modal().config();
+
+    if (stretchOpt) {
+      return {
+        height: '100%',
+        minHeight: '100%',
+        maxHeight: '100%'
+      };
+    }
+
     const styles: Partial<CSSStyleDeclaration> = {
       minHeight: '120px',
     };

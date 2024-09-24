@@ -20,6 +20,6 @@ export abstract class FlexiModalEvent<ModalT extends FlexiModal> {
   }
 
   public get id(): string {
-    return <string>this.modal.config.id;
+    return <string>this.modal.config().id;
   }
 }

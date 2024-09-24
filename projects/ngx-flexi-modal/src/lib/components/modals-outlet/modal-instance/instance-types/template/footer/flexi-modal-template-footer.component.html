@@ -1,5 +1,5 @@
-@let footerTpl = modal().config.footerTpl;
-@let actionsTpl = modal().config.actionsTpl;
+@let footerTpl = modal().config().footerTpl;
+@let actionsTpl = modal().config().actionsTpl;
 
 @if (footerTpl) {
   <ng-container *ngTemplateOutlet="footerTpl" />

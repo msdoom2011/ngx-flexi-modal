@@ -7,7 +7,6 @@ import {
   FlexiModalHeaderDirective,
   FlexiModalOpenEvent,
   FlexiModalsService,
-  FlexiButtonComponent,
   FlexiModalsThemeService,
 } from "ngx-flexi-modal";
 
@@ -24,7 +23,6 @@ import {ModalAwareComponent} from "../modal-content/modal-aware/modal-aware.comp
     FlexiModalHeaderDirective,
     FlexiModalFooterDirective,
     FlexiModalActionDirective,
-    FlexiButtonComponent,
     ModalAwareComponent,
     TemplateAwareComponent,
   ],

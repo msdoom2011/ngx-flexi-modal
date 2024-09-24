@@ -10,7 +10,8 @@ import {
   ElementRef,
   inject,
   input,
-  model, NgZone,
+  model,
+  NgZone,
   OnChanges,
   OnDestroy,
   output,
@@ -19,20 +20,21 @@ import {
 } from '@angular/core';
 import {filter, Subject, takeUntil} from "rxjs";
 
-import {FlexiModalActionDirective} from "./directives/flexi-modal-action.directive";
-import {FlexiModalHeaderDirective} from "./directives/flexi-modal-header.directive";
-import {FlexiModalFooterDirective} from "./directives/flexi-modal-footer.directive";
 import {FlexiModalBeforeCloseEvent} from "../../services/modals/events/flexi-modal-before-close.event";
-import {FlexiModalBodyDirective} from "./directives/flexi-modal-body.directive";
-import {FlexiModalWithTemplate} from "../../models/flexi-modal-with-template";
 import {FlexiModalUpdateEvent} from "../../services/modals/events/flexi-modal-update.event";
 import {FlexiModalCloseEvent} from "../../services/modals/events/flexi-modal-close.event";
 import {FlexiModalOpenEvent} from "../../services/modals/events/flexi-modal-open.event";
+import {FlexiModalActionDirective} from "./directives/flexi-modal-action.directive";
+import {FlexiModalHeaderDirective} from "./directives/flexi-modal-header.directive";
+import {FlexiModalFooterDirective} from "./directives/flexi-modal-footer.directive";
+import {FlexiModalBodyDirective} from "./directives/flexi-modal-body.directive";
+import {FlexiModalWithTemplate} from "../../models/flexi-modal-with-template";
 import {FlexiModalsService} from "../../services/modals/flexi-modals.service";
 import {
   IFlexiModalTemplateConfig,
   IFlexiModalTemplateOptions,
   TFlexiModalHeight,
+  TFlexiModalPosition,
   TFlexiModalScroll,
   TFlexiModalWidth
 } from "../../services/modals/flexi-modals.definitions";
@@ -48,62 +50,72 @@ import {
 export class FlexiModalComponent implements DoCheck, OnChanges, AfterContentInit, OnDestroy {
 
   // Dependencies
-  public service = inject(FlexiModalsService);
-  public elementRef = inject(ElementRef);
-  private _zone = inject(NgZone);
+  public readonly service = inject(FlexiModalsService);
+  public readonly elementRef = inject(ElementRef);
+  private readonly _zone = inject(NgZone);
 
   // Inputs
-  public opened = model<boolean>(false);
-  public title = input<string>();
-  public width = input<TFlexiModalWidth>();
-  public height = input<TFlexiModalHeight>();
-  public scroll = input<TFlexiModalScroll>();
-  public border = input<boolean>();
-  public rounding = input<number | boolean>();
-  public closable = input<boolean>(true);
-  public customId = input<string>('', { alias: 'id' });
-  public data = input<any>();
+  public readonly _id = input<string | undefined>(undefined, { alias: 'id' });
+  public readonly _opened = model<boolean>(false);
+  public readonly _stretch = model<boolean | undefined>(undefined, { alias: 'stretch' });
+  public readonly _title = input<string | undefined>(undefined, { alias: 'title' });
+  public readonly _position = input<TFlexiModalPosition | undefined>(undefined, { alias: 'position' });
+  public readonly _width = input<TFlexiModalWidth | undefined>(undefined, { alias: 'width' });
+  public readonly _height = input<TFlexiModalHeight | undefined>(undefined, { alias: 'height' });
+  public readonly _scroll = input<TFlexiModalScroll | undefined>(undefined, { alias: 'scroll' });
+  public readonly _border = input<boolean | undefined>(undefined, { alias: 'border' });
+  public readonly _rounding = input<number | boolean | undefined>(undefined, { alias: 'rounding' });
+  public readonly _closable = input<boolean | undefined>(undefined, { alias: 'closable' });
+  public readonly _data = input<any>(undefined, { alias: 'data' });
 
   // Outputs
-  public changeEvent = output<FlexiModalUpdateEvent>({ alias: 'change' });
-  public openEvent = output<FlexiModalOpenEvent>({ alias: 'open' });
-  public closeEvent = output<FlexiModalCloseEvent>({ alias: 'close' });
-  public beforeCloseEvent = output<FlexiModalBeforeCloseEvent>({ alias: 'beforeClose' });
+  public readonly changeEvent = output<FlexiModalUpdateEvent>({ alias: 'change' });
+  public readonly openEvent = output<FlexiModalOpenEvent>({ alias: 'open' });
+  public readonly closeEvent = output<FlexiModalCloseEvent>({ alias: 'close' });
+  public readonly beforeCloseEvent = output<FlexiModalBeforeCloseEvent>({ alias: 'beforeClose' });
 
   // Signals
-  public modal = signal<FlexiModalWithTemplate | null>(null);
-  private _classes = signal<Array<string> | undefined>(undefined);
-  private _classesChanged = signal<boolean>(false);
+  public readonly modal = signal<FlexiModalWithTemplate | null>(null);
+  private readonly _classes = signal<Array<string> | undefined>(undefined);
+  private readonly _classesChanged = signal<boolean>(false);
 
   // Queries
-  private _actionsRef = contentChildren(FlexiModalActionDirective, { descendants: true });
-  private _headerRef = contentChild(FlexiModalHeaderDirective);
-  private _footerRef = contentChild(FlexiModalFooterDirective);
-  private _bodyRef = contentChild(FlexiModalBodyDirective);
+  private readonly _actionsRef = contentChildren(FlexiModalActionDirective, { descendants: true });
+  private readonly _headerRef = contentChild(FlexiModalHeaderDirective);
+  private readonly _footerRef = contentChild(FlexiModalFooterDirective);
+  private readonly _bodyRef = contentChild(FlexiModalBodyDirective);
 
   // Private props
-  private _destroy$ = new Subject<void>();
+  private readonly _destroy$ = new Subject<void>();
 
 
   // Computed
 
-  public id = computed(() => {
+  public readonly id = computed(() => {
     return this.modal()?.id || '';
   });
 
-  private _bodyTpl = computed(() => {
+  public readonly opened = computed(() => {
+    return this._opened;
+  });
+
+  public readonly stretched = computed(() => {
+    return !!this.modal()?.config().stretch;
+  });
+
+  private readonly _bodyTpl = computed(() => {
     return this._bodyRef()?.templateRef;
   });
 
-  private _headerTpl = computed(() => {
+  private readonly _headerTpl = computed(() => {
     return this._headerRef()?.templateRef;
   });
 
-  private _footerTpl = computed(() => {
+  private readonly _footerTpl = computed(() => {
     return this._footerRef()?.templateRef;
   });
 
-  private _actionsTpl = computed(() => {
+  private readonly _actionsTpl = computed(() => {
     return this._actionsRef()?.length
       ? [...this._actionsRef()]
       : undefined;
@@ -112,7 +124,7 @@ export class FlexiModalComponent implements DoCheck, OnChanges, AfterContentInit
 
   // Effects
 
-  private _modalChangeEffect = effect((onCleanup) => {
+  private readonly _modalChangeEffect = effect((onCleanup) => {
     if (!this.modal()) {
       return;
     }
@@ -130,7 +142,7 @@ export class FlexiModalComponent implements DoCheck, OnChanges, AfterContentInit
           this.beforeCloseEvent.emit($event);
 
         } else if ($event instanceof FlexiModalCloseEvent) {
-          this.opened.set(false);
+          this._opened.set(false);
           this.modal.set(null);
 
           this.closeEvent.emit($event);
@@ -145,7 +157,7 @@ export class FlexiModalComponent implements DoCheck, OnChanges, AfterContentInit
     });
   });
 
-  private _classesChangeEffect = effect(() => {
+  private readonly _classesChangeEffect = effect(() => {
     if (!this._classesChanged()) {
       return;
     }
@@ -197,13 +209,26 @@ export class FlexiModalComponent implements DoCheck, OnChanges, AfterContentInit
     }
 
     const options: IFlexiModalTemplateOptions<any> = {};
-    const optionNames: Array<keyof IFlexiModalTemplateConfig<any>> = [
-      'title', 'width', 'height', 'scroll', 'closable', 'data',
+    const optionNames: Array<
+      keyof IFlexiModalTemplateConfig<any>
+      | { [inputName: string]: keyof IFlexiModalTemplateConfig<any> }
+    > = [
+      { _stretch: 'stretch' },
+      { _title: 'title' },
+      { _position: 'position' },
+      { _width: 'width' },
+      { _height: 'height' },
+      { _scroll: 'scroll' },
+      { _closable: 'closable' },
+      { _data: 'data' },
     ];
 
-    for (const optionName of optionNames) {
-      if (changes[optionName]) {
-        options[optionName] = changes[optionName].currentValue;
+    for (const item of optionNames) {
+      const inputName = typeof item === 'object' ? Object.keys(item)[0] : item;
+      const optionName = typeof item === 'object' ? item[inputName] : item;
+
+      if (changes[inputName]) {
+        options[optionName] = changes[inputName].currentValue;
       }
     }
 
@@ -213,7 +238,7 @@ export class FlexiModalComponent implements DoCheck, OnChanges, AfterContentInit
   }
 
   public ngAfterContentInit(): void {
-    if (this.opened()) {
+    if (this._opened()) {
       this.open();
     }
   }
@@ -236,18 +261,20 @@ export class FlexiModalComponent implements DoCheck, OnChanges, AfterContentInit
     this._validateInputs();
 
     const modal = this.service.showTemplate(bodyTpl, {
-      id: this.customId(),
-      title: this.title(),
-      width: this.width(),
-      height: this.height(),
-      scroll: this.scroll(),
-      closable: this.closable(),
+      id: this._id(),
+      title: this._title(),
+      position: this._position(),
+      width: this._width(),
+      height: this._height(),
+      scroll: this._scroll(),
+      stretch: this._stretch(),
+      closable: this._closable(),
       aliveUntil: this._destroy$,
       headerTpl: this._headerTpl(),
       footerTpl: this._footerTpl(),
       actionsTpl: !this._footerTpl() ? this._actionsTpl() : undefined,
       classes: this._classes(),
-      data: this.data(),
+      data: this._data(),
     });
 
     if (modal) {
@@ -255,21 +282,29 @@ export class FlexiModalComponent implements DoCheck, OnChanges, AfterContentInit
 
       modal.content$
         .pipe(filter(Boolean))
-        .subscribe(() => this.opened.set(true));
+        .subscribe(() => this._opened.set(true));
     }
   }
 
   public close(): void {
-    if (this.opened()) {
+    if (this._opened()) {
       this.service.closeModal(this.id());
     }
+  }
+
+  public stretch(): void {
+    this.modal()?.stretch();
+  }
+
+  public compress(): void {
+    this.modal()?.compress();
   }
 
 
   // Internal implementation
 
   private _validateInputs(): void {
-    if (this.title() && this._headerTpl()) {
+    if (this._title() && this._headerTpl()) {
       console.warn(
         'Specified both "*fmModalHeader" directive and the "title" property value ' +
         'at the same time for the displaying modal. ' +

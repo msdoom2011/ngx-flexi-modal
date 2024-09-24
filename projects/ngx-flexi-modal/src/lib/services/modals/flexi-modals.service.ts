@@ -148,23 +148,17 @@ export class FlexiModalsService<
   }
 
   public updateModal(modalId: string, changes: IFlexiModalOptions<any>): void {
-    const modalIndex = this.getModalById(modalId)?.index || -1;
-
-    if (modalIndex < 0) {
-      return;
-    }
-
-    this._modals.update(modals => {
-      modals[modalIndex].update(changes);
-
-      return [ ...modals ];
-    });
-
     const modal = this.getModalById(modalId);
 
     if (!modal) {
       return;
     }
+
+    this._modals.update(modals => {
+      modals[modal.index].setOptions(changes);
+
+      return [ ...modals ];
+    });
 
     this._events$.next(new FlexiModalUpdateEvent(
       modal,
@@ -184,7 +178,7 @@ export class FlexiModalsService<
     this._events$.next($beforeCloseEvent);
 
     if (!$beforeCloseEvent.stopped) {
-      modal.config.onClose?.($beforeCloseEvent);
+      modal.config().onClose?.($beforeCloseEvent);
     }
 
     if ($beforeCloseEvent.prevented || $beforeCloseEvent.stopped) {
@@ -223,8 +217,7 @@ export class FlexiModalsService<
       return;
     }
 
-    return <ModalT | undefined>this._modals()
-      .find(modalConfig => modalConfig.id === modalId);
+    return <ModalT | undefined>this._modals().find(modal => modal.id === modalId);
   }
 
 
@@ -265,7 +258,7 @@ export class FlexiModalsService<
         this._events$.next($openEvent);
 
         if (!$openEvent.stopped) {
-          modal.config.onOpen?.($openEvent);
+          modal.config().onOpen?.($openEvent);
         }
       });
 

@@ -1,1 +1,15 @@
-<h3>{{ title() }}</h3>
+@let config = modal().config();
+
+@if (!!modalHeaderTpl()) {
+  <ng-container *ngTemplateOutlet="
+    modalHeaderTpl() || null;
+    context: {
+      $title: config.title,
+      $theme: config.theme || themeNameGlobal()
+    }
+  " />
+
+} @else {
+  <h3>{{ config.title }}</h3>
+}
+

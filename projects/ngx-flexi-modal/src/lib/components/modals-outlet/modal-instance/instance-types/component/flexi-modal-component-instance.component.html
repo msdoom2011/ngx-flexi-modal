@@ -1,13 +1,10 @@
-@let config = modal().config;
+@let config = modal().config();
 
-<div class="fm-modal--viewport" [class.scrollable]="config.scroll === 'modal'">
+<div class="fm-modal--viewport" [class.scrollable]="config.scroll === 'modal' && !config.stretch">
   <fm-modal-instance-layout [modal]="modal()">
     @if (config.title) {
       <fm-modal-instance-header>
-        <fm-modal-component-header
-          class="fm-modal--header"
-          [title]="config.title"
-        />
+        <fm-modal-component-header class="fm-modal--header" [modal]="modal()" />
       </fm-modal-instance-header>
     }
 
@@ -15,10 +12,7 @@
 
     @if (modal().actions.length) {
       <fm-modal-instance-footer>
-        <fm-modal-component-footer
-          class="fm-modal--footer"
-          [modal]="modal()"
-        />
+        <fm-modal-component-footer class="fm-modal--footer" [modal]="modal()" />
       </fm-modal-instance-footer>
     }
   </fm-modal-instance-layout>

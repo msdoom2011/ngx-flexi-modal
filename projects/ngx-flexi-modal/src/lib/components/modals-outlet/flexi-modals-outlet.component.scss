@@ -1,10 +1,6 @@
 :host {
   color: var(--fm-color-body-text);
   box-sizing: border-box;
-
-  &::ng-deep * {
-    box-sizing: border-box;
-  }
 }
 
 .fm-modals--backdrop,
@@ -19,4 +15,54 @@
 
 .fm-modals--backdrop {
   background: var(--fm-color-backdrop);
+}
+
+::ng-deep {
+  * {
+    box-sizing: border-box;
+  }
+
+  .fm-action-button {
+    display: inline-block;
+    height: 36px;
+    border-radius: 3px;
+    border: 0;
+    padding: 0 12px;
+    margin: 0 9px;
+    background: var(--fm-color-action-bg);
+    color: var(--fm-color-action-text);
+    font-weight: bold;
+    cursor: pointer;
+    transition:
+      background 200ms ease,
+      color 200ms ease,
+      box-shadow 200ms ease,
+      filter 200ms ease;
+
+    &:hover {
+      filter: brightness(0.95);
+    }
+
+    &:active {
+      filter: brightness(0.9);
+    }
+
+    &.primary {
+      color: var(--fm-color-action-primary-text);
+      background-color: var(--fm-color-action-primary-bg);
+
+      &:hover {
+        filter: brightness(1.1);
+      }
+
+      &:active {
+        filter: brightness(0.9);
+      }
+    }
+
+    &:focus {
+      outline: none;
+      box-shadow: 0 0 0 4px var(--fm-color-action-focus-outline);
+    }
+  }
 }

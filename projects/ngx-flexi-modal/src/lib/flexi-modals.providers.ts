@@ -56,6 +56,6 @@ export function withThemes(themes: Array<IFlexiModalThemeOptions>): Array<Provid
   return [
     ...themes.map(themeConfig => (
       { provide: FLEXI_MODAL_THEME, useValue: themeConfig, multi: true }
-    ))
+    )),
   ];
 }

@@ -2,9 +2,10 @@ import {BehaviorSubject} from "rxjs";
 
 import {flexiModalActionOptionsDefault, flexiModalOptionsDefault} from "../services/modals/flexi-modals.constants";
 import {IFlexiModalConfig, IFlexiModalOptions} from "../services/modals/flexi-modals.definitions";
-import {FlexiModalActions} from "./actions/flexi-modal-actions";
 import {FlexiModalsService} from "../services/modals/flexi-modals.service";
+import {FlexiModalActions} from "./actions/flexi-modal-actions";
 import {generateRandomId} from "../tools/utils";
+import {Signal, signal} from "@angular/core";
 
 export abstract class FlexiModal<
   ConfigT extends IFlexiModalConfig<any> = IFlexiModalConfig<any>,
@@ -15,7 +16,7 @@ export abstract class FlexiModal<
 
   public abstract readonly type: string;
 
-  public config!: ConfigT;
+  private _config = signal<ConfigT>(<ConfigT>{});
 
   public actions!: FlexiModalActions<this>;
 
@@ -32,26 +33,50 @@ export abstract class FlexiModal<
     options: OptionsT,
   ) {
     this.actions = new FlexiModalActions(this.service, this);
-    this._setOptions(options);
+    this.setOptions(options);
   }
 
   public get id(): string {
-    return this.config.id || '';
+    return this._config().id || '';
   }
 
   public get index(): number {
     return this.service.modals().findIndex(modalConfig => modalConfig.id === this.id);
   }
 
+  public get config(): Signal<ConfigT> {
+    return this._config.asReadonly();
+  }
+
   public get active(): boolean {
     return this.service.modals()[this.service.modals().length - 1]?.id === this.id;
+  }
+
+  public get stretched(): boolean {
+    return this._config().stretch;
   }
 
 
   // Public methods
 
-  public update(options: OptionsT): void {
-    this._setOptions(options);
+  public setOptions(options: OptionsT): void {
+    this._config.set(this._normalizeOptions(options));
+  }
+
+  public update(options?: OptionsT): void {
+    this.service.updateModal(this.id, options || this._config());
+  }
+
+  public stretch(): void {
+    if (!this._config().stretch) {
+      this.update(<OptionsT>{stretch: true});
+    }
+  }
+
+  public compress(): void {
+    if (this._config().stretch) {
+      this.update(<OptionsT>{stretch: false});
+    }
   }
 
   public close(): void {
@@ -65,8 +90,14 @@ export abstract class FlexiModal<
     return `flexi-modal-${generateRandomId()}`;
   }
 
-  protected _setOptions(options: OptionsT): void {
-    const config = <ConfigT>{...(this.config || flexiModalOptionsDefault), ...options};
+  protected _normalizeOptions(options: OptionsT): ConfigT {
+    const config = <ConfigT>{
+      ...(!Object.keys(this._config()).length
+        ? <ConfigT>flexiModalOptionsDefault
+        : this._config()
+      ),
+      ...options
+    };
 
     if (!config.id) {
       config.id = this._generateModalId();
@@ -82,6 +113,6 @@ export abstract class FlexiModal<
       }
     }
 
-    this.config = config;
+    return config;
   }
 }

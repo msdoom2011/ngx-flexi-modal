@@ -1,5 +1,7 @@
 @if (modals().length) {
-  <div class="fm-modals--backdrop" @fadeInOut></div>
+  @if (!modalActive()?.config()?.stretch) {
+    <div class="fm-modals--backdrop" @fadeInOut></div>
+  }
 
   @for(modal of modals(); track modal.id) {
     @switch (modal.type) {

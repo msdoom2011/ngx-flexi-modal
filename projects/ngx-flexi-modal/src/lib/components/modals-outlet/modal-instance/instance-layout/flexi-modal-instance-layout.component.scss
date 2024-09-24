@@ -6,6 +6,18 @@
   width: 100%;
   height: 100%;
   z-index: 10;
+
+  &.position-top {
+    align-items: flex-start;
+  }
+
+  &.position-center {
+    align-items: center;
+  }
+
+  &.position-bottom {
+    align-items: flex-end;
+  }
 }
 
 .fm-modal-close-btn {
@@ -104,13 +116,6 @@
   }
 }
 
-.fm-modal--body-wrapper {
-  position: relative;
-  z-index: 10;
-  padding: 50px;
-  box-sizing: content-box;
-}
-
 .fm-modal--body {
   display: flex;
   flex-direction: column;
@@ -139,5 +144,30 @@
 
   &.scrollable {
     overflow: auto;
+  }
+}
+
+.fm-modal--body-wrapper {
+  position: relative;
+  z-index: 10;
+  padding: 50px;
+  box-sizing: content-box;
+
+  &.width-fit-window {
+    box-sizing: border-box;
+  }
+
+  &.stretched {
+    padding: 0;
+
+    .fm-modal--body,
+    .fm-modal--content {
+      height: 100%;
+    }
+
+    .fm-modal--body,
+    .fm-modal--header-wrapper {
+      border-radius: 0;
+    }
   }
 }

@@ -61,7 +61,7 @@ export abstract class FlexiModalInstance<ModalT extends FlexiModal> implements O
   public _classes = computed(() => {
     return [
       'fm-modal',
-      ...(this.modal().config.classes || [])
+      ...(this.modal().config().classes || [])
     ];
   });
 
@@ -85,7 +85,7 @@ export abstract class FlexiModalInstance<ModalT extends FlexiModal> implements O
   });
 
   private _modalConfigEffect = effect(() => {
-    const theme = this.modal().config.theme;
+    const theme = this.modal().config().theme;
 
     if (!theme || theme === this._theme) {
       return;
@@ -114,7 +114,7 @@ export abstract class FlexiModalInstance<ModalT extends FlexiModal> implements O
   // Callbacks
 
   public onEscapePress(): void {
-    if (this.modal().active && this.modal()?.config.closable) {
+    if (this.modal().active && this.modal()?.config().closable) {
       this.modal().close();
     }
   }
@@ -162,7 +162,7 @@ export abstract class FlexiModalInstance<ModalT extends FlexiModal> implements O
   // Internal implementation
 
   private _initialize(): void {
-    const modalDestroy$ = this.modal().config.aliveUntil;
+    const modalDestroy$ = this.modal().config().aliveUntil;
 
     if (!modalDestroy$) {
       return;

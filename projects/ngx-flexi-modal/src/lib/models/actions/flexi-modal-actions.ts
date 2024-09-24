@@ -17,7 +17,7 @@ export class FlexiModalActions<ModalT extends FlexiModal<any, any, any>> {
   // Getters
 
   public get configs(): Array<IFlexiModalActionConfig> {
-    return this._modal.config.actions || [];
+    return this._modal.config().actions || [];
   }
 
   public get length(): number {

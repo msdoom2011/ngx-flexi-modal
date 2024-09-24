@@ -2,7 +2,7 @@ import {ChangeDetectionStrategy, Component, computed, contentChild, effect, Elem
 import {NgComponentOutlet, NgForOf, NgTemplateOutlet} from "@angular/common";
 import {animate, style, transition, trigger} from "@angular/animations";
 
-import {FlexiModalActionButtonDirective} from "./directives/flexi-modal-action-button.directive";
+import {FlexiModalActionTplDirective} from "./directives/flexi-modal-action-tpl.directive";
 import {FlexiModalsThemeService} from "../../services/theme/flexi-modals-theme.service";
 import {FlexiModalsService} from "../../services/modals/flexi-modals.service";
 import {
@@ -11,6 +11,7 @@ import {
 import {
   FlexiModalTemplateInstanceComponent
 } from "./modal-instance/instance-types/template/flexi-modal-template-instance.component";
+import {FlexiModalHeaderTplDirective} from "./directives/flexi-modal-header-tpl.directive";
 
 @Component({
   selector: 'fm-modals-outlet',
@@ -49,7 +50,8 @@ export class FlexiModalsOutletComponent {
   public theme = this._themes.theme;
 
   // Queries
-  private _actionButtonRef = contentChild(FlexiModalActionButtonDirective);
+  private _modalActionTplRef = contentChild(FlexiModalActionTplDirective);
+  private _modalHeaderTplRef = contentChild(FlexiModalHeaderTplDirective);
 
   // Private props
   private _bodyStyle: HTMLStyleElement | null = null;
@@ -57,8 +59,16 @@ export class FlexiModalsOutletComponent {
 
   // Computed props
 
-  public actionButtonTpl = computed(() => {
-    return this._actionButtonRef()?.templateRef;
+  public modalActive = computed(() => {
+    return this._service.getActiveModal();
+  });
+
+  public modalActionTpl = computed(() => {
+    return this._modalActionTplRef()?.templateRef;
+  });
+
+  public modalHeaderTpl = computed(() => {
+    return this._modalHeaderTplRef()?.templateRef;
   });
 
 

@@ -30,6 +30,10 @@
 <fm-modal
   id="test-custom-id"
   title="Templated Modal And Another Very Long Title I Want That User Can See All The Time And Another Very Long Title I Want That User Can See All The Time"
+  width="medium"
+  height="fit-content"
+  position="bottom"
+  [stretch]="true"
   [closable]="true"
   (open)="onTemplateModalOpened($event)"
   #modal
@@ -37,14 +41,14 @@
   <app-template-aware *fmModalBody />
 
   <button
-    fm-button
-    fm-button-primary
+    class="fm-action-button primary"
     *fmModalAction="{ closeOnClick: false }"
     (click)="buttonVisible.set(!buttonVisible())"
   >Toggle Button</button>
 
   <button
-    fm-button
-    *fmModalAction="{ visible: buttonVisible() }"
+    class="fm-action-button"
+    *fmModalAction="{ visible: buttonVisible(), closeOnClick: false }"
+    (click)="modal.stretched() ? modal.compress() : modal.stretch()"
   >Hidden Button</button>
 </fm-modal>

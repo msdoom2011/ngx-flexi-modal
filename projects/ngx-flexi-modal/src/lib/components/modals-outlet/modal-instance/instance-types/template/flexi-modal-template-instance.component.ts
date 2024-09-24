@@ -34,7 +34,7 @@ implements AfterViewInit {
     const content$ = this.modal().content$;
     const embeddedViewRef = this.contentRef()?.createEmbeddedView<ContentT>(
       this.modal().content,
-      this.modal().config.context || undefined,
+      this.modal().config().context || undefined,
       { injector: this._injector }
     );
 

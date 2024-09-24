@@ -1,11 +1,7 @@
 <div class="fm-modal-footer--actions">
   @for (actionConfig of modal().actions.configs; track actionConfig.id) {
     @if (!!actionButtonTpl()) {
-      <!-- eslint-disable-next-line -->
-      <div
-        [class]="['fm-modal-action-container', actionConfig.position]"
-        (click)="onActionContainerClick(actionConfig.closeOnClick)"
-      >
+      <div [class]="['fm-modal-action-container', actionConfig.position]">
         <ng-container *ngTemplateOutlet="
           actionButtonTpl() || null;
           context: {
@@ -14,7 +10,7 @@
             $disabled: actionConfig.disabled,
             $primary: actionConfig.primary,
             $icon: actionConfig.icon,
-            $theme: modal().config.theme || themeNameGlobal(),
+            $theme: modal().config().theme || themeNameGlobal(),
             $classes: getButtonClasses(actionConfig),
             $onClick: onActionClick.bind(this, actionConfig),
           }
@@ -23,11 +19,10 @@
 
     } @else {
       <button
-        fm-button
+        class="fm-action-button"
         [id]="actionConfig.id"
         [disabled]="actionConfig.disabled"
         [class]="getButtonClasses(actionConfig)"
-        [fm-button-primary]="actionConfig.primary"
         (click)="onActionClick(actionConfig, $event)"
       >
         @if (actionConfig.icon) {
