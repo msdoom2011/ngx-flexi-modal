@@ -14,7 +14,7 @@
             $disabled: actionConfig.disabled,
             $primary: actionConfig.primary,
             $icon: actionConfig.icon,
-            $theme: themeName(),
+            $theme: modal().config.theme || themeNameGlobal(),
             $classes: getButtonClasses(actionConfig),
             $onClick: onActionClick.bind(this, actionConfig),
           }

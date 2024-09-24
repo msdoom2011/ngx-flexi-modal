@@ -30,7 +30,7 @@ export class FlexiModalComponentFooterComponent {
 
   // Signals
   public actionButtonTpl = this._modalsOutlet.actionButtonTpl;
-  public themeName = this._themeService.themeName;
+  public themeNameGlobal = this._themeService.themeName;
 
   // Callbacks
 
