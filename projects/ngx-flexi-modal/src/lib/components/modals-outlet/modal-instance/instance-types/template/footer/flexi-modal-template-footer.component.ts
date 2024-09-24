@@ -1,7 +1,7 @@
 import {ChangeDetectionStrategy, Component, input} from '@angular/core';
 import {NgTemplateOutlet} from "@angular/common";
 
-import {FlexiModalWithTemplate} from "../../../../../../modals/flexi-modal-with-template";
+import {FlexiModalWithTemplate} from "../../../../../../models/flexi-modal-with-template";
 
 @Component({
   selector: 'fm-modal-template-footer',
@@ -20,7 +20,7 @@ export class FlexiModalTemplateFooterComponent {
 
   // Callbacks
 
-  public onButtonTplClick(closeOnClick: any): void {
+  public onActionContainerClick(closeOnClick: any): void {
     if (closeOnClick) {
       this.modal().close();
     }

@@ -1,10 +1,12 @@
-import {ChangeDetectionStrategy, Component, input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject, input} from '@angular/core';
 import {NgTemplateOutlet} from "@angular/common";
 
-import {FlexiModalWithComponent} from "../../../../../../modals/flexi-modal-with-component";
+import {IFlexiModalActionConfig} from "../../../../../../services/modals/flexi-modals.definitions";
+import {FlexiModalWithComponent} from "../../../../../../models/flexi-modal-with-component";
 import {FlexiButtonComponent} from "../../../../../common/button/flexi-button.component";
-import {FlexiModalAction} from "../../../../../../modals/actions/flexi-modal-action";
-import {IFlexiModalActionConfig} from "../../../../../../flexi-modals.models";
+import {FlexiModalAction} from "../../../../../../models/actions/flexi-modal-action";
+import {FlexiModalsOutletComponent} from "../../../../flexi-modals-outlet.component";
+import {FlexiModalsThemeService} from "../../../../../../services/theme/flexi-modals-theme.service";
 
 @Component({
   selector: 'fm-modal-component-footer',
@@ -19,19 +21,32 @@ import {IFlexiModalActionConfig} from "../../../../../../flexi-modals.models";
 })
 export class FlexiModalComponentFooterComponent {
 
+  // Dependencies
+  private _modalsOutlet = inject(FlexiModalsOutletComponent);
+  private _themeService = inject(FlexiModalsThemeService);
+
   // Inputs
   public modal = input.required<FlexiModalWithComponent>();
 
+  // Signals
+  public actionButtonTpl = this._modalsOutlet.actionButtonTpl;
+  public themeName = this._themeService.themeName;
 
   // Callbacks
 
-  public onButtonClick($event: MouseEvent, actionConfig: IFlexiModalActionConfig): void {
+  public onActionClick(actionConfig: IFlexiModalActionConfig, $event: MouseEvent): void {
     const modal = this.modal();
 
     actionConfig.onClick?.($event, new FlexiModalAction(modal, actionConfig));
 
     if (actionConfig.closeOnClick) {
       modal.close();
+    }
+  }
+
+  public onActionContainerClick(closeOnClick: any): void {
+    if (closeOnClick) {
+      this.modal().close();
     }
   }
 
@@ -42,6 +57,7 @@ export class FlexiModalComponentFooterComponent {
     return [
       actionConfig.position,
       actionConfig.disabled ? 'disabled' : '',
+      actionConfig.primary ? 'primary' : '',
       ...(actionConfig.classes || []),
     ]
       .filter(Boolean);

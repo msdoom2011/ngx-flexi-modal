@@ -1,6 +1,6 @@
 import {Observable, tap} from "rxjs";
 
-import {IFlexiModalActionConfig} from "../../flexi-modals.models";
+import {IFlexiModalActionConfig} from "../../services/modals/flexi-modals.definitions";
 import {FlexiModal} from "../flexi-modal";
 
 export class FlexiModalAction {

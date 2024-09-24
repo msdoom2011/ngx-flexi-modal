@@ -1,4 +1,3 @@
-export type TFlexiModalCloseButtonPosition = 'outside' | 'inside';
 export type IFlexiModalThemes = Record<string, IFlexiModalTheme>;
 
 export interface IFlexiModalTheme {
@@ -30,20 +29,11 @@ export interface IFlexiModalColorScheme {
   actionFocusOutline: string;
 }
 
-export type IFlexiModalStylingOptions = (
-  Partial<Omit<IFlexiModalStylingConfig, 'closeBtn'>>
-  & { closeBtn?: Partial<IFlexiModalCloseButtonConfig> }
-);
+export type IFlexiModalStylingOptions = Partial<IFlexiModalStylingConfig>;
 
 export interface IFlexiModalStylingConfig {
   frameBorder: boolean;
   frameShadow: string | boolean;
   frameRounding: number | boolean;
-  closeBtn: IFlexiModalCloseButtonConfig | boolean | null;
-}
-
-export interface IFlexiModalCloseButtonConfig {
-  // TODO: needs to be implemented!!!
-  label: string | undefined;
-  position: TFlexiModalCloseButtonPosition;
+  closeBtn: 'outside' | 'inside' | boolean | null;
 }

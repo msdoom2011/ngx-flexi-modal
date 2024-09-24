@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {FlexiModalsOutletComponent} from "ngx-flexi-modal";
+import {FlexiModalsOutletComponent, FlexiModalActionButtonDirective, FlexiButtonComponent} from "ngx-flexi-modal";
 
 import {ShowcaseComponent} from "./components/showcase/showcase.component";
 
@@ -8,6 +8,8 @@ import {ShowcaseComponent} from "./components/showcase/showcase.component";
   standalone: true,
   imports: [
     FlexiModalsOutletComponent,
+    FlexiModalActionButtonDirective,
+    FlexiButtonComponent,
     ShowcaseComponent,
   ],
   templateUrl: './app.component.html',

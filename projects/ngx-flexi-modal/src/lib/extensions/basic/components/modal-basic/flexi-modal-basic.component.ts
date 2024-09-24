@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, Component, input} from '@angular/core';
 
-import {TFlexiModalBasicAlign, TFlexiModalBasicIcon} from "../../flexi-modal-basic.models";
+import {TFlexiModalBasicAlign, TFlexiModalBasicIcon} from "../../flexi-modal-basic.definitions";
 import {WarningIconComponent} from "../modal-icons/warning-icon.component";
 import {SuccessIconComponent} from "../modal-icons/success-icon.component";
 import {ConfirmIconComponent} from "../modal-icons/confirm-icon.component";

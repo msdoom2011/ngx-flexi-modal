@@ -6,7 +6,7 @@ import {FlexiModalTemplateFooterComponent} from "./footer/flexi-modal-template-f
 import {FlexiModalInstanceFooterComponent} from "../../instance-layout/footer/flexi-modal-instance-footer.component";
 import {FlexiModalInstanceHeaderComponent} from "../../instance-layout/header/flexi-modal-instance-header.component";
 import {FlexiModalInstanceLayoutComponent} from "../../instance-layout/flexi-modal-instance-layout.component";
-import {FlexiModalWithTemplate} from "../../../../../modals/flexi-modal-with-template";
+import {FlexiModalWithTemplate} from "../../../../../models/flexi-modal-with-template";
 import {FlexiModalInstance} from "../../flexi-modal-instance";
 
 @Component({

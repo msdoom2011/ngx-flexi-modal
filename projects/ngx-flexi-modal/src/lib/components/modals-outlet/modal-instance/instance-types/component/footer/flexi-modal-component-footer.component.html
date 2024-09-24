@@ -1,19 +1,42 @@
 <div class="fm-modal-footer--actions">
   @for (actionConfig of modal().actions.configs; track actionConfig.id) {
-    <button
-      fm-button
-      [id]="actionConfig.id"
-      [disabled]="actionConfig.disabled"
-      [class]="getButtonClasses(actionConfig)"
-      [fm-button-primary]="actionConfig.theme === 'primary'"
-      (click)="onButtonClick($event, actionConfig)"
-    >
-      @if (actionConfig.icon) {
-        <span [class]="['icon', actionConfig.icon]"></span>
-      }
-      <span class="label">
+    @if (!!actionButtonTpl()) {
+      <!-- eslint-disable-next-line -->
+      <div
+        [class]="['fm-modal-action-container', actionConfig.position]"
+        (click)="onActionContainerClick(actionConfig.closeOnClick)"
+      >
+        <ng-container *ngTemplateOutlet="
+          actionButtonTpl() || null;
+          context: {
+            $id: actionConfig.id,
+            $label: actionConfig.label,
+            $disabled: actionConfig.disabled,
+            $primary: actionConfig.primary,
+            $icon: actionConfig.icon,
+            $theme: themeName(),
+            $classes: getButtonClasses(actionConfig),
+            $onClick: onActionClick.bind(this, actionConfig),
+          }
+        " />
+      </div>
+
+    } @else {
+      <button
+        fm-button
+        [id]="actionConfig.id"
+        [disabled]="actionConfig.disabled"
+        [class]="getButtonClasses(actionConfig)"
+        [fm-button-primary]="actionConfig.primary"
+        (click)="onActionClick(actionConfig, $event)"
+      >
+        @if (actionConfig.icon) {
+          <span [class]="['icon', actionConfig.icon]"></span>
+        }
+        <span class="label">
         {{ actionConfig.label }}
       </span>
-    </button>
+      </button>
+    }
   }
 </div>

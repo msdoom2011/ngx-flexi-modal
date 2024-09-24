@@ -1,6 +1,6 @@
-import {FlexiModalPreventableEvent} from "./base/flexi-modal-preventable.event";
+import {FlexiModalPreventableEvent} from "./abstract/flexi-modal-preventable.event";
 import {FlexiModalEventType} from "../flexi-modals.constants";
-import {FlexiModal} from "../modals/flexi-modal";
+import {FlexiModal} from "../../../models/flexi-modal";
 
 export class FlexiModalBeforeOpenEvent<
   ModalT extends FlexiModal = FlexiModal

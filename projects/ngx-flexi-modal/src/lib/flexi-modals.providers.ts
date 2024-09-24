@@ -1,12 +1,12 @@
 import {EnvironmentProviders, makeEnvironmentProviders, Provider} from "@angular/core";
 
 import {flexiModalBasicExtension} from "./extensions/basic/flexi-modal-basic.extension";
-import {IFlexiModalOptions} from "./flexi-modals.models";
+import {IFlexiModalOptions} from "./services/modals/flexi-modals.definitions";
 import {
   IFlexiModalStylingOptions,
   IFlexiModalColorScheme,
   IFlexiModalThemeOptions
-} from "./services/theme/flexi-modal-theme.models";
+} from "./services/theme/flexi-modals-theme.definitions";
 import {
   FLEXI_MODAL_STYLING_OPTIONS,
   FLEXI_MODAL_COLOR_SCHEME,

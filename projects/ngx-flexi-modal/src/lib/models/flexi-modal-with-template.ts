@@ -1,6 +1,6 @@
 import {EmbeddedViewRef, TemplateRef} from "@angular/core";
 
-import {IFlexiModalTemplateConfig, IFlexiModalTemplateOptions} from "../flexi-modals.models";
+import {IFlexiModalTemplateConfig, IFlexiModalTemplateOptions} from "../services/modals/flexi-modals.definitions";
 import {FlexiModal} from "./flexi-modal";
 
 export class FlexiModalWithTemplate<ContextT extends object = any>

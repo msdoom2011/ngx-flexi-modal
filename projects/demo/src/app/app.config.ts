@@ -60,22 +60,12 @@ export const appConfig: ApplicationConfig = {
             frameShadow: false,
             frameBorder: false,
             frameRounding: 20,
-            closeBtn: {
-              label: undefined,
-              position: 'outside'
-            },
+            closeBtn: 'outside',
           }
         },
         {
           name: 'light',
-          default: false,
-          colors: {
-            border: 'black',
-          },
-          styling: {
-            frameBorder: true,
-            frameShadow: false,
-          }
+          default: true,
         },
       ])
     ),

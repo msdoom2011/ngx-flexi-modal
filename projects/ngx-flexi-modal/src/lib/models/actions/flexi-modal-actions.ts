@@ -1,8 +1,8 @@
 import {filter, Observable, ReplaySubject, take} from "rxjs";
 
-import {FlexiModalUpdateEvent} from "../../events/flexi-modal-update.event";
-import {IFlexiModalActionConfig} from "../../flexi-modals.models";
-import {FlexiModalsService} from "../../flexi-modals.service";
+import {FlexiModalUpdateEvent} from "../../services/modals/events/flexi-modal-update.event";
+import {IFlexiModalActionConfig} from "../../services/modals/flexi-modals.definitions";
+import {FlexiModalsService} from "../../services/modals/flexi-modals.service";
 import {FlexiModalAction} from "./flexi-modal-action";
 import {FlexiModal} from "../flexi-modal";
 

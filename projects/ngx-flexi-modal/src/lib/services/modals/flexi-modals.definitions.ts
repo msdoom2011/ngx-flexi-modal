@@ -1,23 +1,22 @@
 import {InputSignal, TemplateRef, Type} from "@angular/core";
 import {Observable} from "rxjs";
 
-import {IFlexiModalBasicOptionsByTypes} from "./extensions/basic/flexi-modal-basic.models";
-import {FlexiModalActionDirective} from "./directives/flexi-modal-action.directive";
+import {IFlexiModalBasicOptionsByTypes} from "../../extensions/basic/flexi-modal-basic.definitions";
+import {FlexiModalActionDirective} from "../../components/modal/directives/flexi-modal-action.directive";
 import {FlexiModalBeforeCloseEvent} from "./events/flexi-modal-before-close.event";
 import {FlexiModalBeforeOpenEvent} from "./events/flexi-modal-before-open.event";
-import {FlexiModalWithComponent} from "./modals/flexi-modal-with-component";
-import {FlexiModalWithTemplate} from "./modals/flexi-modal-with-template";
+import {FlexiModalWithComponent} from "../../models/flexi-modal-with-component";
+import {FlexiModalWithTemplate} from "../../models/flexi-modal-with-template";
 import {FlexiModalUpdateEvent} from "./events/flexi-modal-update.event";
 import {FlexiModalCloseEvent} from "./events/flexi-modal-close.event";
-import {FlexiModalAction} from "./modals/actions/flexi-modal-action";
+import {FlexiModalAction} from "../../models/actions/flexi-modal-action";
 import {FlexiModalOpenEvent} from "./events/flexi-modal-open.event";
 import {modalWidthPresets} from "./flexi-modals.constants";
-import {FlexiModal} from "./modals/flexi-modal";
+import {FlexiModal} from "../../models/flexi-modal";
 
 export type TFlexiModalWidth = 'fit-content' | 'fit-window' | (keyof typeof modalWidthPresets) | number;
 export type TFlexiModalHeight = 'fit-content' | number;
 export type TFlexiModalScroll = 'modal' | 'content';
-export type TFlexiModalButtonTheme = 'primary' | 'secondary';
 export type TFlexiModalButtonPosition = 'left' | 'center' | 'right';
 export type TFlexiModalEvent = (
   FlexiModalBeforeOpenEvent
@@ -125,7 +124,7 @@ export interface IFlexiModalActionConfig {
   onClick: (($event: MouseEvent, action: FlexiModalAction) => unknown) | undefined;
   disabled: boolean;
   closeOnClick: boolean;
-  theme: TFlexiModalButtonTheme;
+  primary: boolean;
   position: TFlexiModalButtonPosition;
   classes: Array<string> | undefined;
   icon: string | undefined;

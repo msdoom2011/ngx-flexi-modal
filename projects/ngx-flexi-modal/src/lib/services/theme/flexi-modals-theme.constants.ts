@@ -1,4 +1,4 @@
-import {IFlexiModalStylingConfig, IFlexiModalColorScheme} from "./flexi-modal-theme.models";
+import {IFlexiModalStylingConfig, IFlexiModalColorScheme} from "./flexi-modals-theme.definitions";
 
 export const FLEXI_MODAL_DEFAULT_THEME = 'default';
 
@@ -23,10 +23,7 @@ export const flexiModalDefaultStyles: IFlexiModalStylingConfig = {
   frameShadow: '0 5px 20px rgba(0, 0, 0, 0.3)',
   frameBorder: false,
   frameRounding: 4,
-  closeBtn: {
-    label: undefined,
-    position: 'inside',
-  },
+  closeBtn: 'inside',
 };
 
 export const flexiModalCssColorsVars: Record<keyof IFlexiModalColorScheme, string> = {

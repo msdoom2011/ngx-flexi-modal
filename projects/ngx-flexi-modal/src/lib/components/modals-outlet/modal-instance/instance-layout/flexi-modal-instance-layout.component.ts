@@ -3,9 +3,9 @@ import {NgComponentOutlet, NgTemplateOutlet} from "@angular/common";
 
 import {FlexiModalInstanceFooterComponent} from "./footer/flexi-modal-instance-footer.component";
 import {FlexiModalInstanceHeaderComponent} from "./header/flexi-modal-instance-header.component";
-import {FlexiModalThemeService} from "../../../../services/theme/flexi-modal-theme.service";
-import {modalWidthPresets} from "../../../../flexi-modals.constants";
-import {FlexiModal} from "../../../../modals/flexi-modal";
+import {FlexiModalsThemeService} from "../../../../services/theme/flexi-modals-theme.service";
+import {modalWidthPresets} from "../../../../services/modals/flexi-modals.constants";
+import {FlexiModal} from "../../../../models/flexi-modal";
 
 @Component({
   selector: 'fm-modal-instance-layout',
@@ -23,7 +23,7 @@ import {FlexiModal} from "../../../../modals/flexi-modal";
 export class FlexiModalInstanceLayoutComponent {
 
   // Dependencies
-  private readonly _themeService = inject(FlexiModalThemeService);
+  private readonly _themeService = inject(FlexiModalsThemeService);
 
   // Inputs
   public readonly modal = input.required<FlexiModal>();

@@ -1,8 +1,8 @@
 import {Observable} from "rxjs";
 
-import {FlexiModalBeforeCloseEvent} from "../../events/flexi-modal-before-close.event";
-import {FlexiModalWithComponent} from "../../modals/flexi-modal-with-component";
-import {FlexiModalAction} from "../../modals/actions/flexi-modal-action";
+import {FlexiModalBeforeCloseEvent} from "../../services/modals/events/flexi-modal-before-close.event";
+import {FlexiModalWithComponent} from "../../models/flexi-modal-with-component";
+import {FlexiModalAction} from "../../models/actions/flexi-modal-action";
 
 export type TFlexiModalBasicIcon = keyof IFlexiModalBasicOptionsByTypes | null;
 export type TFlexiModalBasicAlign = 'left' | 'center' | 'right';

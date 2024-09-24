@@ -19,23 +19,23 @@ import {
 } from '@angular/core';
 import {filter, Subject, takeUntil} from "rxjs";
 
-import {FlexiModalActionDirective} from "../../directives/flexi-modal-action.directive";
-import {FlexiModalHeaderDirective} from "../../directives/flexi-modal-header.directive";
-import {FlexiModalFooterDirective} from "../../directives/flexi-modal-footer.directive";
-import {FlexiModalBeforeCloseEvent} from "../../events/flexi-modal-before-close.event";
-import {FlexiModalBodyDirective} from "../../directives/flexi-modal-body.directive";
-import {FlexiModalWithTemplate} from "../../modals/flexi-modal-with-template";
-import {FlexiModalUpdateEvent} from "../../events/flexi-modal-update.event";
-import {FlexiModalCloseEvent} from "../../events/flexi-modal-close.event";
-import {FlexiModalOpenEvent} from "../../events/flexi-modal-open.event";
-import {FlexiModalsService} from "../../flexi-modals.service";
+import {FlexiModalActionDirective} from "./directives/flexi-modal-action.directive";
+import {FlexiModalHeaderDirective} from "./directives/flexi-modal-header.directive";
+import {FlexiModalFooterDirective} from "./directives/flexi-modal-footer.directive";
+import {FlexiModalBeforeCloseEvent} from "../../services/modals/events/flexi-modal-before-close.event";
+import {FlexiModalBodyDirective} from "./directives/flexi-modal-body.directive";
+import {FlexiModalWithTemplate} from "../../models/flexi-modal-with-template";
+import {FlexiModalUpdateEvent} from "../../services/modals/events/flexi-modal-update.event";
+import {FlexiModalCloseEvent} from "../../services/modals/events/flexi-modal-close.event";
+import {FlexiModalOpenEvent} from "../../services/modals/events/flexi-modal-open.event";
+import {FlexiModalsService} from "../../services/modals/flexi-modals.service";
 import {
   IFlexiModalTemplateConfig,
   IFlexiModalTemplateOptions,
   TFlexiModalHeight,
   TFlexiModalScroll,
   TFlexiModalWidth
-} from "../../flexi-modals.models";
+} from "../../services/modals/flexi-modals.definitions";
 
 @Component({
   selector: 'fm-modal',

@@ -7,8 +7,8 @@ import {FlexiModalInstanceFooterComponent} from "../../instance-layout/footer/fl
 import {FlexiModalInstanceLayoutComponent} from "../../instance-layout/flexi-modal-instance-layout.component";
 import {FlexiModalComponentHeaderComponent} from "./header/flexi-modal-component-header.component";
 import {FlexiModalComponentFooterComponent} from "./footer/flexi-modal-component-footer.component";
-import {FlexiModalWithComponent} from "../../../../../modals/flexi-modal-with-component";
-import {IFlexiModalAware} from "../../../../../flexi-modals.models";
+import {FlexiModalWithComponent} from "../../../../../models/flexi-modal-with-component";
+import {IFlexiModalAware} from "../../../../../services/modals/flexi-modals.definitions";
 import {FlexiModalInstance} from "../../flexi-modal-instance";
 
 @Component({

@@ -1,5 +1,5 @@
 import {FlexiModalEventType} from "../../flexi-modals.constants";
-import {FlexiModal} from "../../modals/flexi-modal";
+import {FlexiModal} from "../../../../models/flexi-modal";
 
 export abstract class FlexiModalEvent<ModalT extends FlexiModal> {
 

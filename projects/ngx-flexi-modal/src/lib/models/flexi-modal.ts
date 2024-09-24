@@ -1,9 +1,9 @@
 import {BehaviorSubject} from "rxjs";
 
-import {flexiModalActionOptionsDefault, flexiModalOptionsDefault} from "../flexi-modals.constants";
-import {IFlexiModalConfig, IFlexiModalOptions} from "../flexi-modals.models";
+import {flexiModalActionOptionsDefault, flexiModalOptionsDefault} from "../services/modals/flexi-modals.constants";
+import {IFlexiModalConfig, IFlexiModalOptions} from "../services/modals/flexi-modals.definitions";
 import {FlexiModalActions} from "./actions/flexi-modal-actions";
-import {FlexiModalsService} from "../flexi-modals.service";
+import {FlexiModalsService} from "../services/modals/flexi-modals.service";
 import {generateRandomId} from "../tools/utils";
 
 export abstract class FlexiModal<

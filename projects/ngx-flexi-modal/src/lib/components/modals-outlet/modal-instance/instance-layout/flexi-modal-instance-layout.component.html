@@ -15,7 +15,7 @@
     [class.no-border]="!theme().styling.frameBorder"
     [class.no-shadow]="!theme().styling.frameShadow"
   >
-    @if (config.closable && $any(theme().styling.closeBtn)?.position === 'inside') {
+    @if (config.closable && theme().styling.closeBtn === 'inside') {
       <div class="fm-modal--header-wrapper">
         <div class="fm-modal--header-content">
           <ng-container *ngTemplateOutlet="headerTpl" />

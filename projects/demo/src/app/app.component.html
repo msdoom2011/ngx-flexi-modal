@@ -1,2 +1,27 @@
 <fm-app-showcase />
-<fm-modals-outlet />
+
+<fm-modals-outlet>
+  <button
+    *fmActionButton="
+      let id = $id,
+      let label = $label,
+      let icon = $icon,
+      let theme = $theme,
+      let classes = $classes,
+      let disabled = $disabled,
+      let primary = $primary,
+      let onClick = $onClick,
+    "
+    fm-button
+    [fm-button-primary]="primary"
+    [id]="id"
+    [disabled]="disabled"
+    [class]="['custom-class', classes]"
+    (click)="onClick($event)"
+  >
+    @if (icon) {
+      <span [class]="icon"></span>
+    }
+    {{ label }} ({{ theme }})
+  </button>
+</fm-modals-outlet>

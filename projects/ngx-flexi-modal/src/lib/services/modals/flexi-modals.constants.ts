@@ -1,4 +1,4 @@
-import {IFlexiModalActionConfig, IFlexiModalConfig,} from "./flexi-modals.models";
+import {IFlexiModalActionConfig, IFlexiModalConfig,} from "./flexi-modals.definitions";
 
 export enum FlexiModalEventType {
   BeforeOpen = 'BEFORE_OPEN',
@@ -40,7 +40,7 @@ export const flexiModalActionOptionsDefault: IFlexiModalActionConfig = {
   classes: undefined,
   disabled: false,
   closeOnClick: true,
-  theme: 'primary',
+  primary: false,
   position: 'right',
   onClick: undefined,
 }

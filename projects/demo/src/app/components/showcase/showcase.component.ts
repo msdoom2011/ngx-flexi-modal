@@ -8,11 +8,11 @@ import {
   FlexiModalOpenEvent,
   FlexiModalsService,
   FlexiButtonComponent,
-  FlexiModalThemeService,
+  FlexiModalsThemeService,
 } from "ngx-flexi-modal";
 
-import {ModalAwareComponent} from "../modal-content/modal-aware/modal-aware.component";
 import {TemplateAwareComponent} from "../modal-content/template-aware/template-aware.component";
+import {ModalAwareComponent} from "../modal-content/modal-aware/modal-aware.component";
 
 @Component({
   selector: 'fm-app-showcase',
@@ -35,7 +35,7 @@ export class ShowcaseComponent {
 
   // Dependencies
   private modalsService = inject<FlexiModalsService>(FlexiModalsService);
-  private modalsThemeService = inject<FlexiModalThemeService>(FlexiModalThemeService);
+  private modalsThemeService = inject<FlexiModalsThemeService>(FlexiModalsThemeService);
 
   // Signals
   public buttonVisible = signal(true);
@@ -74,12 +74,12 @@ export class ShowcaseComponent {
       actions: [
         {
           label: 'Okay',
-          onClick: () => alert('Okay!')
+          primary: true,
+          onClick: () => alert('Okay!'),
         },
         {
           closeOnClick: false,
           label: 'Show error',
-          theme: 'secondary',
           onClick: () => {
             this.modalsService.closeAll();
             this.modalsService.show('error', {

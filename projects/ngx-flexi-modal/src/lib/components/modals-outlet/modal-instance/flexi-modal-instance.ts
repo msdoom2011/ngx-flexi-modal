@@ -14,10 +14,10 @@ import {
 } from '@angular/core';
 import {Subject, Subscription, takeUntil} from "rxjs";
 
-import {FlexiModalThemeService} from "../../../services/theme/flexi-modal-theme.service";
-import {FlexiModalsService} from "../../../flexi-modals.service";
+import {FlexiModalsThemeService} from "../../../services/theme/flexi-modals-theme.service";
+import {FlexiModalsService} from "../../../services/modals/flexi-modals.service";
 import {findFocusableElements} from "../../../tools/utils";
-import {FlexiModal} from "../../../modals/flexi-modal";
+import {FlexiModal} from "../../../models/flexi-modal";
 
 @Directive({
   host: {
@@ -31,7 +31,7 @@ export abstract class FlexiModalInstance<ModalT extends FlexiModal> implements O
 
   // Dependencies
   public service = inject(FlexiModalsService);
-  protected _themeService = inject(FlexiModalThemeService);
+  protected _themeService = inject(FlexiModalsThemeService);
   protected _elementRef = inject(ElementRef<HTMLElement>);
   protected _injector = inject(Injector);
 

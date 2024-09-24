@@ -1,7 +1,7 @@
 import {Directive, inject, input, TemplateRef} from "@angular/core";
 
-import {generateRandomId, isPlainObject} from "../tools/utils";
-import {TFlexiModalButtonPosition} from "../flexi-modals.models";
+import {generateRandomId, isPlainObject} from "../../../tools/utils";
+import {TFlexiModalButtonPosition} from "../../../services/modals/flexi-modals.definitions";
 
 export interface IFlexiModalButtonDirectiveOptions {
   visible?: boolean;

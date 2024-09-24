@@ -1,7 +1,7 @@
-import {IFlexiModalOptions} from "../flexi-modals.models";
+import {IFlexiModalOptions} from "../flexi-modals.definitions";
 import {FlexiModalEventType} from "../flexi-modals.constants";
-import {FlexiModalEvent} from "./base/flexi-modal.event";
-import {FlexiModal} from "../modals/flexi-modal";
+import {FlexiModalEvent} from "./abstract/flexi-modal.event";
+import {FlexiModal} from "../../../models/flexi-modal";
 
 export class FlexiModalUpdateEvent<
   ModalT extends FlexiModal = FlexiModal,

@@ -1,6 +1,6 @@
 import {FlexiModalBasicComponent} from "./components/modal-basic/flexi-modal-basic.component";
-import {IFlexiModalBasicInputs, IFlexiModalBasicOptions} from "./flexi-modal-basic.models";
-import {IFlexiModalComponentOptions} from "../../flexi-modals.models";
+import {IFlexiModalBasicInputs, IFlexiModalBasicOptions} from "./flexi-modal-basic.definitions";
+import {IFlexiModalComponentOptions} from "../../services/modals/flexi-modals.definitions";
 
 export function extendModalOptions(
   basicOptions: IFlexiModalComponentOptions<

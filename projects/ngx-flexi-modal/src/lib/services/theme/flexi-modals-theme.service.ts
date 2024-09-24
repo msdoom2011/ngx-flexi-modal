@@ -9,19 +9,19 @@ import {
   flexiModalCssColorsVars,
   flexiModalDefaultColors,
   FLEXI_MODAL_DEFAULT_THEME
-} from "./flexi-modal-theme.constants";
+} from "./flexi-modals-theme.constants";
 import {
   IFlexiModalStylingOptions,
   IFlexiModalColorScheme,
   IFlexiModalTheme,
   IFlexiModalThemeOptions,
   IFlexiModalThemes
-} from "./flexi-modal-theme.models";
+} from "./flexi-modals-theme.definitions";
 
 @Injectable({
   providedIn: "root",
 })
-export class FlexiModalThemeService {
+export class FlexiModalsThemeService {
 
   private readonly _themes = signal<IFlexiModalThemes>({});
 

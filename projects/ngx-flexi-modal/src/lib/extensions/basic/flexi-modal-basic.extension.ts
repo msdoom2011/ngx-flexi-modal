@@ -1,7 +1,7 @@
 import {FlexiModalBasicComponent} from "./components/modal-basic/flexi-modal-basic.component";
 import {MODAL_NO_BUTTON_ID, MODAL_YES_BUTTON_ID} from "./flexi-modal-basic.constants";
-import {IFlexiModalBasicOptionsByTypes} from "./flexi-modal-basic.models";
-import {IFlexiModalExtension} from "../../flexi-modals.models";
+import {IFlexiModalBasicOptionsByTypes} from "./flexi-modal-basic.definitions";
+import {IFlexiModalExtension} from "../../services/modals/flexi-modals.definitions";
 import {extendModalOptions} from "./flexi-modal-basic.helpers";
 
 export const flexiModalBasicExtension: IFlexiModalExtension<IFlexiModalBasicOptionsByTypes> = {
@@ -67,12 +67,12 @@ export const flexiModalBasicExtension: IFlexiModalExtension<IFlexiModalBasicOpti
           id: MODAL_YES_BUTTON_ID,
           label: config.onYesLabel || 'Confirm',
           onClick: config.onYes,
+          primary: true,
         },
         {
           id: MODAL_NO_BUTTON_ID,
           label: config.onNoLabel || 'Cancel',
           onClick: config.onNo,
-          theme: 'secondary',
         }
       ];
 

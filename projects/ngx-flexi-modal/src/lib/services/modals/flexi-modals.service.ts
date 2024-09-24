@@ -11,17 +11,17 @@ import {
 } from "@angular/core";
 import {BehaviorSubject, filter, Observable, Subject} from "rxjs";
 
-import {FLEXI_MODAL_DEFAULT_OPTIONS, FLEXI_MODAL_EXTENSION} from "./flexi-modals.tokens";
+import {FLEXI_MODAL_DEFAULT_OPTIONS, FLEXI_MODAL_EXTENSION} from "../../flexi-modals.tokens";
 import {FlexiModalBeforeCloseEvent} from "./events/flexi-modal-before-close.event";
 import {FlexiModalBeforeOpenEvent} from "./events/flexi-modal-before-open.event";
-import {FlexiModalWithComponent} from "./modals/flexi-modal-with-component";
-import {FlexiModalWithTemplate} from "./modals/flexi-modal-with-template";
+import {FlexiModalWithComponent} from "../../models/flexi-modal-with-component";
+import {FlexiModalWithTemplate} from "../../models/flexi-modal-with-template";
 import {FlexiModalUpdateEvent} from "./events/flexi-modal-update.event";
 import {FlexiModalCloseEvent} from "./events/flexi-modal-close.event";
 import {FlexiModalOpenEvent} from "./events/flexi-modal-open.event";
 import {flexiModalOptionsDefault} from "./flexi-modals.constants";
-import {isPlainObject, normalizeOptions} from "./tools/utils";
-import {FlexiModal} from "./modals/flexi-modal";
+import {isPlainObject, normalizeOptions} from "../../tools/utils";
+import {FlexiModal} from "../../models/flexi-modal";
 import {
   IFlexiModalComponentOptions,
   IFlexiModalExtension,
@@ -30,7 +30,7 @@ import {
   IFlexiModalOptions,
   IFlexiModalTemplateOptions,
   TFlexiModalEvent
-} from "./flexi-modals.models";
+} from "./flexi-modals.definitions";
 
 @Injectable({
   providedIn: 'root'
