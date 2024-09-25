@@ -24,6 +24,7 @@ export interface IFlexiModalColorScheme {
   actionBorder: string;
   actionText: string;
   actionBg: string;
+  actionPrimaryBorder: string;
   actionPrimaryText: string;
   actionPrimaryBg: string;
   actionFocusOutline: string;
@@ -36,4 +37,8 @@ export interface IFlexiModalStylingConfig {
   frameShadow: string | boolean;
   frameRounding: number | boolean;
   headerActions: 'outside' | 'inside' | boolean;
+  headerActionsWithBg: boolean;
+  headerHeight: number;
+  headerFontSize: string;
+  headerFontWeight: string;
 }

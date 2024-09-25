@@ -7,6 +7,8 @@ import {FlexiModalsThemeService} from "../../../../services/theme/flexi-modals-t
 import {modalWidthPresets} from "../../../../services/modals/flexi-modals.constants";
 import {FlexiModal} from "../../../../models/flexi-modal";
 
+export const FLEXI_MODAL_HEADER_ACTION_CLASS = 'fm-modal--header-action';
+
 @Component({
   selector: 'fm-modal-instance-layout',
   templateUrl: './flexi-modal-instance-layout.component.html',
@@ -55,6 +57,13 @@ export class FlexiModalInstanceLayoutComponent {
       maximized ? 'maximized' : `position-${position}`,
       ...(height && typeof height === 'string' ? [ `height-${height}` ] : []),
       ...(width && typeof width === 'string' ? [ `width-${height}` ] : []),
+    ];
+  });
+
+  public readonly headerActionClasses = computed<Array<string>>(() => {
+    return [
+      FLEXI_MODAL_HEADER_ACTION_CLASS,
+      ...(!this.theme().styling.headerActionsWithBg ? ['no-background'] : []),
     ];
   });
 

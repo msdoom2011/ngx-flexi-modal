@@ -15,38 +15,38 @@
 <!--    }-->
 <!--  </ng-container>-->
 
-  <ng-container *fmModalActionTpl="
-    let id = $id,
-    let label = $label,
-    let icon = $icon,
-    let theme = $theme,
-    let classes = $classes,
-    let disabled = $disabled,
-    let onClick = $onClick,
-  ">
-    @switch (theme) {
-      @case ('light') {
-        <button
-          class="fm-action-button custom-class"
-          [id]="id"
-          [class]="classes"
-          [disabled]="disabled"
-          (click)="onClick($event)"
-        >
-          @if (icon) {
-            <span [class]="icon"></span>
-          }
-          {{ label }} ({{ theme }})
-        </button>
-      }
-      @case ('dark') {
-        <button (click)="onClick($event)">
-          {{ label }} ({{ theme }})
-        </button>
-      }
-      @default {
-        <button>{{ label }} (unknown theme!)</button>
-      }
-    }
-  </ng-container>
+<!--  <ng-container *fmModalActionTpl="-->
+<!--    let id = $id,-->
+<!--    let label = $label,-->
+<!--    let icon = $icon,-->
+<!--    let theme = $theme,-->
+<!--    let classes = $classes,-->
+<!--    let disabled = $disabled,-->
+<!--    let onClick = $onClick,-->
+<!--  ">-->
+<!--    @switch (theme) {-->
+<!--      @case ('light') {-->
+<!--        <button-->
+<!--          class="fm-modal-action-button custom-class"-->
+<!--          [id]="id"-->
+<!--          [class]="classes"-->
+<!--          [disabled]="disabled"-->
+<!--          (click)="onClick($event)"-->
+<!--        >-->
+<!--          @if (icon) {-->
+<!--            <span [class]="icon"></span>-->
+<!--          }-->
+<!--          {{ label }} ({{ theme }})-->
+<!--        </button>-->
+<!--      }-->
+<!--      @case ('dark') {-->
+<!--        <button (click)="onClick($event)">-->
+<!--          {{ label }} ({{ theme }})-->
+<!--        </button>-->
+<!--      }-->
+<!--      @default {-->
+<!--        <button>{{ label }} (unknown theme!)</button>-->
+<!--      }-->
+<!--    }-->
+<!--  </ng-container>-->
 </fm-modals-outlet>

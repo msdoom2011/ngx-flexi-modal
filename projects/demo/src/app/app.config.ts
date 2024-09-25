@@ -11,7 +11,7 @@ export const appConfig: ApplicationConfig = {
         position: 'center',
         closable: true,
         maximizable: true,
-        scroll: 'modal'
+        scroll: 'modal',
       }),
       // withStyling({
         // frameShadow: '20px 20px 20px 0 rgba(255, 0, 0, 0.3)',
@@ -72,7 +72,11 @@ export const appConfig: ApplicationConfig = {
             actionBg: '#f0f0f0',
           },
           styling: {
+            headerHeight: 40,
             headerActions: 'outside',
+            headerFontSize: '1.17em',
+            headerFontWeight: 'bold',
+            headerActionsWithBg: false,
           }
         },
       ])

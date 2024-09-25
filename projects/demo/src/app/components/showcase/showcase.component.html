@@ -43,13 +43,13 @@
   <app-template-aware *fmModalBody />
 
   <button
-    class="fm-action-button primary"
+    class="fm-modal-action-button primary"
     *fmModalAction="{ closeOnClick: false }"
     (click)="buttonVisible.set(!buttonVisible())"
   >Toggle Button</button>
 
   <button
-    class="fm-action-button"
+    class="fm-modal-action-button"
     *fmModalAction="{ visible: buttonVisible(), closeOnClick: false }"
     (click)="modal.maximized() ? modal.minimize() : modal.maximize()"
   >Hidden Button</button>

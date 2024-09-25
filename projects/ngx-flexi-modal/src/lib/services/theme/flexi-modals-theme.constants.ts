@@ -6,14 +6,15 @@ export const flexiModalDefaultColors: IFlexiModalColorScheme = {
   border: '#ccc',
   backdrop: 'rgba(4, 67, 81, 0.5)',
   headerText: '#333',
-  headerBg: '#fff',
+  headerBg: '#f0f0f0',
   bodyText: '#333',
   bodyBg: '#fff',
   footerText: '#333',
-  footerBg: '#fff',
-  actionBorder: 'transparent',
+  footerBg: '#f0f0f0',
+  actionBorder: '#f0f0f0',
   actionText: '#6da6ad',
-  actionBg: '#fff',
+  actionBg: '#f0f0f0',
+  actionPrimaryBorder: '#6da6ad',
   actionPrimaryText: '#fff',
   actionPrimaryBg: '#6da6ad',
   actionFocusOutline: 'rgba(109, 166, 173, 0.4)',
@@ -24,9 +25,15 @@ export const flexiModalDefaultStyles: IFlexiModalStylingConfig = {
   frameBorder: false,
   frameRounding: 4,
   headerActions: 'inside',
+  headerActionsWithBg: true,
+  headerHeight: 40,
+  headerFontSize: '1.17em',
+  headerFontWeight: '600',
 };
 
-export const flexiModalCssColorsVars: Record<keyof IFlexiModalColorScheme, string> = {
+export const flexiModalCssColorsVars: (
+  Record<keyof IFlexiModalColorScheme, string>
+)= {
   border: '--fm-color-border',
   backdrop: '--fm-color-backdrop',
   headerText: '--fm-color-header-text',
@@ -38,6 +45,7 @@ export const flexiModalCssColorsVars: Record<keyof IFlexiModalColorScheme, strin
   actionBorder: '--fm-color-action-border',
   actionText: '--fm-color-action-text',
   actionBg: '--fm-color-action-bg',
+  actionPrimaryBorder: '--fm-color-action-primary-border',
   actionPrimaryText: '--fm-color-action-primary-text',
   actionPrimaryBg: '--fm-color-action-primary-bg',
   actionFocusOutline: '--fm-color-action-focus-outline',
@@ -48,17 +56,23 @@ export const flexiModalCssStylesVars: (
 ) = {
   frameRounding: '--fm-frame-border-radius',
   frameShadow: '--fm-frame-box-shadow',
-  frameBorder: '',
+  headerHeight: '--fm-header-height',
+  headerFontSize: '--fm-header-font-size',
+  headerFontWeight: '--fm-header-font-weight',
   headerActions: '',
+  headerActionsWithBg: '',
+  frameBorder: '',
 };
 
 export const flexiModalCssStylesValueGetters: (
   Record<keyof IFlexiModalStylingConfig, ((value: any) => string) | undefined>
 ) = {
-  frameRounding: (rounding: number | undefined) => {
-    return typeof rounding === 'number' ? rounding + 'px' : '0';
-  },
+  frameRounding: (rounding: number | undefined) => typeof rounding === 'number' ? rounding + 'px' : '0',
+  headerHeight: (height: number) => height >= 30 ? `${height}px` : '30px',
   frameShadow: undefined,
   frameBorder: undefined,
   headerActions: undefined,
+  headerActionsWithBg: undefined,
+  headerFontSize: undefined,
+  headerFontWeight: undefined,
 }

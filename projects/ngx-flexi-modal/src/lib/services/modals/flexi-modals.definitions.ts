@@ -70,9 +70,9 @@ export interface IFlexiModalConfig<FlexiModalT extends FlexiModal> {
   scroll: TFlexiModalScroll;
   height: TFlexiModalHeight;
   width: TFlexiModalWidth;
-  maximized: boolean;
   classes: Array<string> | undefined;
   theme: string | undefined;
+  maximized: boolean;
   closable: boolean;
   maximizable: boolean;
   // Random data that can be used to read for example in event listeners.

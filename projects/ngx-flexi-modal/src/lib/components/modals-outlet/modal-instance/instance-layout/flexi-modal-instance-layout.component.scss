@@ -1,4 +1,3 @@
-$header-height: 40px;
 $outer-v-padding: 50px;
 $outer-h-padding: 30px;
 
@@ -39,6 +38,7 @@ $outer-h-padding: 30px;
 
 .fm-modal--header-actions {
   display: flex;
+  flex-direction: row-reverse;
 
   &.position-outside {
     position: absolute;
@@ -65,31 +65,72 @@ $outer-h-padding: 30px;
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
   cursor: pointer;
   width: 24px;
   height: 24px;
   opacity: 0.5;
-  transition: opacity 200ms ease, background 200ms ease;
+  transition:
+    background 300ms ease,
+    box-shadow 300ms ease,
+    opacity 300ms ease;
 
   &:hover {
     opacity: 1;
   }
 
+  &:focus {
+    outline: none;
+    z-index: 10;
+  }
+
   .fm-modal--header-actions.position-outside & {
     margin-left: 8px;
     border-radius: 100%;
-    background: var(--fm-color-body-bg);
+    background-color: var(--fm-color-body-bg);
+
+    &:focus {
+      box-shadow: 0 0 0 4px rgb(from var(--fm-color-body-bg) r g b / 0.6);
+    }
+
+    &.no-background {
+      background-color: transparent;
+      opacity: 1;
+
+      &:focus {
+        background-color: rgb(from var(--fm-color-body-bg) r g b / 0.4);
+        box-shadow: 0 0 0 4px rgb(from var(--fm-color-body-bg) r g b / 0.2);
+      }
+
+      &:hover {
+        background-color: rgb(from var(--fm-color-body-bg) r g b / 0.6);
+      }
+    }
   }
 
   .fm-modal--header-actions.position-inside & {
     background-color: var(--fm-color-header-bg);
-    min-width: $header-height;
-    width: $header-height;
+    min-width: var(--fm-header-height);
+    width: var(--fm-header-height);
     height: 100%;
+    opacity: 1;
     margin: 0;
+
+    & > * {
+      opacity: 0.5;
+      transition: opacity 300ms ease;
+    }
 
     &:hover {
       filter: brightness(0.9);
+
+      & > * {
+        opacity: 1;
+      }
+    }
+
+    &:focus {
+      box-shadow: inset 0 0 0 4px var(--fm-color-action-focus-outline);
     }
 
     &:last-child {
@@ -105,9 +146,8 @@ $outer-h-padding: 30px;
 .fm-modal-close-btn {
   .line {
     display: block;
-    height: 1px;
     position: absolute;
-    background: var(--fm-color-body-text);
+    height: 1px;
     transform: rotate(45deg);
 
     & + .line {
@@ -117,12 +157,14 @@ $outer-h-padding: 30px;
 
   .fm-modal--header-actions.position-outside & {
     .line {
+      background-color: var(--fm-color-body-text);
       width: 13px;
     }
   }
 
   .fm-modal--header-actions.position-inside & {
     .line {
+      background-color: var(--fm-color-header-text);
       width: 18px;
     }
   }
@@ -135,7 +177,7 @@ $outer-h-padding: 30px;
       width: 12px;
       height: 9px;
       background: var(--fm-color-header-bg);
-      border: 1px solid var(--fm-color-body-text);
+      border: 1px solid var(--fm-color-header-text);
       border-top-width: 2px;
       transform: translate(-2px, 0);
     }
@@ -151,10 +193,14 @@ $outer-h-padding: 30px;
   }
 
   :host:not(.maximized) & {
+    .square {
+      position: relative;
+      z-index: 1;
+    }
+
     .top-square {
       width: 15px;
       height: 14px;
-      background: var(--fm-color-header-bg);
       border: 1px solid var(--fm-color-body-text);
       border-top-width: 2px;
     }
@@ -164,7 +210,18 @@ $outer-h-padding: 30px;
     }
   }
 
+  :host.maximized &,
+  :host:not(.maximized) .fm-modal--header-actions.position-inside & {
+    .square {
+      border-color: var(--fm-color-header-text);
+    }
+  }
+
   :host:not(.maximized) .fm-modal--header-actions.position-outside & {
+    .square {
+      border-color: var(--fm-color-body-text);
+    }
+
     .top-square {
       width: 11px;
       height: 10px;

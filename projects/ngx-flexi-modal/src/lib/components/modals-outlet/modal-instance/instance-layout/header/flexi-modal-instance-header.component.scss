@@ -2,10 +2,10 @@
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  height: 40px;
   padding: 8px 18px;
-  border-radius: var(--fm-frame-border-radius) var(--fm-frame-border-radius) 0 0;
+  height: var(--fm-header-height);
   background-color: var(--fm-color-header-bg);
   border-bottom: 1px solid var(--fm-color-border);
+  border-radius: var(--fm-frame-border-radius) var(--fm-frame-border-radius) 0 0;
   white-space: nowrap;
 }

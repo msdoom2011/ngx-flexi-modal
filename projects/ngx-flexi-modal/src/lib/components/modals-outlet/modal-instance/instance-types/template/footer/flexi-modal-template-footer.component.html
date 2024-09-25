@@ -10,8 +10,9 @@
       @if (actionDirective.options().visible) {
         <!-- eslint-disable-next-line -->
         <div
+          class="fm-modal-action-container"
+          [class]="actionDirective.options().position"
           (click)="onActionContainerClick(actionDirective.options().closeOnClick)"
-          [class]="['fm-modal-action-container', actionDirective.options().position]"
         >
           <ng-container *ngTemplateOutlet="actionDirective.templateRef || null" />
         </div>

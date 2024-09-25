@@ -8,12 +8,14 @@ import {
   InputSignal,
   NgZone,
   OnDestroy,
-  OnInit,
+  OnInit, signal,
   viewChild,
   ViewContainerRef
 } from '@angular/core';
-import {filter, fromEvent, Subject, Subscription, takeUntil} from "rxjs";
+import {delay, filter, fromEvent, Subject, Subscription, takeUntil} from "rxjs";
+import {toObservable} from "@angular/core/rxjs-interop";
 
+import {FLEXI_MODAL_HEADER_ACTION_CLASS} from "./instance-layout/flexi-modal-instance-layout.component";
 import {FlexiModalsThemeService} from "../../../services/theme/flexi-modals-theme.service";
 import {FlexiModalsService} from "../../../services/modals/flexi-modals.service";
 import {findFocusableElements} from "../../../tools/utils";
@@ -37,6 +39,9 @@ export abstract class FlexiModalInstance<ModalT extends FlexiModal> implements O
   // Inputs
   public abstract readonly modal: InputSignal<ModalT>;
 
+  // Signals
+  private _focusableElements = signal<Array<Element & { focus: () => any }>>([]);
+
   // Public props
   public readonly contentRef = viewChild('content', { read: ViewContainerRef });
   public readonly viewportRef = viewChild('viewport', { read: ElementRef<HTMLDivElement> });
@@ -45,7 +50,7 @@ export abstract class FlexiModalInstance<ModalT extends FlexiModal> implements O
   private readonly _destroy$ = new Subject<void>();
   private _destroySubscription: Subscription | null = null;
   private _themeOld = this._themeService.themeName();
-  private _maximizeOld = false;
+  private _maximizedOld = false;
 
 
   // Computed
@@ -66,27 +71,25 @@ export abstract class FlexiModalInstance<ModalT extends FlexiModal> implements O
     ];
   });
 
-  protected readonly _focusableElements = computed<Array<Element & { focus: () => any }>>(() => {
-    return findFocusableElements(this._elementRef.nativeElement);
-  });
-
 
   // Effects
 
   private readonly _scrollTopEffect = effect(() => {
     const { maximized, scroll } = this.modal().config();
     const viewportRef = this.viewportRef();
+    const isActive = this.modal().active();
 
     if (
-      !viewportRef
+      !isActive
+      || !viewportRef
       || scroll !== 'modal'
-      || maximized === this._maximizeOld
+      || maximized === this._maximizedOld
     ) {
       return;
     }
 
     viewportRef.nativeElement.scrollTop = 0;
-    this._maximizeOld = maximized;
+    this._maximizedOld = maximized;
   });
 
   private readonly _activeUntilEffect = effect(() => {
@@ -113,7 +116,23 @@ export abstract class FlexiModalInstance<ModalT extends FlexiModal> implements O
       (<any>document.activeElement).blur();
 
     } else if (isActive && !focusInModal) {
-      this._focusableElements()[0]?.focus();
+      const focusableElements = this._focusableElements();
+      let focusSucceeded = false;
+
+      for (const element of focusableElements) {
+        if (!element.classList.contains(FLEXI_MODAL_HEADER_ACTION_CLASS)) {
+          focusSucceeded = true;
+          element.focus();
+          break;
+        }
+      }
+
+      if (!focusSucceeded && focusableElements.length) {
+        focusableElements[0].focus();
+
+      } else if (!focusableElements.length) {
+        (<any>document.activeElement).blur();
+      }
     }
   });
 
@@ -131,6 +150,7 @@ export abstract class FlexiModalInstance<ModalT extends FlexiModal> implements O
   // Lifecycle hooks
 
   public ngOnInit(): void {
+    this._initializeFocusableElements();
     this._initializeOnEscapeKeydown();
     this._initializeOnTabKeydown();
   }
@@ -142,6 +162,19 @@ export abstract class FlexiModalInstance<ModalT extends FlexiModal> implements O
 
 
   // Internal implementation
+
+  protected _initializeFocusableElements(): void {
+    toObservable(this.modal().maximized, { injector: this._injector })
+      .pipe(
+        delay(10),
+        takeUntil(this._destroy$)
+      )
+      .subscribe(() => {
+        this._focusableElements.set(
+          findFocusableElements(this._elementRef.nativeElement)
+        );
+      });
+  }
 
   protected _initializeOnEscapeKeydown(): void {
     this._zone.runOutsideAngular(() => {

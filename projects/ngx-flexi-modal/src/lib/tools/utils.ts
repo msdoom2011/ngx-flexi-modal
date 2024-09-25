@@ -11,7 +11,7 @@ export function isPlainObject(obj: unknown): obj is object  {
 }
 
 export function findFocusableElements(element: Element): Array<Element & { focus: () => any }> {
-  return <Array<Element & { focus: () => any }>>Array.from(
+  const elements = <Array<Element & { focus: () => any }>>Array.from(
     element.querySelectorAll([
       'a[href]',
       'button',
@@ -29,6 +29,8 @@ export function findFocusableElements(element: Element): Array<Element & { focus
         && !el.getAttribute('aria-hidden')
       );
     });
+
+  return elements;
 }
 
 export function normalizeOptions(
