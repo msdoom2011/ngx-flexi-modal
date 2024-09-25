@@ -1,19 +1,19 @@
 <fm-app-showcase />
 
 <fm-modals-outlet>
-  <ng-container *fmModalHeaderTpl="let title = $title, let theme = $theme">
-    @switch (theme) {
-      @case ('light') {
-        <h3>{{ title }} ({{ theme }})</h3>
-      }
-      @case ('dark') {
-        <h2>{{ title }} ({{ theme }})</h2>
-      }
-      @default {
-        {{ title }} (unknown)
-      }
-    }
-  </ng-container>
+<!--  <ng-container *fmModalHeaderTpl="let title = $title, let theme = $theme">-->
+<!--    @switch (theme) {-->
+<!--      @case ('light') {-->
+<!--        <h3>{{ title }} ({{ theme }})</h3>-->
+<!--      }-->
+<!--      @case ('dark') {-->
+<!--        <h2>{{ title }} ({{ theme }})</h2>-->
+<!--      }-->
+<!--      @default {-->
+<!--        {{ title }} (unknown)-->
+<!--      }-->
+<!--    }-->
+<!--  </ng-container>-->
 
   <ng-container *fmModalActionTpl="
     let id = $id,

@@ -16,7 +16,8 @@ import {
   OnDestroy,
   output,
   signal,
-  SimpleChanges
+  SimpleChanges,
+  TemplateRef
 } from '@angular/core';
 import {filter, Subject, takeUntil} from "rxjs";
 
@@ -57,7 +58,7 @@ export class FlexiModalComponent implements DoCheck, OnChanges, AfterContentInit
   // Inputs
   public readonly _id = input<string | undefined>(undefined, { alias: 'id' });
   public readonly _opened = model<boolean>(false);
-  public readonly _stretch = model<boolean | undefined>(undefined, { alias: 'stretch' });
+  public readonly _maximized = model<boolean | undefined>(undefined, { alias: 'maximized' });
   public readonly _title = input<string | undefined>(undefined, { alias: 'title' });
   public readonly _position = input<TFlexiModalPosition | undefined>(undefined, { alias: 'position' });
   public readonly _width = input<TFlexiModalWidth | undefined>(undefined, { alias: 'width' });
@@ -66,6 +67,7 @@ export class FlexiModalComponent implements DoCheck, OnChanges, AfterContentInit
   public readonly _border = input<boolean | undefined>(undefined, { alias: 'border' });
   public readonly _rounding = input<number | boolean | undefined>(undefined, { alias: 'rounding' });
   public readonly _closable = input<boolean | undefined>(undefined, { alias: 'closable' });
+  public readonly _maximizable = input<boolean | undefined>(undefined, { alias: 'maximizable' });
   public readonly _data = input<any>(undefined, { alias: 'data' });
 
   // Outputs
@@ -91,31 +93,31 @@ export class FlexiModalComponent implements DoCheck, OnChanges, AfterContentInit
 
   // Computed
 
-  public readonly id = computed(() => {
-    return this.modal()?.id || '';
+  public readonly id = computed<string>(() => {
+    return this.modal()?.id() || '';
   });
 
-  public readonly opened = computed(() => {
-    return this._opened;
+  public readonly opened = computed<boolean>(() => {
+    return this._opened();
   });
 
-  public readonly stretched = computed(() => {
-    return !!this.modal()?.config().stretch;
+  public readonly maximized = computed<boolean>(() => {
+    return !!this.modal()?.config().maximized;
   });
 
-  private readonly _bodyTpl = computed(() => {
+  private readonly _bodyTpl = computed<TemplateRef<any> | undefined>(() => {
     return this._bodyRef()?.templateRef;
   });
 
-  private readonly _headerTpl = computed(() => {
+  private readonly _headerTpl = computed<TemplateRef<any> | undefined>(() => {
     return this._headerRef()?.templateRef;
   });
 
-  private readonly _footerTpl = computed(() => {
+  private readonly _footerTpl = computed<TemplateRef<any> | undefined>(() => {
     return this._footerRef()?.templateRef;
   });
 
-  private readonly _actionsTpl = computed(() => {
+  private readonly _actionsTpl = computed<Array<FlexiModalActionDirective> | undefined>(() => {
     return this._actionsRef()?.length
       ? [...this._actionsRef()]
       : undefined;
@@ -213,13 +215,14 @@ export class FlexiModalComponent implements DoCheck, OnChanges, AfterContentInit
       keyof IFlexiModalTemplateConfig<any>
       | { [inputName: string]: keyof IFlexiModalTemplateConfig<any> }
     > = [
-      { _stretch: 'stretch' },
+      { _maximized: 'maximized' },
       { _title: 'title' },
       { _position: 'position' },
       { _width: 'width' },
       { _height: 'height' },
       { _scroll: 'scroll' },
       { _closable: 'closable' },
+      { _maximizable: 'maximizable' },
       { _data: 'data' },
     ];
 
@@ -267,8 +270,9 @@ export class FlexiModalComponent implements DoCheck, OnChanges, AfterContentInit
       width: this._width(),
       height: this._height(),
       scroll: this._scroll(),
-      stretch: this._stretch(),
+      maximized: this._maximized(),
       closable: this._closable(),
+      maximizable: this._maximizable(),
       aliveUntil: this._destroy$,
       headerTpl: this._headerTpl(),
       footerTpl: this._footerTpl(),
@@ -292,12 +296,16 @@ export class FlexiModalComponent implements DoCheck, OnChanges, AfterContentInit
     }
   }
 
-  public stretch(): void {
-    this.modal()?.stretch();
+  public maximize(): void {
+    this.modal()?.maximize();
   }
 
-  public compress(): void {
-    this.modal()?.compress();
+  public minimize(): void {
+    this.modal()?.minimize();
+  }
+
+  public toggleMaximize(): void {
+    this.modal()?.toggleMaximize();
   }
 
 

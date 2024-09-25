@@ -32,9 +32,11 @@
   title="Templated Modal And Another Very Long Title I Want That User Can See All The Time And Another Very Long Title I Want That User Can See All The Time"
   width="medium"
   height="fit-content"
-  position="bottom"
-  [stretch]="true"
+  position="center"
+  scroll="content"
+  [maximized]="true"
   [closable]="true"
+  [maximizable]="true"
   (open)="onTemplateModalOpened($event)"
   #modal
 >
@@ -49,6 +51,6 @@
   <button
     class="fm-action-button"
     *fmModalAction="{ visible: buttonVisible(), closeOnClick: false }"
-    (click)="modal.stretched() ? modal.compress() : modal.stretch()"
+    (click)="modal.maximized() ? modal.minimize() : modal.maximize()"
   >Hidden Button</button>
 </fm-modal>

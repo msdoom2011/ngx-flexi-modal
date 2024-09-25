@@ -17,7 +17,7 @@ interface IFlexiModalActionTplDirectiveContext {
 })
 export class FlexiModalActionTplDirective {
 
-  public templateRef = inject(TemplateRef);
+  public readonly templateRef = inject(TemplateRef);
 
   static ngTemplateContextGuard(
     dir: FlexiModalActionTplDirective,

@@ -1,7 +1,7 @@
 import {FlexiModalBasicComponent} from "./components/modal-basic/flexi-modal-basic.component";
 import {MODAL_NO_BUTTON_ID, MODAL_YES_BUTTON_ID} from "./flexi-modal-basic.constants";
-import {IFlexiModalBasicOptionsByTypes} from "./flexi-modal-basic.definitions";
 import {IFlexiModalExtension} from "../../services/modals/flexi-modals.definitions";
+import {IFlexiModalBasicOptionsByTypes} from "./flexi-modal-basic.definitions";
 import {extendModalOptions} from "./flexi-modal-basic.helpers";
 
 export const flexiModalBasicExtension: IFlexiModalExtension<IFlexiModalBasicOptionsByTypes> = {

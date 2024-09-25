@@ -35,5 +35,5 @@ export interface IFlexiModalStylingConfig {
   frameBorder: boolean;
   frameShadow: string | boolean;
   frameRounding: number | boolean;
-  closeBtn: 'outside' | 'inside' | boolean | null;
+  headerActions: 'outside' | 'inside' | boolean;
 }

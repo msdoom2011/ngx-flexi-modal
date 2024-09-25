@@ -37,105 +37,62 @@ export class FlexiModalInstanceLayoutComponent {
 
   // Computed
 
-  public readonly isOverlayVisible = computed(() => {
+  public readonly isOverlayVisible = computed<boolean>(() => {
     const modal = this.modal();
 
     return (
-      !modal.config().stretch
+      !modal.config().maximized
       && modal.service.modals().length > 0
-      && modal.index > 0
+      && modal.index() > 0
     );
   });
 
-  public readonly hostClasses = computed(() => {
-    return 'position-' + this.modal().config().position;
-  });
-
-  public readonly bodyClasses = computed(() => {
-    const { width, height, scroll, stretch } = this.modal().config();
-
-    if (stretch) {
-      return [
-        'stretched',
-        'scroll-content',
-      ];
-    }
+  public readonly hostClasses = computed<Array<string>>(() => {
+    const { width, height, scroll, maximized, position } = this.modal().config();
 
     return [
       `scroll-${scroll}`,
+      maximized ? 'maximized' : `position-${position}`,
       ...(height && typeof height === 'string' ? [ `height-${height}` ] : []),
       ...(width && typeof width === 'string' ? [ `width-${height}` ] : []),
     ];
   });
 
-  public readonly bodyStyles = computed(() => {
+  public readonly bodyStyles = computed<Partial<CSSStyleDeclaration>>(() => {
     return {
       ...this._widthStyles(),
       ...this._heightStyles(),
     };
   });
 
-  private readonly _widthStyles = computed(() => {
-    const { width: widthOpt, stretch: stretchOpt } = this.modal().config();
+  private readonly _widthStyles = computed<Partial<CSSStyleDeclaration>>(() => {
+    const { width: widthOpt, maximized: maximizeOpt } = this.modal().config();
 
-    if (stretchOpt) {
-      return {
-        width: '100%',
-        minWidth: '100%',
-        maxWidth: '100%'
-      };
+    if (maximizeOpt) {
+      return {};
     }
 
     const styles: Partial<CSSStyleDeclaration> = {
       minWidth: modalWidthPresets['tiny'],
-      width: '100%',
     };
 
     if (widthOpt in modalWidthPresets) {
       styles.maxWidth = `min(${modalWidthPresets[<keyof typeof modalWidthPresets>widthOpt]}, 100%)`;
+      styles.width = '100%';
 
     } else if (typeof widthOpt === 'number') {
       styles.maxWidth = `min(${widthOpt}px, 100%)`;
-
-    } else {
-      switch (widthOpt) {
-        case 'fit-content':
-          styles.maxWidth = '100%';
-          styles.width = '';
-          break;
-
-        case 'fit-window':
-          styles.maxWidth = '100%';
-          styles.width = '100%';
-          break;
-      }
+      styles.width = '100%';
     }
 
     return styles;
   });
 
-  private readonly _heightStyles = computed(() => {
-    const { height: heightOpt, scroll: scrollOpt, stretch: stretchOpt } = this.modal().config();
+  private readonly _heightStyles = computed<Partial<CSSStyleDeclaration>>(() => {
+    const { height: heightOpt } = this.modal().config();
+    const styles: Partial<CSSStyleDeclaration> = {};
 
-    if (stretchOpt) {
-      return {
-        height: '100%',
-        minHeight: '100%',
-        maxHeight: '100%'
-      };
-    }
-
-    const styles: Partial<CSSStyleDeclaration> = {
-      minHeight: '120px',
-    };
-
-    if (scrollOpt === 'modal') {
-      return styles;
-
-    } else if (heightOpt === 'fit-content') {
-      styles.maxHeight = '100%';
-
-    } else if (typeof heightOpt === 'number') {
+    if (typeof heightOpt === 'number') {
       styles.maxHeight = heightOpt + 'px';
     }
 

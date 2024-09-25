@@ -1,11 +1,11 @@
 import {AfterViewInit, ChangeDetectionStrategy, Component, input} from '@angular/core';
 import {NgTemplateOutlet} from "@angular/common";
 
-import {FlexiModalTemplateHeaderComponent} from "./header/flexi-modal-template-header.component";
-import {FlexiModalTemplateFooterComponent} from "./footer/flexi-modal-template-footer.component";
 import {FlexiModalInstanceFooterComponent} from "../../instance-layout/footer/flexi-modal-instance-footer.component";
 import {FlexiModalInstanceHeaderComponent} from "../../instance-layout/header/flexi-modal-instance-header.component";
 import {FlexiModalInstanceLayoutComponent} from "../../instance-layout/flexi-modal-instance-layout.component";
+import {FlexiModalTemplateHeaderComponent} from "./header/flexi-modal-template-header.component";
+import {FlexiModalTemplateFooterComponent} from "./footer/flexi-modal-template-footer.component";
 import {FlexiModalWithTemplate} from "../../../../../models/flexi-modal-with-template";
 import {FlexiModalInstance} from "../../flexi-modal-instance";
 
@@ -28,7 +28,7 @@ export class FlexiModalTemplateInstanceComponent<ContentT extends object>
 extends FlexiModalInstance<FlexiModalWithTemplate<ContentT>>
 implements AfterViewInit {
 
-  public override modal = input.required<FlexiModalWithTemplate<ContentT>>();
+  public readonly modal = input.required<FlexiModalWithTemplate<ContentT>>();
 
   public ngAfterViewInit() {
     const content$ = this.modal().content$;

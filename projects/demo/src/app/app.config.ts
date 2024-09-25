@@ -8,15 +8,15 @@ export const appConfig: ApplicationConfig = {
     provideAnimationsAsync(),
     provideFlexiModals(
       withDefaultOptions({
-        position: 'top'
+        position: 'center',
+        closable: true,
+        maximizable: true,
+        scroll: 'modal'
       }),
       // withStyling({
         // frameShadow: '20px 20px 20px 0 rgba(255, 0, 0, 0.3)',
         // frameBorder: false,
         // frameRounding: 10,
-        // closeBtn: {
-        //   position: 'outside'
-        // }
       // }),
       // withColorScheme({
         // border: '#ccc',
@@ -60,7 +60,7 @@ export const appConfig: ApplicationConfig = {
             frameShadow: false,
             frameBorder: false,
             frameRounding: 20,
-            closeBtn: 'outside',
+            headerActions: 'outside',
           }
         },
         {
@@ -70,6 +70,9 @@ export const appConfig: ApplicationConfig = {
             headerBg: '#f0f0f0',
             footerBg: '#f0f0f0',
             actionBg: '#f0f0f0',
+          },
+          styling: {
+            headerActions: 'outside',
           }
         },
       ])

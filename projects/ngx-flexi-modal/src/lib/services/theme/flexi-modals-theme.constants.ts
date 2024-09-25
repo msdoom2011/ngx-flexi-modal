@@ -23,7 +23,7 @@ export const flexiModalDefaultStyles: IFlexiModalStylingConfig = {
   frameShadow: '0 5px 20px rgba(0, 0, 0, 0.3)',
   frameBorder: false,
   frameRounding: 4,
-  closeBtn: 'inside',
+  headerActions: 'inside',
 };
 
 export const flexiModalCssColorsVars: Record<keyof IFlexiModalColorScheme, string> = {
@@ -49,7 +49,7 @@ export const flexiModalCssStylesVars: (
   frameRounding: '--fm-frame-border-radius',
   frameShadow: '--fm-frame-box-shadow',
   frameBorder: '',
-  closeBtn: '',
+  headerActions: '',
 };
 
 export const flexiModalCssStylesValueGetters: (
@@ -60,5 +60,5 @@ export const flexiModalCssStylesValueGetters: (
   },
   frameShadow: undefined,
   frameBorder: undefined,
-  closeBtn: undefined,
+  headerActions: undefined,
 }

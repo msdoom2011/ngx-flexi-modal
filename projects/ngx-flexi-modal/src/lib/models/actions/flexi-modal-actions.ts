@@ -1,3 +1,4 @@
+import {computed} from "@angular/core";
 import {filter, Observable, ReplaySubject, take} from "rxjs";
 
 import {FlexiModalUpdateEvent} from "../../services/modals/events/flexi-modal-update.event";
@@ -6,7 +7,7 @@ import {FlexiModalsService} from "../../services/modals/flexi-modals.service";
 import {FlexiModalAction} from "./flexi-modal-action";
 import {FlexiModal} from "../flexi-modal";
 
-export class FlexiModalActions<ModalT extends FlexiModal<any, any, any>> {
+export class FlexiModalActions<ModalT extends FlexiModal<any, any>> {
 
   constructor(
     private _service: FlexiModalsService,
@@ -16,19 +17,19 @@ export class FlexiModalActions<ModalT extends FlexiModal<any, any, any>> {
 
   // Getters
 
-  public get configs(): Array<IFlexiModalActionConfig> {
+  public readonly configs = computed<Array<IFlexiModalActionConfig>>(() => {
     return this._modal.config().actions || [];
-  }
+  });
 
-  public get length(): number {
-    return this.configs.length;
-  }
+  public readonly length = computed<number>(() => {
+    return this.configs().length;
+  });
 
 
   // Public methods
 
   public getById(actionId: string): FlexiModalAction | undefined {
-    const actionConfig = this.configs.find(actionConf => actionConf.id === actionId);
+    const actionConfig = this.configs().find(actionConf => actionConf.id === actionId);
 
     if (!actionConfig) {
       return;
@@ -38,7 +39,7 @@ export class FlexiModalActions<ModalT extends FlexiModal<any, any, any>> {
   }
 
   public getIndex(actionId: string): number {
-    return this.configs.findIndex(actionConfig => actionConfig.id === actionId);
+    return this.configs().findIndex(actionConfig => actionConfig.id === actionId);
   }
 
   public update(
@@ -80,7 +81,7 @@ export class FlexiModalActions<ModalT extends FlexiModal<any, any, any>> {
     actionConfig: IFlexiModalActionConfig
   ): Observable<FlexiModalAction> {
 
-    const actionConfigs = [...this.configs];
+    const actionConfigs = [...this.configs()];
     const newActionConfig$ = new ReplaySubject<FlexiModalAction>(1);
 
     actionConfigs[actionIndex] = actionConfig;
@@ -89,24 +90,24 @@ export class FlexiModalActions<ModalT extends FlexiModal<any, any, any>> {
       .pipe(
         filter($event => (
           $event instanceof FlexiModalUpdateEvent
-          && this._modal.id === $event.id
+          && this._modal.id() === $event.id
           && Object.keys($event.changes).length === 1
           && Object.keys($event.changes)[0] === 'actions'
         )),
         take(1)
       )
       .subscribe(() => {
-        newActionConfig$.next(this.wrap(this.configs[actionIndex]));
+        newActionConfig$.next(this.wrap(this.configs()[actionIndex]));
         newActionConfig$.complete();
       });
 
-    this._service.updateModal(this._modal.id, { actions: actionConfigs });
+    this._service.updateModal(this._modal.id(), { actions: actionConfigs });
 
     return newActionConfig$.asObservable();
   }
 
   public replaceAll(actionConfigs: Array<IFlexiModalActionConfig>): void {
-    this._service.updateModal(this._modal.id, { actions: actionConfigs });
+    this._service.updateModal(this._modal.id(), { actions: actionConfigs });
   }
 
   public removeById(actionId: string): void {
@@ -116,11 +117,11 @@ export class FlexiModalActions<ModalT extends FlexiModal<any, any, any>> {
   }
 
   public removeByIndex(actionIndex: number): void {
-    const actionConfigs = [...this.configs];
+    const actionConfigs = [...this.configs()];
 
     actionConfigs.splice(actionIndex, 1);
 
-    this._service.updateModal(this._modal.id, { actions: actionConfigs });
+    this._service.updateModal(this._modal.id(), { actions: actionConfigs });
   }
 
   public wrap(actionConfig: IFlexiModalActionConfig): FlexiModalAction {

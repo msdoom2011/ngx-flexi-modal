@@ -23,19 +23,19 @@ const FLEXI_MODAL_OPTIONS_DEFAULT: IFlexiModalButtonDirectiveOptions = {
 export class FlexiModalActionDirective {
 
   // Dependencies
-  public templateRef = inject(TemplateRef);
-
-  // Private props
-  public id = 'fm-modal-action-' + generateRandomId();
+  public readonly templateRef = inject(TemplateRef);
 
   // Inputs
-  public options = input<
+  public readonly options = input<
     IFlexiModalButtonDirectiveOptions,
     Partial<IFlexiModalButtonDirectiveOptions> | boolean | string
   >(FLEXI_MODAL_OPTIONS_DEFAULT, {
     alias: 'fmModalAction',
     transform: (optionsOrVisible) => this._normalizeOptions(optionsOrVisible),
   });
+
+  // Public props
+  public readonly id = 'fm-modal-action-' + generateRandomId();
 
 
   // Private implementation

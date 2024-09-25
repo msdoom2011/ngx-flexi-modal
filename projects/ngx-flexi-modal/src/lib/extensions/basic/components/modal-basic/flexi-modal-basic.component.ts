@@ -24,11 +24,11 @@ import {InfoIconComponent} from "../modal-icons/info-icon.component";
 export class FlexiModalBasicComponent {
 
   // Inputs
-  public icon = input<TFlexiModalBasicIcon>();
-  public message = input.required<Array<string>, string | Array<string>>({
+  public readonly icon = input<TFlexiModalBasicIcon>();
+  public readonly message = input.required<Array<string>, string | Array<string>>({
     transform: value => typeof value === 'string' ? [value] : value
   });
-  public messageAlign = input<TFlexiModalBasicAlign, TFlexiModalBasicAlign>('left', {
+  public readonly messageAlign = input<TFlexiModalBasicAlign, TFlexiModalBasicAlign>('left', {
     transform: value => value || 'left'
   });
 }

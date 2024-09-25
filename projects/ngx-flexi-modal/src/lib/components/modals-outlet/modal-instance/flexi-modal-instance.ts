@@ -6,13 +6,13 @@ import {
   inject,
   Injector,
   InputSignal,
-  OnChanges,
-  OnDestroy, OnInit,
-  SimpleChanges,
+  NgZone,
+  OnDestroy,
+  OnInit,
   viewChild,
   ViewContainerRef
 } from '@angular/core';
-import {Subject, Subscription, takeUntil} from "rxjs";
+import {filter, fromEvent, Subject, Subscription, takeUntil} from "rxjs";
 
 import {FlexiModalsThemeService} from "../../../services/theme/flexi-modals-theme.service";
 import {FlexiModalsService} from "../../../services/modals/flexi-modals.service";
@@ -22,59 +22,92 @@ import {FlexiModal} from "../../../models/flexi-modal";
 @Directive({
   host: {
     '[id]': 'id()',
-    '[class]': '_classes()',
-    '(window:keydown.Escape)': 'onEscapePress()',
-    '(window:keydown)': 'onTabPress($event)',
+    '[class]': 'classes()',
   },
 })
-export abstract class FlexiModalInstance<ModalT extends FlexiModal> implements OnChanges, OnDestroy {
+export abstract class FlexiModalInstance<ModalT extends FlexiModal> implements OnInit, OnDestroy {
 
   // Dependencies
-  public service = inject(FlexiModalsService);
-  protected _themeService = inject(FlexiModalsThemeService);
-  protected _elementRef = inject(ElementRef<HTMLElement>);
-  protected _injector = inject(Injector);
+  public readonly service = inject(FlexiModalsService);
+  protected readonly _themeService = inject(FlexiModalsThemeService);
+  protected readonly _elementRef = inject(ElementRef<HTMLElement>);
+  protected readonly _injector = inject(Injector);
+  protected readonly _zone = inject(NgZone);
 
   // Inputs
-  public modal!: InputSignal<ModalT>;
+  public abstract readonly modal: InputSignal<ModalT>;
 
   // Public props
-  public contentRef = viewChild('content', { read: ViewContainerRef });
+  public readonly contentRef = viewChild('content', { read: ViewContainerRef });
+  public readonly viewportRef = viewChild('viewport', { read: ElementRef<HTMLDivElement> });
 
   // Private props
-  private _destroy$ = new Subject<void>();
-  private _destroySubscription!: Subscription;
-  private _theme: string = this._themeService.themeName();
+  private readonly _destroy$ = new Subject<void>();
+  private _destroySubscription: Subscription | null = null;
+  private _themeOld = this._themeService.themeName();
+  private _maximizeOld = false;
 
 
   // Computed
 
-  public id = computed(() => {
-    return <string>this.modal().id;
+  public readonly id = computed<string>(() => {
+    return this.modal().id();
   });
 
-  public index = computed(() => {
+  public readonly index = computed<number>(() => {
     return this.service.modals()
-      .findIndex(modalConfig => modalConfig.id === this.id());
+      .findIndex(modal => modal.id() === this.id());
   });
 
-  public _classes = computed(() => {
+  public readonly classes = computed<Array<string>>(() => {
     return [
       'fm-modal',
       ...(this.modal().config().classes || [])
     ];
   });
 
-  private _focusableElements = computed(() => {
+  protected readonly _focusableElements = computed<Array<Element & { focus: () => any }>>(() => {
     return findFocusableElements(this._elementRef.nativeElement);
   });
 
 
   // Effects
 
-  private _modalActiveEffect = effect(() => {
+  private readonly _scrollTopEffect = effect(() => {
+    const { maximized, scroll } = this.modal().config();
+    const viewportRef = this.viewportRef();
+
+    if (
+      !viewportRef
+      || scroll !== 'modal'
+      || maximized === this._maximizeOld
+    ) {
+      return;
+    }
+
+    viewportRef.nativeElement.scrollTop = 0;
+    this._maximizeOld = maximized;
+  });
+
+  private readonly _activeUntilEffect = effect(() => {
+    const modalDestroy$ = this.modal().config().aliveUntil;
+
+    if (!modalDestroy$) {
+      return;
+    }
+
+    if (this._destroySubscription) {
+      this._destroySubscription.unsubscribe();
+    }
+
+    this._destroySubscription = modalDestroy$
+      .pipe(takeUntil(this._destroy$))
+      .subscribe(() => this.modal().close());
+  });
+
+  private readonly _focusableElementsEffect = effect(() => {
     const focusInModal = this._elementRef.nativeElement.contains(document.activeElement);
-    const isActive = this.modal().active;
+    const isActive = this.modal().active();
 
     if (!isActive && focusInModal) {
       (<any>document.activeElement).blur();
@@ -84,10 +117,10 @@ export abstract class FlexiModalInstance<ModalT extends FlexiModal> implements O
     }
   });
 
-  private _modalConfigEffect = effect(() => {
+  private readonly _themeEffect = effect(() => {
     const theme = this.modal().config().theme;
 
-    if (!theme || theme === this._theme) {
+    if (!theme || theme === this._themeOld) {
       return;
     }
 
@@ -97,12 +130,9 @@ export abstract class FlexiModalInstance<ModalT extends FlexiModal> implements O
 
   // Lifecycle hooks
 
-  public ngOnChanges(changes: SimpleChanges): void {
-    const { config } = changes;
-
-    if (config?.currentValue) {
-      this._initialize();
-    }
+  public ngOnInit(): void {
+    this._initializeOnEscapeKeydown();
+    this._initializeOnTabKeydown();
   }
 
   public ngOnDestroy(): void {
@@ -111,19 +141,47 @@ export abstract class FlexiModalInstance<ModalT extends FlexiModal> implements O
   }
 
 
-  // Callbacks
+  // Internal implementation
 
-  public onEscapePress(): void {
-    if (this.modal().active && this.modal()?.config().closable) {
-      this.modal().close();
-    }
+  protected _initializeOnEscapeKeydown(): void {
+    this._zone.runOutsideAngular(() => {
+      fromEvent<KeyboardEvent>(window, 'keydown')
+        .pipe(
+          filter(($event: KeyboardEvent) => {
+            return !!(
+              $event.key === 'Escape'
+              && this.modal().active()
+              && this.modal()?.config().closable
+            );
+          }),
+          takeUntil(this._destroy$),
+        )
+        .subscribe(() => {
+          this._zone.run(() => {
+            this.modal().close();
+          });
+        });
+    });
   }
 
-  public onTabPress($event: KeyboardEvent): void {
-    if (!this.modal().active || $event.key !== 'Tab') {
-      return;
-    }
+  protected _initializeOnTabKeydown(): void {
+    this._zone.runOutsideAngular(() => {
+      fromEvent<KeyboardEvent>(window, 'keydown')
+        .pipe(
+          filter(($event: KeyboardEvent) => {
+            return $event.key === 'Tab' && this.modal().active();
+          }),
+          takeUntil(this._destroy$),
+        )
+        .subscribe(($event: KeyboardEvent) => {
+          this._zone.run(() => {
+            this._onTabKeydownCallback($event);
+          });
+        });
+    });
+  }
 
+  private _onTabKeydownCallback($event: KeyboardEvent): void {
     const elements = this._focusableElements();
 
     if (!elements.length) {
@@ -156,24 +214,5 @@ export abstract class FlexiModalInstance<ModalT extends FlexiModal> implements O
 
       elements[indexToFocus].focus();
     }
-  }
-
-
-  // Internal implementation
-
-  private _initialize(): void {
-    const modalDestroy$ = this.modal().config().aliveUntil;
-
-    if (!modalDestroy$) {
-      return;
-    }
-
-    if (this._destroySubscription) {
-      this._destroySubscription.unsubscribe();
-    }
-
-    this._destroySubscription = modalDestroy$
-      .pipe(takeUntil(this._destroy$))
-      .subscribe(() => this.modal().close());
   }
 }

@@ -6,5 +6,5 @@ export class FlexiModalOpenEvent<
   ModalT extends FlexiModal = FlexiModal
 > extends FlexiModalEvent<ModalT> {
 
-  public type = FlexiModalEventType.Open;
+  public readonly type = FlexiModalEventType.Open;
 }

@@ -1,17 +1,27 @@
-import {ChangeDetectionStrategy, Component, computed, contentChild, effect, ElementRef, inject} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  contentChild,
+  effect,
+  ElementRef,
+  inject,
+  TemplateRef
+} from '@angular/core';
 import {NgComponentOutlet, NgForOf, NgTemplateOutlet} from "@angular/common";
 import {animate, style, transition, trigger} from "@angular/animations";
 
 import {FlexiModalActionTplDirective} from "./directives/flexi-modal-action-tpl.directive";
+import {FlexiModalHeaderTplDirective} from "./directives/flexi-modal-header-tpl.directive";
 import {FlexiModalsThemeService} from "../../services/theme/flexi-modals-theme.service";
 import {FlexiModalsService} from "../../services/modals/flexi-modals.service";
+import {FlexiModal} from "../../models/flexi-modal";
 import {
   FlexiModalComponentInstanceComponent
 } from "./modal-instance/instance-types/component/flexi-modal-component-instance.component";
 import {
   FlexiModalTemplateInstanceComponent
 } from "./modal-instance/instance-types/template/flexi-modal-template-instance.component";
-import {FlexiModalHeaderTplDirective} from "./directives/flexi-modal-header-tpl.directive";
 
 @Component({
   selector: 'fm-modals-outlet',
@@ -41,56 +51,56 @@ import {FlexiModalHeaderTplDirective} from "./directives/flexi-modal-header-tpl.
 export class FlexiModalsOutletComponent {
 
   // Dependencies
-  private _service = inject(FlexiModalsService);
-  private _themes = inject(FlexiModalsThemeService);
-  private _elementRef = inject(ElementRef<HTMLElement>);
+  private readonly _service = inject(FlexiModalsService);
+  private readonly _themes = inject(FlexiModalsThemeService);
+  private readonly _elementRef = inject(ElementRef<HTMLElement>);
 
   // Signals
-  public modals = this._service.modals;
-  public theme = this._themes.theme;
+  public readonly modals = this._service.modals;
+  public readonly theme = this._themes.theme;
 
   // Queries
-  private _modalActionTplRef = contentChild(FlexiModalActionTplDirective);
-  private _modalHeaderTplRef = contentChild(FlexiModalHeaderTplDirective);
+  private readonly _modalActionTplRef = contentChild(FlexiModalActionTplDirective);
+  private readonly _modalHeaderTplRef = contentChild(FlexiModalHeaderTplDirective);
 
   // Private props
-  private _bodyStyle: HTMLStyleElement | null = null;
+  private _bodyStyleElement: HTMLStyleElement | null = null;
 
 
   // Computed props
 
-  public modalActive = computed(() => {
-    return this._service.getActiveModal();
+  public readonly modalActive = computed<FlexiModal | undefined>(() => {
+    return this._service.getModalActive();
   });
 
-  public modalActionTpl = computed(() => {
+  public readonly modalActionTpl = computed<TemplateRef<any> | undefined>(() => {
     return this._modalActionTplRef()?.templateRef;
   });
 
-  public modalHeaderTpl = computed(() => {
+  public readonly modalHeaderTpl = computed<TemplateRef<any> | undefined>(() => {
     return this._modalHeaderTplRef()?.templateRef;
   });
 
 
   // Effects
 
-  private _modalsEffect = effect(() => {
-    if (this.modals().length > 0 && !this._bodyStyle) {
-      this._bodyStyle = document.createElement('style');
+  private readonly _modalsEffect = effect(() => {
+    if (this.modals().length > 0 && !this._bodyStyleElement) {
+      this._bodyStyleElement = document.createElement('style');
 
-      this._bodyStyle.id = 'fm-modals-styles';
-      this._bodyStyle.type = 'text/css';
-      this._bodyStyle.innerHTML = 'body { overflow: hidden }';
+      this._bodyStyleElement.id = 'fm-modals-styles';
+      this._bodyStyleElement.type = 'text/css';
+      this._bodyStyleElement.innerHTML = 'body { overflow: hidden }';
 
-      document.getElementsByTagName('head')[0].appendChild(this._bodyStyle);
+      document.getElementsByTagName('head')[0].appendChild(this._bodyStyleElement);
 
-    } else if (!this.modals().length && this._bodyStyle) {
-      this._bodyStyle.remove();
-      this._bodyStyle = null;
+    } else if (!this.modals().length && this._bodyStyleElement) {
+      this._bodyStyleElement.remove();
+      this._bodyStyleElement = null;
     }
   });
 
-  private _themeEffect = effect(() => {
+  private readonly _themeEffect = effect(() => {
     this._themes.applyThemeStyles(this._elementRef.nativeElement);
   });
 }

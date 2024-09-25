@@ -7,5 +7,5 @@ export class FlexiModalBeforeOpenEvent<
 >
 extends FlexiModalPreventableEvent<ModalT> {
 
-  public type = FlexiModalEventType.BeforeOpen;
+  public readonly type = FlexiModalEventType.BeforeOpen;
 }

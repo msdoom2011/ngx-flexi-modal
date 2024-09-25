@@ -3,7 +3,7 @@ import {FlexiModal} from "../../../../models/flexi-modal";
 
 export abstract class FlexiModalEvent<ModalT extends FlexiModal> {
 
-  public abstract type: FlexiModalEventType;
+  public abstract readonly type: FlexiModalEventType;
 
   private _stopped = false;
 

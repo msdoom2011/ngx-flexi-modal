@@ -32,8 +32,9 @@ export type TFlexiModalEvent = (
 
 // Applicable only for components that will be opened via showComponent method
 // Implementing this interface provides access to the modal instance inside the rendered component.
+// The modal input is optional intentionally to ensure ability to use the same component outside the modal context.
 export interface IFlexiModalAware {
-  modal: InputSignal<FlexiModalWithComponent>;
+  modal: InputSignal<FlexiModalWithComponent | undefined>;
 }
 
 
@@ -69,10 +70,11 @@ export interface IFlexiModalConfig<FlexiModalT extends FlexiModal> {
   scroll: TFlexiModalScroll;
   height: TFlexiModalHeight;
   width: TFlexiModalWidth;
-  stretch: boolean;
+  maximized: boolean;
   classes: Array<string> | undefined;
   theme: string | undefined;
   closable: boolean;
+  maximizable: boolean;
   // Random data that can be used to read for example in event listeners.
   // This object doesn't go to any renderable modal content
   data: {};

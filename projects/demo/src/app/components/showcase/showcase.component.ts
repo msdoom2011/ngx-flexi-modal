@@ -32,13 +32,13 @@ import {ModalAwareComponent} from "../modal-content/modal-aware/modal-aware.comp
 export class ShowcaseComponent {
 
   // Dependencies
-  private modalsService = inject<FlexiModalsService>(FlexiModalsService);
-  private modalsThemeService = inject<FlexiModalsThemeService>(FlexiModalsThemeService);
+  private modals = inject<FlexiModalsService>(FlexiModalsService);
+  private modalsThemes = inject<FlexiModalsThemeService>(FlexiModalsThemeService);
 
   // Signals
   public buttonVisible = signal(true);
-  public themesConfigs = this.modalsThemeService.themes;
-  public themeActive = this.modalsThemeService.themeName;
+  public themesConfigs = this.modalsThemes.themes;
+  public themeActive = this.modalsThemes.themeName;
 
 
   // Computed
@@ -51,7 +51,7 @@ export class ShowcaseComponent {
       if (Object.prototype.hasOwnProperty.call(themesConfigs, themeName)) {
         themes.push({
           name: themeName,
-          default: this.modalsThemeService.themeName() === themeName,
+          default: this.modalsThemes.themeName() === themeName,
           ...themesConfigs[themeName],
         })
       }
@@ -63,11 +63,11 @@ export class ShowcaseComponent {
   // Callbacks
 
   public onThemeChange(themeName: string): void {
-    this.modalsThemeService.setTheme(themeName);
+    this.modalsThemes.setTheme(themeName);
   }
 
   public onOpenComponentModal(): void {
-    this.modalsService.showComponent(ModalAwareComponent, {
+    this.modals.showComponent(ModalAwareComponent, {
       title: 'Modal title',
       actions: [
         {
@@ -79,8 +79,8 @@ export class ShowcaseComponent {
           closeOnClick: false,
           label: 'Show error',
           onClick: () => {
-            this.modalsService.closeAll();
-            this.modalsService.show('error', {
+            this.modals.closeAll();
+            this.modals.show('error', {
               message: 'Some internal error',
               theme: 'light'
             });
@@ -91,8 +91,8 @@ export class ShowcaseComponent {
   }
 
   public onOpenError(): void {
-    this.modalsService.show('error', {
-      title: 'Error: Failed to process your request',
+    this.modals.show('error', {
+      title: 'Error: Failed to process your request, Failed to process your request',
       message:
         'Oops! Some unfortunate error occurred. ' +
         'Please try again later or contact our administrator to get further instructions.'
@@ -100,7 +100,7 @@ export class ShowcaseComponent {
   }
 
   public onOpenWarning(): void {
-    this.modalsService.show('warning', {
+    this.modals.show('warning', {
       title: 'Warning: Disabled functionality',
       message:
         'Currently requested functionality is disabled. ' +
@@ -109,19 +109,19 @@ export class ShowcaseComponent {
   }
 
   public onOpenSuccess(): void {
-    this.modalsService.show('success', {
+    this.modals.show('success', {
       message: 'Your data was successfully saved'
     });
   }
 
   public onOpenInfo(): void {
-    this.modalsService.show('info', {
+    this.modals.show('info', {
       message: 'Our service was updated to the newer version'
     });
   }
 
   public onOpenConfirm(): void {
-    this.modalsService.show('confirm', {
+    this.modals.show('confirm', {
       message: 'You have unsaved changes. Are you really sure want to proceed and quit?'
     });
   }

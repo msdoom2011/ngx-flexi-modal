@@ -1,10 +1,10 @@
 import {
   ComponentRef,
+  computed,
   EmbeddedViewRef,
   inject,
   Injectable,
   NgZone,
-  Signal,
   signal,
   TemplateRef,
   Type
@@ -51,9 +51,9 @@ export class FlexiModalsService<
 
   private readonly _modals = signal<Array<FlexiModal>>([]);
 
-  public get modals(): Signal<Array<FlexiModal>> {
-    return this._modals.asReadonly();
-  }
+  public modals = computed<Array<FlexiModal>>(() => {
+    return this._modals();
+  });
 
   public get events$(): Observable<TFlexiModalEvent>{
     return this._events$.pipe(filter($event => !$event.stopped));
@@ -155,7 +155,7 @@ export class FlexiModalsService<
     }
 
     this._modals.update(modals => {
-      modals[modal.index].setOptions(changes);
+      modals[modal.index()].setOptions(changes);
 
       return [ ...modals ];
     });
@@ -185,7 +185,7 @@ export class FlexiModalsService<
       return;
     }
 
-    this._modals.update(modals => modals.filter(modalConfig => modalConfig.id !== modalId));
+    this._modals.update(modals => modals.filter(modalInst => modalInst.id() !== modalId));
 
     this._zone.runOutsideAngular(() => {
       setTimeout(() => {
@@ -198,18 +198,18 @@ export class FlexiModalsService<
 
   public closeAll(): void {
     [...this._modals()].forEach(modalConfig => {
-      this.closeModal(<string>modalConfig.id);
+      this.closeModal(modalConfig.id());
     });
   }
 
-  public getActiveModal(): FlexiModal | undefined {
+  public getModalActive<ModalT extends FlexiModal = FlexiModal>(): ModalT | undefined {
     const modals = this._modals();
 
     if (!modals.length) {
       return;
     }
 
-    return modals[modals.length - 1];
+    return <ModalT>modals[modals.length - 1];
   }
 
   public getModalById<ModalT extends FlexiModal = FlexiModal>(modalId: string): ModalT | undefined {
@@ -217,7 +217,7 @@ export class FlexiModalsService<
       return;
     }
 
-    return <ModalT | undefined>this._modals().find(modal => modal.id === modalId);
+    return <ModalT | undefined>this._modals().find(modal => modal.id() === modalId);
   }
 
 

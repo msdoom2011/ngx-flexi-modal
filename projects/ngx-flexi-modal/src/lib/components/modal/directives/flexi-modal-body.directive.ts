@@ -6,5 +6,5 @@ import {Directive, inject, TemplateRef} from "@angular/core";
 })
 export class FlexiModalBodyDirective {
 
-  public templateRef = inject(TemplateRef);
+  public readonly templateRef = inject(TemplateRef);
 }

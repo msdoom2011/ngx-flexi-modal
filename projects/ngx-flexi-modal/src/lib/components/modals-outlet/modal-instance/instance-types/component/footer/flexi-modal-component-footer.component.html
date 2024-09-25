@@ -1,5 +1,5 @@
 <div class="fm-modal-footer--actions">
-  @for (actionConfig of modal().actions.configs; track actionConfig.id) {
+  @for (actionConfig of modal().actions.configs(); track actionConfig.id) {
     @if (!!actionButtonTpl()) {
       <div [class]="['fm-modal-action-container', actionConfig.position]">
         <ng-container *ngTemplateOutlet="

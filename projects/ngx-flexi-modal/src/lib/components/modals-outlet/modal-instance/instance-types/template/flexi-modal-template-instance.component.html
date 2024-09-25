@@ -1,6 +1,6 @@
 @let config = modal().config();
 
-<div class="fm-modal--viewport" [class.scrollable]="config.scroll === 'modal' && !config.stretch">
+<div class="fm-modal--viewport" [class.scrollable]="config.scroll === 'modal'" #viewport>
   <fm-modal-instance-layout [modal]="modal()">
     @if (config.title || config.headerTpl) {
       <fm-modal-instance-header>

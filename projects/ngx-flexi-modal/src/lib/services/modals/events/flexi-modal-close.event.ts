@@ -6,5 +6,5 @@ export class FlexiModalCloseEvent<
   ModalT extends FlexiModal = FlexiModal
 > extends FlexiModalEvent<ModalT> {
 
-  public type = FlexiModalEventType.Close;
+  public readonly type = FlexiModalEventType.Close;
 }

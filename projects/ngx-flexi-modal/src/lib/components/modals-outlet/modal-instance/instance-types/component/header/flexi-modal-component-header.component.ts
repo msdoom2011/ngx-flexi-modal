@@ -16,13 +16,13 @@ import {FlexiModalsOutletComponent} from "../../../../flexi-modals-outlet.compon
 export class FlexiModalComponentHeaderComponent {
 
   // Dependencies
-  private _modalsOutlet = inject(FlexiModalsOutletComponent);
-  private _themeService = inject(FlexiModalsThemeService);
+  private readonly _modalsOutlet = inject(FlexiModalsOutletComponent);
+  private readonly _themeService = inject(FlexiModalsThemeService);
 
   // Inputs
-  public modal = input.required<FlexiModalWithComponent>();
+  public readonly modal = input.required<FlexiModalWithComponent>();
 
   // Signals
-  public modalHeaderTpl = this._modalsOutlet.modalHeaderTpl;
-  public themeNameGlobal = this._themeService.themeName;
+  public readonly modalHeaderTpl = this._modalsOutlet.modalHeaderTpl;
+  public readonly themeNameGlobal = this._themeService.themeName;
 }

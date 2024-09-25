@@ -1,4 +1,4 @@
-import {computed, Inject, Injectable, Optional, Signal, signal} from "@angular/core";
+import {computed, Inject, Injectable, Optional, signal} from "@angular/core";
 
 import {FLEXI_MODAL_STYLING_OPTIONS, FLEXI_MODAL_COLOR_SCHEME, FLEXI_MODAL_THEME} from "../../flexi-modals.tokens";
 import {normalizeOptions} from "../../tools/utils";
@@ -31,13 +31,13 @@ export class FlexiModalsThemeService {
     return this._themes()[this._themeName()];
   });
 
-  public get themeName(): Signal<string> {
-    return this._themeName.asReadonly();
-  }
+  public readonly themeName = computed<string>(() => {
+    return this._themeName();
+  });
 
-  public get themes(): Signal<IFlexiModalThemes> {
-    return this._themes.asReadonly();
-  }
+  public readonly themes = computed<IFlexiModalThemes>(() => {
+    return this._themes();
+  });
 
   constructor(
     @Optional() @Inject(FLEXI_MODAL_THEME) themeConfigs: Array<IFlexiModalThemeOptions>,
@@ -62,17 +62,8 @@ export class FlexiModalsThemeService {
     }
   }
 
-  public isThemeExist(themeName: string): boolean {
-    return themeName in this._themes();
-  }
 
-  public setTheme(themeName: string): void {
-    if (!this.isThemeExist(themeName)) {
-      throw new Error(`Unable to switch theme. Theme with '${themeName}' is not registered`);
-    }
-
-    this._themeName.set(themeName);
-  }
+  // Public methods
 
   public registerTheme(themeOptions: IFlexiModalThemeOptions): void {
     if (this.isThemeExist(themeOptions.name)) {
@@ -85,6 +76,18 @@ export class FlexiModalsThemeService {
         [themeOptions.name]: this._composeThemeConfig(themeOptions.colors, themeOptions.styling)
       };
     });
+  }
+
+  public isThemeExist(themeName: string): boolean {
+    return themeName in this._themes();
+  }
+
+  public setTheme(themeName: string): void {
+    if (!this.isThemeExist(themeName)) {
+      throw new Error(`Unable to switch theme. Theme with '${themeName}' is not registered`);
+    }
+
+    this._themeName.set(themeName);
   }
 
   public applyThemeStyles(targetElement: HTMLElement, themeName?: string): void {
@@ -120,6 +123,9 @@ export class FlexiModalsThemeService {
       }
     });
   }
+
+
+  // Private methods
 
   private _initializeWithOptions(
     colorsScheme: IFlexiModalColorScheme,
@@ -201,7 +207,7 @@ export class FlexiModalsThemeService {
       styling: {
         ...flexiModalDefaultStyles,
         ...(stylingOptions
-          ? normalizeOptions(stylingOptions, ['closeBtn', 'frameShadow'])
+          ? normalizeOptions(stylingOptions, ['headerActions', 'frameShadow'])
           : {}
         )
       },

@@ -30,7 +30,7 @@ export class FlexiModalComponentInstanceComponent<ComponentT extends Partial<IFl
 extends FlexiModalInstance<FlexiModalWithComponent<ComponentT, any>>
 implements AfterViewInit {
 
-  public override modal = input.required<FlexiModalWithComponent<ComponentT>>();
+  public readonly modal = input.required<FlexiModalWithComponent<ComponentT>>();
 
   public ngAfterViewInit() {
     const modal = this.modal();

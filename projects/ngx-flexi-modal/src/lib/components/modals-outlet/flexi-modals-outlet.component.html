@@ -1,9 +1,9 @@
 @if (modals().length) {
-  @if (!modalActive()?.config()?.stretch) {
+  @if (!modalActive()?.config()?.maximized) {
     <div class="fm-modals--backdrop" @fadeInOut></div>
   }
 
-  @for(modal of modals(); track modal.id) {
+  @for(modal of modals(); track modal.id()) {
     @switch (modal.type) {
       @case ('COMPONENT') {
         <fm-modal-component-instance

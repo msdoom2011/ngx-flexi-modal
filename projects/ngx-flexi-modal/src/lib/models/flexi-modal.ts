@@ -1,3 +1,4 @@
+import {computed, Signal, signal} from "@angular/core";
 import {BehaviorSubject} from "rxjs";
 
 import {flexiModalActionOptionsDefault, flexiModalOptionsDefault} from "../services/modals/flexi-modals.constants";
@@ -5,7 +6,6 @@ import {IFlexiModalConfig, IFlexiModalOptions} from "../services/modals/flexi-mo
 import {FlexiModalsService} from "../services/modals/flexi-modals.service";
 import {FlexiModalActions} from "./actions/flexi-modal-actions";
 import {generateRandomId} from "../tools/utils";
-import {Signal, signal} from "@angular/core";
 
 export abstract class FlexiModal<
   ConfigT extends IFlexiModalConfig<any> = IFlexiModalConfig<any>,
@@ -16,9 +16,9 @@ export abstract class FlexiModal<
 
   public abstract readonly type: string;
 
-  private _config = signal<ConfigT>(<ConfigT>{});
+  private readonly _config = signal<ConfigT>(<ConfigT>{});
 
-  public actions!: FlexiModalActions<this>;
+  public readonly actions!: FlexiModalActions<this>;
 
   constructor(
     public service: FlexiModalsService,
@@ -36,25 +36,28 @@ export abstract class FlexiModal<
     this.setOptions(options);
   }
 
-  public get id(): string {
+
+  // Computed
+
+  public readonly id = computed<string>(() => {
     return this._config().id || '';
-  }
+  });
 
-  public get index(): number {
+  public readonly index = computed<number>(() => {
     return this.service.modals().findIndex(modalConfig => modalConfig.id === this.id);
-  }
+  });
 
-  public get config(): Signal<ConfigT> {
-    return this._config.asReadonly();
-  }
+  public readonly config = computed<ConfigT>(() => {
+    return this._config();
+  });
 
-  public get active(): boolean {
+  public readonly active = computed<boolean>(() => {
     return this.service.modals()[this.service.modals().length - 1]?.id === this.id;
-  }
+  });
 
-  public get stretched(): boolean {
-    return this._config().stretch;
-  }
+  public readonly maximized = computed<boolean>(() => {
+    return this._config().maximized;
+  });
 
 
   // Public methods
@@ -64,23 +67,27 @@ export abstract class FlexiModal<
   }
 
   public update(options?: OptionsT): void {
-    this.service.updateModal(this.id, options || this._config());
+    this.service.updateModal(this.id(), options || this._config());
   }
 
-  public stretch(): void {
-    if (!this._config().stretch) {
-      this.update(<OptionsT>{stretch: true});
+  public maximize(): void {
+    if (!this._config().maximized) {
+      this.update(<OptionsT>{maximized: true});
     }
   }
 
-  public compress(): void {
-    if (this._config().stretch) {
-      this.update(<OptionsT>{stretch: false});
+  public minimize(): void {
+    if (this._config().maximized) {
+      this.update(<OptionsT>{maximized: false});
     }
+  }
+
+  public toggleMaximize(): void {
+    return this.maximized() ? this.minimize() : this.maximize();
   }
 
   public close(): void {
-    this.service.closeModal(this.id);
+    this.service.closeModal(this.id());
   }
 
 
