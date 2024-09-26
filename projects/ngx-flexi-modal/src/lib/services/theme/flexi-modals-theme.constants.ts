@@ -25,7 +25,7 @@ export const flexiModalDefaultStyles: IFlexiModalStylingConfig = {
   frameBorder: false,
   frameRounding: 4,
   headerActions: 'inside',
-  headerActionsWithBg: true,
+  headerActionsWithBg: false,
   headerHeight: 40,
   headerFontSize: '1.17em',
   headerFontWeight: '600',
