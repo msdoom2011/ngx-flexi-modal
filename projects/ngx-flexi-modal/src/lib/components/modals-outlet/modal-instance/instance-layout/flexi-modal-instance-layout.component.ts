@@ -1,15 +1,22 @@
 import {
   afterNextRender,
+  afterRender,
   ChangeDetectionStrategy,
   Component,
   computed,
   ElementRef,
   inject,
+  Injector,
   input,
+  OnDestroy,
+  OnInit,
+  signal,
   viewChild
 } from '@angular/core';
 import {NgComponentOutlet, NgTemplateOutlet} from "@angular/common";
+import {toObservable} from "@angular/core/rxjs-interop";
 import {AnimationBuilder} from "@angular/animations";
+import {filter, Subject, takeUntil} from "rxjs";
 
 import {FlexiModalInstanceFooterComponent} from "./footer/flexi-modal-instance-footer.component";
 import {FlexiModalInstanceHeaderComponent} from "./header/flexi-modal-instance-header.component";
@@ -35,13 +42,17 @@ export const FLEXI_MODAL_HEADER_ACTIONS_OUTER_SELECTOR = '.fm-modal--header-acti
     NgTemplateOutlet
   ],
   host: {
+    'class': 'fm-modal--viewport',
+    '[class.scrollable]': 'modal().config().scroll === "modal"',
     '[class.maximized]': 'modal().maximized()',
     '[class]': 'hostClasses()'
   }
 })
-export class FlexiModalInstanceLayoutComponent {
+export class FlexiModalInstanceLayoutComponent implements OnInit, OnDestroy {
 
   // Dependencies
+  private readonly _injector = inject(Injector);
+  private readonly _elementRef = inject(ElementRef<HTMLElement>);
   private readonly _themeService = inject(FlexiModalsThemeService);
   private readonly _animationBuilder = inject(AnimationBuilder);
 
@@ -53,6 +64,10 @@ export class FlexiModalInstanceLayoutComponent {
 
   // Signals
   public readonly theme = this._themeService.theme;
+  private readonly _scrollTopRequired = signal<boolean>(true);
+
+  // Private
+  private readonly _destroy$ = new Subject<void>();
 
 
   // Computed
@@ -131,9 +146,31 @@ export class FlexiModalInstanceLayoutComponent {
 
   // Lifecycle hooks
 
+  public ngOnInit(): void {
+    toObservable(this.modal().maximized, { injector: this._injector })
+      .pipe(
+        filter(() => this.modal().active()),
+        takeUntil(this._destroy$),
+      )
+      .subscribe(() => {
+        this._scrollTopRequired.set(true);
+      });
+  }
+
+  public ngOnDestroy(): void {
+    this._destroy$.next();
+    this._destroy$.complete();
+  }
+
   public readonly ngAfterNextRender = afterNextRender({ read: () => {
     if (!this.modal().maximized()) {
       this._runOpeningAnimation(this.modal().config().animation);
+    }
+  }});
+
+  public readonly ngAfterRender = afterRender({ read: () => {
+    if (this._scrollTopRequired()) {
+      this._elementRef.nativeElement.scrollTop = 0;
     }
   }});
 

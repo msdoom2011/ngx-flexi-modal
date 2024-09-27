@@ -35,7 +35,7 @@ implements AfterViewInit {
   public ngAfterViewInit() {
     const modal = this.modal();
     const content$ = modal.content$;
-    const componentRef = this.contentRef()?.createComponent(modal.content, { injector: this._injector });
+    const componentRef = this._contentRef()?.createComponent(modal.content, { injector: this._injector });
     const componentInputs = modal.config().inputs;
 
     if (componentRef?.instance.modal && componentRef.instance.modal[SIGNAL]) {

@@ -11,7 +11,6 @@ import {
   inject,
   input,
   model,
-  NgZone,
   OnChanges,
   OnDestroy,
   output,
@@ -34,7 +33,8 @@ import {FlexiModalsService} from "../../services/modals/flexi-modals.service";
 import {
   IFlexiModalTemplateConfig,
   IFlexiModalTemplateOptions,
-  TFlexiModalHeight, TFlexiModalOpeningAnimation,
+  TFlexiModalHeight,
+  TFlexiModalOpeningAnimation,
   TFlexiModalPosition,
   TFlexiModalScroll,
   TFlexiModalWidth
@@ -53,11 +53,10 @@ export class FlexiModalComponent implements DoCheck, OnChanges, AfterContentInit
   // Dependencies
   public readonly service = inject(FlexiModalsService);
   public readonly elementRef = inject(ElementRef);
-  private readonly _zone = inject(NgZone);
 
   // Inputs
   public readonly _id = input<string | undefined>(undefined, { alias: 'id' });
-  public readonly _opened = model<boolean>(false);
+  public readonly _opened = model<boolean>(false, { alias: 'opened' });
   public readonly _maximized = model<boolean | undefined>(undefined, { alias: 'maximized' });
   public readonly _title = input<string | undefined>(undefined, { alias: 'title' });
   public readonly _animation = input<TFlexiModalOpeningAnimation | undefined>(undefined, { alias: 'animation' });
@@ -65,7 +64,6 @@ export class FlexiModalComponent implements DoCheck, OnChanges, AfterContentInit
   public readonly _width = input<TFlexiModalWidth | undefined>(undefined, { alias: 'width' });
   public readonly _height = input<TFlexiModalHeight | undefined>(undefined, { alias: 'height' });
   public readonly _scroll = input<TFlexiModalScroll | undefined>(undefined, { alias: 'scroll' });
-  public readonly _border = input<boolean | undefined>(undefined, { alias: 'border' });
   public readonly _rounding = input<number | boolean | undefined>(undefined, { alias: 'rounding' });
   public readonly _closable = input<boolean | undefined>(undefined, { alias: 'closable' });
   public readonly _maximizable = input<boolean | undefined>(undefined, { alias: 'maximizable' });
@@ -192,21 +190,13 @@ export class FlexiModalComponent implements DoCheck, OnChanges, AfterContentInit
   }
 
   public ngOnChanges(changes: SimpleChanges): void {
-    const { opened } = changes;
+    const { _opened } = changes;
 
-    if (!opened?.currentValue) {
+    if (!_opened?.currentValue) {
       return;
 
-    } else if (opened?.currentValue && !this.modal()) {
-      this._zone.runOutsideAngular(() => {
-        const timeout = setTimeout(() => {
-          clearTimeout(timeout);
-
-          this._zone.run(() => {
-            this.open();
-          });
-        });
-      });
+    } else if (!this.modal()) {
+      this.open();
 
       return;
     }

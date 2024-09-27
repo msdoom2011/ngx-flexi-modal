@@ -2,6 +2,17 @@ $outer-v-padding: 50px;
 $outer-h-padding: 30px;
 
 :host {
+  position: absolute;
+  display: block;
+  inset: 0;
+
+  &.scrollable {
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+}
+
+.fm-modal--container {
   position: relative;
   display: flex;
   justify-content: center;
@@ -10,7 +21,7 @@ $outer-h-padding: 30px;
   height: 100vh;
   z-index: 10;
 
-  &.maximized {
+  :host.maximized & {
     display: block;
 
     &::ng-deep fm-modal-instance-footer {
@@ -18,20 +29,20 @@ $outer-h-padding: 30px;
     }
   }
 
-  &.scroll-modal.height-fit-content {
+  :host.scroll-modal.height-fit-content & {
     height: fit-content;
     min-height: 100vh;
   }
 
-  &.position-top {
+  :host.position-top & {
     align-items: flex-start;
   }
 
-  &.position-center {
+  :host.position-center & {
     align-items: center;
   }
 
-  &.position-bottom {
+  :host.position-bottom & {
     align-items: flex-end;
   }
 }
@@ -292,7 +303,7 @@ $outer-h-padding: 30px;
   }
 }
 
-.fm-modal--body-wrapper {
+.fm-modal--paddings {
   position: relative;
   z-index: 10;
   padding: $outer-v-padding $outer-h-padding;

@@ -5,16 +5,6 @@
   inset: 0;
 }
 
-.fm-modal--viewport {
-  position: absolute;
-  inset: 0;
-
-  &.scrollable {
-    overflow-y: auto;
-    overflow-x: hidden;
-  }
-}
-
 .fm-modal--content-placeholder {
   display: none;
 }

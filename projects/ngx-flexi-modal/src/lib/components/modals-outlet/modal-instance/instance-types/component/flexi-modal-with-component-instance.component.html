@@ -1,19 +1,17 @@
 @let config = modal().config();
 
-<div class="fm-modal--viewport" [class.scrollable]="config.scroll === 'modal'" #viewport>
-  <fm-modal-instance-layout [modal]="modal()">
-    @if (config.title) {
-      <fm-modal-instance-header>
-        <fm-modal-with-component-header class="fm-modal--header" [modal]="modal()" />
-      </fm-modal-instance-header>
-    }
+<fm-modal-instance-layout [modal]="modal()" #viewport>
+  @if (config.title) {
+    <fm-modal-instance-header>
+      <fm-modal-with-component-header class="fm-modal--header" [modal]="modal()" />
+    </fm-modal-instance-header>
+  }
 
-    <div class="fm-modal--content-placeholder" #content></div>
+  <div class="fm-modal--content-placeholder" #content></div>
 
-    @if (modal().actions.length()) {
-      <fm-modal-instance-footer>
-        <fm-modal-with-component-footer class="fm-modal--footer" [modal]="modal()" />
-      </fm-modal-instance-footer>
-    }
-  </fm-modal-instance-layout>
-</div>
+  @if (modal().actions.length()) {
+    <fm-modal-instance-footer>
+      <fm-modal-with-component-footer class="fm-modal--footer" [modal]="modal()" />
+    </fm-modal-instance-footer>
+  }
+</fm-modal-instance-layout>

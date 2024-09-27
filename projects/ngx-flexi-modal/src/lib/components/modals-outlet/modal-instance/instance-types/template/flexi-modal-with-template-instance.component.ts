@@ -32,7 +32,7 @@ implements AfterViewInit {
 
   public ngAfterViewInit() {
     const content$ = this.modal().content$;
-    const embeddedViewRef = this.contentRef()?.createEmbeddedView<ContentT>(
+    const embeddedViewRef = this._contentRef()?.createEmbeddedView<ContentT>(
       this.modal().content,
       this.modal().config().context || undefined,
       { injector: this._injector }

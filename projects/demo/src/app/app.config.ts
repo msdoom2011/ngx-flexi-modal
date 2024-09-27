@@ -17,7 +17,7 @@ export const appConfig: ApplicationConfig = {
         closable: true,
         maximizable: true,
         scroll: 'modal',
-        animation: 'appear',
+        animation: 'zoom-out',
       }),
       // withStyling({
         // frameShadow: '20px 20px 20px 0 rgba(255, 0, 0, 0.3)',

@@ -18,6 +18,32 @@ export const flexiModalOpeningAnimations: Record<TFlexiModalOpeningAnimation, IF
     ]),
   },
 
+  'zoom-in': {
+    fallback: 'slide',
+    validate: () => true,
+    transition: () => ([
+      style({
+        transform: 'perspective(30cm) translate3d(0, 0, -300px)'
+      }),
+      animate('200ms ease-in-out', style({
+        transform: 'perspective(30cm) translate3d(0, 0, 0)'
+      })),
+    ]),
+  },
+
+  'zoom-out': {
+    fallback: 'slide',
+    validate: () => true,
+    transition: () => ([
+      style({
+        transform: 'perspective(30cm) translate3d(0, 0, 300px)'
+      }),
+      animate('200ms ease-in-out', style({
+        transform: 'perspective(30cm) translate3d(0, 0, 0)'
+      })),
+    ]),
+  },
+
   'appear': {
     fallback: 'slide',
     validate: () => true,

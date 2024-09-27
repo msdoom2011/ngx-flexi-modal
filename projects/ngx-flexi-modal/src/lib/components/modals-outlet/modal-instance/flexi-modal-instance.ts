@@ -1,4 +1,5 @@
 import {
+  afterRender,
   computed,
   Directive,
   effect,
@@ -13,7 +14,7 @@ import {
   viewChild,
   ViewContainerRef
 } from '@angular/core';
-import {delay, filter, fromEvent, Subject, Subscription, takeUntil} from "rxjs";
+import {filter, fromEvent, Subject, Subscription, takeUntil} from "rxjs";
 import {toObservable} from "@angular/core/rxjs-interop";
 
 import {FLEXI_MODAL_HEADER_ACTION_CLASS} from "./instance-layout/flexi-modal-instance-layout.component";
@@ -31,7 +32,7 @@ import {FlexiModal} from "../../../models/flexi-modal";
 export abstract class FlexiModalInstance<ModalT extends FlexiModal> implements OnInit, OnDestroy {
 
   // Dependencies
-  public readonly service = inject(FlexiModalsService);
+  protected readonly _service = inject(FlexiModalsService);
   protected readonly _themeService = inject(FlexiModalsThemeService);
   protected readonly _elementRef = inject(ElementRef<HTMLElement>);
   protected readonly _injector = inject(Injector);
@@ -41,17 +42,17 @@ export abstract class FlexiModalInstance<ModalT extends FlexiModal> implements O
   public abstract readonly modal: InputSignal<ModalT>;
 
   // Signals
-  private _focusableElements = signal<Array<Element & { focus: () => any }>>([]);
+  private readonly _focusableElements = signal<Array<Element & { focus: () => any }>>([]);
+  private readonly _focusableElementsUpdateRequested = signal<boolean>(true);
 
   // Public props
-  public readonly contentRef = viewChild('content', { read: ViewContainerRef });
-  public readonly viewportRef = viewChild('viewport', { read: ElementRef<HTMLDivElement> });
+  protected readonly _contentRef = viewChild.required('content', { read: ViewContainerRef });
+  protected readonly _viewportRef = viewChild.required('viewport', { read: ElementRef<HTMLElement> });
 
   // Private props
   private readonly _destroy$ = new Subject<void>();
   private _destroySubscription: Subscription | null = null;
   private _themeOld = this._themeService.themeName();
-  private _maximizedOld = false;
 
 
   // Computed
@@ -61,7 +62,7 @@ export abstract class FlexiModalInstance<ModalT extends FlexiModal> implements O
   });
 
   public readonly index = computed<number>(() => {
-    return this.service.modals().findIndex(modal => modal.id() === this.id());
+    return this._service.modals().findIndex(modal => modal.id() === this.id());
   });
 
   public readonly classes = computed<Array<string>>(() => {
@@ -73,24 +74,6 @@ export abstract class FlexiModalInstance<ModalT extends FlexiModal> implements O
 
 
   // Effects
-
-  private readonly _scrollTopEffect = effect(() => {
-    const { maximized, scroll } = this.modal().config();
-    const viewportRef = this.viewportRef();
-    const isActive = this.modal().active();
-
-    if (
-      !isActive
-      || !viewportRef
-      || scroll !== 'modal'
-      || maximized === this._maximizedOld
-    ) {
-      return;
-    }
-
-    viewportRef.nativeElement.scrollTop = 0;
-    this._maximizedOld = maximized;
-  });
 
   private readonly _activeUntilEffect = effect(() => {
     const modalDestroy$ = this.modal().config().aliveUntil;
@@ -110,29 +93,39 @@ export abstract class FlexiModalInstance<ModalT extends FlexiModal> implements O
 
   private readonly _focusableElementsEffect = effect(() => {
     const focusInModal = this._elementRef.nativeElement.contains(document.activeElement);
+    const focusableElements = this._focusableElements();
     const isActive = this.modal().active();
 
     if (!isActive && focusInModal) {
-      (<any>document.activeElement).blur();
+      return (<any>document.activeElement).blur();
 
-    } else if (isActive && !focusInModal) {
-      const focusableElements = this._focusableElements();
-      let focusSucceeded = false;
+    } else if (!isActive || focusInModal) {
+      return;
+    }
 
-      for (const element of focusableElements) {
-        if (!element.classList.contains(FLEXI_MODAL_HEADER_ACTION_CLASS)) {
-          focusSucceeded = true;
-          element.focus();
-          break;
+    const viewportBox = this._viewportRef().nativeElement.getBoundingClientRect();
+    let focusSucceeded = false;
+
+    for (const element of focusableElements) {
+      if (!element.classList.contains(FLEXI_MODAL_HEADER_ACTION_CLASS)) {
+        const elementBox = element.getBoundingClientRect();
+
+        if (viewportBox.height < elementBox.top) {
+          continue;
         }
-      }
 
-      if (!focusSucceeded && focusableElements.length) {
-        focusableElements[0].focus();
+        focusSucceeded = true;
+        element.focus();
 
-      } else if (!focusableElements.length) {
-        (<any>document.activeElement).blur();
+        break;
       }
+    }
+
+    if (!focusSucceeded && focusableElements.length) {
+      focusableElements[0].focus();
+
+    } else if (!focusableElements.length) {
+      (<any>document.activeElement).blur();
     }
   });
 
@@ -160,19 +153,21 @@ export abstract class FlexiModalInstance<ModalT extends FlexiModal> implements O
     this._destroy$.complete();
   }
 
+  public ngAfterRender = afterRender({ read: () => {
+    if (this._focusableElementsUpdateRequested()) {
+      this._focusableElementsUpdateRequested.set(false);
+      this._focusableElements.set(findFocusableElements(this._elementRef.nativeElement));
+    }
+  }});
+
 
   // Internal implementation
 
   protected _initializeFocusableElements(): void {
     toObservable(this.modal().maximized, { injector: this._injector })
-      .pipe(
-        delay(10),
-        takeUntil(this._destroy$)
-      )
+      .pipe(takeUntil(this._destroy$))
       .subscribe(() => {
-        this._focusableElements.set(
-          findFocusableElements(this._elementRef.nativeElement)
-        );
+        this._focusableElementsUpdateRequested.set(true);
       });
   }
 

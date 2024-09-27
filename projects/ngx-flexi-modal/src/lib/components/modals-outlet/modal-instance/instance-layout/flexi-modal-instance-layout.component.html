@@ -9,40 +9,42 @@
   <div class="fm-modal--closing-layer" (click)="modal().close()"></div>
 }
 
-<div class="fm-modal--body-wrapper" [style]="bodyStyles()">
-  <div
-    class="fm-modal--body"
-    [class.no-border]="!theme().styling.frameBorder"
-    [class.no-shadow]="!theme().styling.frameShadow"
-    #body
-  >
-    @if (
-      (config.closable || config.maximizable)
-      && (config.maximized || theme().styling.headerActions === 'inside')
-    ) {
-      <div class="fm-modal--header-wrapper">
-        <div class="fm-modal--header-content">
-          <ng-container *ngTemplateOutlet="headerTpl" />
+<div class="fm-modal--container">
+  <div class="fm-modal--paddings" [style]="bodyStyles()">
+    <div
+      class="fm-modal--body"
+      [class.no-border]="!theme().styling.frameBorder"
+      [class.no-shadow]="!theme().styling.frameShadow"
+      #body
+    >
+      @if (
+        (config.closable || config.maximizable)
+        && (config.maximized || theme().styling.headerActions === 'inside')
+      ) {
+        <div class="fm-modal--header-wrapper">
+          <div class="fm-modal--header-content">
+            <ng-container *ngTemplateOutlet="headerTpl" />
+          </div>
+
+          <ng-container *ngTemplateOutlet="headerActionsTpl" />
         </div>
 
-        <ng-container *ngTemplateOutlet="headerActionsTpl" />
+      } @else {
+        @if (!!theme().styling.headerActions) {
+          <ng-container *ngTemplateOutlet="headerActionsTpl" />
+        }
+        <ng-container *ngTemplateOutlet="headerTpl" />
+      }
+
+      <div
+        class="fm-modal--content"
+        [class.scrollable]="config.scroll === 'content'"
+      >
+        <ng-content />
       </div>
 
-    } @else {
-      @if (!!theme().styling.headerActions) {
-        <ng-container *ngTemplateOutlet="headerActionsTpl" />
-      }
-      <ng-container *ngTemplateOutlet="headerTpl" />
-    }
-
-    <div
-      class="fm-modal--content"
-      [class.scrollable]="config.scroll === 'content'"
-    >
-      <ng-content />
+      <ng-content select="fm-modal-instance-footer" />
     </div>
-
-    <ng-content select="fm-modal-instance-footer" />
   </div>
 </div>
 

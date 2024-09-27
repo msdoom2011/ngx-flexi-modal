@@ -1,4 +1,5 @@
 import {InputSignal, TemplateRef, Type} from "@angular/core";
+import {AnimationMetadata} from "@angular/animations";
 import {Observable} from "rxjs";
 
 import {FlexiModalActionDirective} from "../../components/modal/directives/flexi-modal-action.directive";
@@ -13,14 +14,13 @@ import {FlexiModalCloseEvent} from "./events/flexi-modal-close.event";
 import {FlexiModalOpenEvent} from "./events/flexi-modal-open.event";
 import {modalWidthPresets} from "./flexi-modals.constants";
 import {FlexiModal} from "../../models/flexi-modal";
-import {AnimationMetadata} from "@angular/animations";
 
 export type TFlexiModalWidth = 'fit-content' | 'fit-window' | (keyof typeof modalWidthPresets) | number;
 export type TFlexiModalHeight = 'fit-content' | number;
 export type TFlexiModalScroll = 'modal' | 'content';
 export type TFlexiModalButtonPosition = 'left' | 'center' | 'right';
 export type TFlexiModalPosition = 'top' | 'center';
-export type TFlexiModalOpeningAnimation = 'fade-in' | 'slide' | 'appear' | 'fall-down' | 'roll-out';
+export type TFlexiModalOpeningAnimation = 'fade-in' | 'zoom-in' | 'zoom-out' | 'slide' | 'appear' | 'fall-down' | 'roll-out';
 export type TFlexiModalEvent = (
   FlexiModalBeforeOpenEvent
   | FlexiModalOpenEvent

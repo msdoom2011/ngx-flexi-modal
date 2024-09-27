@@ -39,8 +39,6 @@ export class FlexiModalsService<
   ExtensionOptionsByTypesT extends IFlexiModalExtensionOptionsByTypes = IFlexiModalExtensionOptionsByTypes
 > {
 
-  private readonly _zone = inject(NgZone);
-
   private readonly _extensionsArr = inject<Array<IFlexiModalExtension<ExtensionOptionsByTypesT>>>(FLEXI_MODAL_EXTENSION);
 
   private readonly _defaultOptions = inject<IFlexiModalOptions<any> | undefined>(FLEXI_MODAL_DEFAULT_OPTIONS, { optional: true });
@@ -186,14 +184,7 @@ export class FlexiModalsService<
     }
 
     this._modals.update(modals => modals.filter(modalInst => modalInst.id() !== modalId));
-
-    this._zone.runOutsideAngular(() => {
-      setTimeout(() => {
-        this._zone.run(() => {
-          this._events$.next(new FlexiModalCloseEvent(modal));
-        });
-      });
-    });
+    this._events$.next(new FlexiModalCloseEvent(modal));
   }
 
   public closeAll(): void {
