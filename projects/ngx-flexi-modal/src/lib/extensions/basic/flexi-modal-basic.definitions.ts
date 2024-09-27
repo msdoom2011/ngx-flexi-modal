@@ -3,6 +3,7 @@ import {Observable} from "rxjs";
 import {FlexiModalBeforeCloseEvent} from "../../services/modals/events/flexi-modal-before-close.event";
 import {FlexiModalWithComponent} from "../../models/flexi-modal-with-component";
 import {FlexiModalAction} from "../../models/actions/flexi-modal-action";
+import {TFlexiModalOpeningAnimation} from "../../services/modals/flexi-modals.definitions";
 
 export type TFlexiModalBasicIcon = keyof IFlexiModalBasicOptionsByTypes | null;
 export type TFlexiModalBasicAlign = 'left' | 'center' | 'right';

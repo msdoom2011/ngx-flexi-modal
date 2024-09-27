@@ -4,16 +4,16 @@ import {NgTemplateOutlet} from "@angular/common";
 import {FlexiModalWithTemplate} from "../../../../../../models/flexi-modal-with-template";
 
 @Component({
-  selector: 'fm-modal-template-footer',
+  selector: 'fm-modal-with-template-footer',
   standalone: true,
   imports: [
     NgTemplateOutlet
   ],
-  templateUrl: './flexi-modal-template-footer.component.html',
-  styleUrl: './flexi-modal-template-footer.component.scss',
+  templateUrl: './flexi-modal-with-template-footer.component.html',
+  styleUrl: './flexi-modal-with-template-footer.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FlexiModalTemplateFooterComponent {
+export class FlexiModalWithTemplateFooterComponent {
 
   // Inputs
   public readonly modal = input.required<FlexiModalWithTemplate>();

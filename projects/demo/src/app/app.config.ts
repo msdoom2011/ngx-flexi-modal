@@ -1,17 +1,23 @@
-import {ApplicationConfig, provideZoneChangeDetection} from '@angular/core';
+import {ApplicationConfig, provideExperimentalZonelessChangeDetection} from '@angular/core';
 import {provideAnimationsAsync} from "@angular/platform-browser/animations/async";
-import {provideFlexiModals, withDefaultOptions, withThemes} from "ngx-flexi-modal";
+import {provideFlexiModals, withDefaultOptions, withThemes, withExtensions} from "ngx-flexi-modal";
+
+// import {modalBasicCustomExtension} from "./modal/basic-custom/modal-basic-custom.extension";
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideZoneChangeDetection({ eventCoalescing: true }),
+    provideExperimentalZonelessChangeDetection(),
     provideAnimationsAsync(),
     provideFlexiModals(
+      withExtensions([
+        // modalBasicCustomExtension,
+      ]),
       withDefaultOptions({
-        position: 'center',
+        position: 'top',
         closable: true,
         maximizable: true,
         scroll: 'modal',
+        animation: 'appear',
       }),
       // withStyling({
         // frameShadow: '20px 20px 20px 0 rgba(255, 0, 0, 0.3)',
@@ -76,7 +82,7 @@ export const appConfig: ApplicationConfig = {
             headerActions: 'outside',
             headerFontSize: '1.17em',
             headerFontWeight: 'bold',
-            headerActionsWithBg: false,
+            headerActionsWithBg: true,
           }
         },
       ])

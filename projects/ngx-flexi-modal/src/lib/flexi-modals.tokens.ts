@@ -2,8 +2,8 @@ import {InjectionToken} from "@angular/core";
 
 import {IFlexiModalExtension, IFlexiModalOptions} from "./services/modals/flexi-modals.definitions";
 import {
-  IFlexiModalStylingConfig, IFlexiModalStylingOptions,
   IFlexiModalColorScheme,
+  IFlexiModalStylingOptions,
   IFlexiModalThemeOptions
 } from "./services/theme/flexi-modals-theme.definitions";
 

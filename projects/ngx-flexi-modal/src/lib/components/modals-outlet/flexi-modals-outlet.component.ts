@@ -17,11 +17,11 @@ import {FlexiModalsThemeService} from "../../services/theme/flexi-modals-theme.s
 import {FlexiModalsService} from "../../services/modals/flexi-modals.service";
 import {FlexiModal} from "../../models/flexi-modal";
 import {
-  FlexiModalComponentInstanceComponent
-} from "./modal-instance/instance-types/component/flexi-modal-component-instance.component";
+  FlexiModalWithComponentInstanceComponent
+} from "./modal-instance/instance-types/component/flexi-modal-with-component-instance.component";
 import {
-  FlexiModalTemplateInstanceComponent
-} from "./modal-instance/instance-types/template/flexi-modal-template-instance.component";
+  FlexiModalWithTemplateInstanceComponent
+} from "./modal-instance/instance-types/template/flexi-modal-with-template-instance.component";
 
 @Component({
   selector: 'fm-modals-outlet',
@@ -32,8 +32,8 @@ import {
   imports: [
     NgTemplateOutlet,
     NgComponentOutlet,
-    FlexiModalComponentInstanceComponent,
-    FlexiModalTemplateInstanceComponent,
+    FlexiModalWithComponentInstanceComponent,
+    FlexiModalWithTemplateInstanceComponent,
     NgForOf,
   ],
   animations: [

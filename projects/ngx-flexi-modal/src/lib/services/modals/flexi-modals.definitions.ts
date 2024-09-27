@@ -13,12 +13,14 @@ import {FlexiModalCloseEvent} from "./events/flexi-modal-close.event";
 import {FlexiModalOpenEvent} from "./events/flexi-modal-open.event";
 import {modalWidthPresets} from "./flexi-modals.constants";
 import {FlexiModal} from "../../models/flexi-modal";
+import {AnimationMetadata} from "@angular/animations";
 
 export type TFlexiModalWidth = 'fit-content' | 'fit-window' | (keyof typeof modalWidthPresets) | number;
 export type TFlexiModalHeight = 'fit-content' | number;
 export type TFlexiModalScroll = 'modal' | 'content';
 export type TFlexiModalButtonPosition = 'left' | 'center' | 'right';
-export type TFlexiModalPosition = 'top' | 'center' | 'bottom';
+export type TFlexiModalPosition = 'top' | 'center';
+export type TFlexiModalOpeningAnimation = 'fade-in' | 'slide' | 'appear' | 'fall-down' | 'roll-out';
 export type TFlexiModalEvent = (
   FlexiModalBeforeOpenEvent
   | FlexiModalOpenEvent
@@ -30,9 +32,11 @@ export type TFlexiModalEvent = (
 
 // Modal aware component interface
 
-// Applicable only for components that will be opened via showComponent method
-// Implementing this interface provides access to the modal instance inside the rendered component.
-// The modal input is optional intentionally to ensure ability to use the same component outside the modal context.
+/*
+ * Applicable only for components that will be opened via showComponent method
+ * Implementing this interface provides access to the modal instance inside the rendered component.
+ * The modal input is optional intentionally to ensure ability to use the same component outside the modal context.
+ */
 export interface IFlexiModalAware {
   modal: InputSignal<FlexiModalWithComponent | undefined>;
 }
@@ -53,6 +57,7 @@ export interface IFlexiModalExtensionTypeConfig<
   ComponentT = any
 > {
   component: Type<ComponentT>;
+  options: IFlexiModalComponentOptions<ComponentT>;
   convert: (config: ShortcutModalOptionsT) => IFlexiModalComponentOptions<ComponentT>;
 }
 
@@ -66,6 +71,7 @@ export interface IFlexiModalConfig<FlexiModalT extends FlexiModal> {
   actions: Array<IFlexiModalActionConfig> | undefined;
   onClose: (($event: FlexiModalBeforeCloseEvent<FlexiModalT>) => unknown) | undefined;
   onOpen: (($event: FlexiModalOpenEvent<FlexiModalT>) => unknown) | undefined;
+  animation: TFlexiModalOpeningAnimation;
   position: TFlexiModalPosition;
   scroll: TFlexiModalScroll;
   height: TFlexiModalHeight;
@@ -75,8 +81,10 @@ export interface IFlexiModalConfig<FlexiModalT extends FlexiModal> {
   maximized: boolean;
   closable: boolean;
   maximizable: boolean;
-  // Random data that can be used to read for example in event listeners.
-  // This object doesn't go to any renderable modal content
+  /*
+   * Random data that can be used to read for example in event listeners.
+   * This object doesn't go to any renderable modal content
+   */
   data: {};
 }
 
@@ -97,8 +105,7 @@ extends IFlexiModalConfig<FlexiModalWithComponent<ComponentT>> {
   inputs: InputsT;
 }
 
-export type IFlexiModalComponentOptions<
-  ComponentT, InputsT extends object = Record<string, any>
+export type IFlexiModalComponentOptions<ComponentT, InputsT extends object = Record<string, any>
 > = TModalOptions<IFlexiModalComponentConfig<ComponentT, InputsT>>;
 
 
@@ -139,3 +146,12 @@ export type IFlexiModalActionOptions = (
   Partial<Omit<IFlexiModalActionConfig, 'label'>>
   & IFlexiModalActionOptionsRequired
 );
+
+
+// Animations
+
+export interface IFlexiModalAnimationConfig {
+  fallback: TFlexiModalOpeningAnimation;
+  validate: (modalBodyElement: HTMLDivElement) => boolean;
+  transition: () => Array<AnimationMetadata>;
+}

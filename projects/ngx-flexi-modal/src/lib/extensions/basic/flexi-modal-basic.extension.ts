@@ -8,59 +8,72 @@ export const flexiModalBasicExtension: IFlexiModalExtension<IFlexiModalBasicOpti
 
   error: {
     component: FlexiModalBasicComponent,
-    convert: (config: IFlexiModalBasicOptionsByTypes['error']) => extendModalOptions({
+    options: {
       title: 'Error',
       width: 'small',
       inputs: {
         icon: 'error'
       },
-    }, config)
+    },
+    convert(config: IFlexiModalBasicOptionsByTypes['error']) {
+      return extendModalOptions(this.options, config)
+    }
   },
 
   warning: {
     component: FlexiModalBasicComponent,
-    convert: (config: IFlexiModalBasicOptionsByTypes['warning']) => extendModalOptions({
+    options: {
       title: 'Warning',
       width: 'small',
       inputs: {
         icon: 'warning'
       },
-    }, config)
+    },
+    convert(config: IFlexiModalBasicOptionsByTypes['warning']) {
+      return extendModalOptions(this.options, config)
+    }
   },
 
   success: {
     component: FlexiModalBasicComponent,
-    convert: (config: IFlexiModalBasicOptionsByTypes['success']) => extendModalOptions({
+    options: {
       title: 'Success',
       width: 'small',
       inputs: {
         icon: 'success'
       },
-    }, config)
+    },
+    convert(config: IFlexiModalBasicOptionsByTypes['success']) {
+      return extendModalOptions(this.options, config);
+    }
   },
 
   info: {
     component: FlexiModalBasicComponent,
-    convert: (config: IFlexiModalBasicOptionsByTypes['info']) => extendModalOptions({
+    options: {
       title: 'Information',
       width: 'small',
       inputs: {
         icon: 'info'
       },
-    }, config)
+    },
+    convert(config: IFlexiModalBasicOptionsByTypes['info']) {
+      return extendModalOptions(this.options, config);
+    }
   },
 
   confirm: {
     component: FlexiModalBasicComponent,
-    convert: (config: IFlexiModalBasicOptionsByTypes['confirm']) => {
-      const options = extendModalOptions({
-        title: 'Confirmation',
-        closable: false,
-        width: 'small',
-        inputs: {
-          icon: 'confirm'
-        },
-      }, config);
+    options: {
+      title: 'Confirmation',
+      closable: false,
+      width: 'small',
+      inputs: {
+        icon: 'confirm'
+      },
+    },
+    convert(config: IFlexiModalBasicOptionsByTypes['confirm']) {
+      const options = extendModalOptions(this.options, config);
 
       options.actions = [
         {

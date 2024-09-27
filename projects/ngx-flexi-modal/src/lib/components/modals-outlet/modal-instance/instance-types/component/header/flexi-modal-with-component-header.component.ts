@@ -6,14 +6,14 @@ import {FlexiModalWithComponent} from "../../../../../../models/flexi-modal-with
 import {FlexiModalsOutletComponent} from "../../../../flexi-modals-outlet.component";
 
 @Component({
-  selector: 'fm-modal-component-header',
+  selector: 'fm-modal-with-component-header',
   standalone: true,
-  templateUrl: './flexi-modal-component-header.component.html',
-  styleUrl: './flexi-modal-component-header.component.scss',
+  templateUrl: './flexi-modal-with-component-header.component.html',
+  styleUrl: './flexi-modal-with-component-header.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [NgTemplateOutlet]
 })
-export class FlexiModalComponentHeaderComponent {
+export class FlexiModalWithComponentHeaderComponent {
 
   // Dependencies
   private readonly _modalsOutlet = inject(FlexiModalsOutletComponent);

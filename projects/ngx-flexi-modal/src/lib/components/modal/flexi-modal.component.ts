@@ -34,7 +34,7 @@ import {FlexiModalsService} from "../../services/modals/flexi-modals.service";
 import {
   IFlexiModalTemplateConfig,
   IFlexiModalTemplateOptions,
-  TFlexiModalHeight,
+  TFlexiModalHeight, TFlexiModalOpeningAnimation,
   TFlexiModalPosition,
   TFlexiModalScroll,
   TFlexiModalWidth
@@ -60,6 +60,7 @@ export class FlexiModalComponent implements DoCheck, OnChanges, AfterContentInit
   public readonly _opened = model<boolean>(false);
   public readonly _maximized = model<boolean | undefined>(undefined, { alias: 'maximized' });
   public readonly _title = input<string | undefined>(undefined, { alias: 'title' });
+  public readonly _animation = input<TFlexiModalOpeningAnimation | undefined>(undefined, { alias: 'animation' });
   public readonly _position = input<TFlexiModalPosition | undefined>(undefined, { alias: 'position' });
   public readonly _width = input<TFlexiModalWidth | undefined>(undefined, { alias: 'width' });
   public readonly _height = input<TFlexiModalHeight | undefined>(undefined, { alias: 'height' });
@@ -217,6 +218,7 @@ export class FlexiModalComponent implements DoCheck, OnChanges, AfterContentInit
     > = [
       { _maximized: 'maximized' },
       { _title: 'title' },
+      { _animation: 'animation' },
       { _position: 'position' },
       { _width: 'width' },
       { _height: 'height' },
@@ -266,6 +268,7 @@ export class FlexiModalComponent implements DoCheck, OnChanges, AfterContentInit
     const modal = this.service.showTemplate(bodyTpl, {
       id: this._id(),
       title: this._title(),
+      animation: this._animation(),
       position: this._position(),
       width: this._width(),
       height: this._height(),

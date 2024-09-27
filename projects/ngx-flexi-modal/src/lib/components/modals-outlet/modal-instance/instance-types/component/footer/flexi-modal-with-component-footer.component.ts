@@ -8,14 +8,14 @@ import {FlexiModalAction} from "../../../../../../models/actions/flexi-modal-act
 import {FlexiModalsOutletComponent} from "../../../../flexi-modals-outlet.component";
 
 @Component({
-  selector: 'fm-modal-component-footer',
+  selector: 'fm-modal-with-component-footer',
   standalone: true,
   imports: [ NgTemplateOutlet ],
-  templateUrl: './flexi-modal-component-footer.component.html',
-  styleUrl: './flexi-modal-component-footer.component.scss',
+  templateUrl: './flexi-modal-with-component-footer.component.html',
+  styleUrl: './flexi-modal-with-component-footer.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FlexiModalComponentFooterComponent {
+export class FlexiModalWithComponentFooterComponent {
 
   // Dependencies
   private readonly _modalsOutlet = inject(FlexiModalsOutletComponent);

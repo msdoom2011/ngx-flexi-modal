@@ -1,5 +1,9 @@
 import {IFlexiModalActionConfig, IFlexiModalConfig,} from "./flexi-modals.definitions";
 
+export const MODAL_WITH_COMPONENT_TYPE = 'COMPONENT';
+
+export const MODAL_WITH_TEMPLATE_TYPE = 'TEMPLATE';
+
 export enum FlexiModalEventType {
   BeforeOpen = 'BEFORE_OPEN',
   Open = 'OPEN',
@@ -23,7 +27,8 @@ export const flexiModalOptionsDefault: IFlexiModalConfig<any> = {
   actions: undefined,
   onClose: undefined,
   onOpen: undefined,
-  position: 'center',
+  animation: 'slide',
+  position: 'top',
   width: 'fit-content',
   height: 'fit-content',
   scroll: 'content',

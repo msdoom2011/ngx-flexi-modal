@@ -8,7 +8,8 @@ import {
   InputSignal,
   NgZone,
   OnDestroy,
-  OnInit, signal,
+  OnInit,
+  signal,
   viewChild,
   ViewContainerRef
 } from '@angular/core';
@@ -60,13 +61,12 @@ export abstract class FlexiModalInstance<ModalT extends FlexiModal> implements O
   });
 
   public readonly index = computed<number>(() => {
-    return this.service.modals()
-      .findIndex(modal => modal.id() === this.id());
+    return this.service.modals().findIndex(modal => modal.id() === this.id());
   });
 
   public readonly classes = computed<Array<string>>(() => {
     return [
-      'fm-modal',
+      'fm-modal-instance',
       ...(this.modal().config().classes || [])
     ];
   });
@@ -214,7 +214,7 @@ export abstract class FlexiModalInstance<ModalT extends FlexiModal> implements O
     });
   }
 
-  private _onTabKeydownCallback($event: KeyboardEvent): void {
+  protected _onTabKeydownCallback($event: KeyboardEvent): void {
     const elements = this._focusableElements();
 
     if (!elements.length) {

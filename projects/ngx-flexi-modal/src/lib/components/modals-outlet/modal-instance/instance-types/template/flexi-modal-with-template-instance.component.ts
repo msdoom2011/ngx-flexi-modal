@@ -4,14 +4,14 @@ import {NgTemplateOutlet} from "@angular/common";
 import {FlexiModalInstanceFooterComponent} from "../../instance-layout/footer/flexi-modal-instance-footer.component";
 import {FlexiModalInstanceHeaderComponent} from "../../instance-layout/header/flexi-modal-instance-header.component";
 import {FlexiModalInstanceLayoutComponent} from "../../instance-layout/flexi-modal-instance-layout.component";
-import {FlexiModalTemplateHeaderComponent} from "./header/flexi-modal-template-header.component";
-import {FlexiModalTemplateFooterComponent} from "./footer/flexi-modal-template-footer.component";
+import {FlexiModalWithTemplateHeaderComponent} from "./header/flexi-modal-with-template-header.component";
+import {FlexiModalWithTemplateFooterComponent} from "./footer/flexi-modal-with-template-footer.component";
 import {FlexiModalWithTemplate} from "../../../../../models/flexi-modal-with-template";
 import {FlexiModalInstance} from "../../flexi-modal-instance";
 
 @Component({
-  selector: 'fm-modal-template-instance',
-  templateUrl: './flexi-modal-template-instance.component.html',
+  selector: 'fm-modal-with-template-instance',
+  templateUrl: './flexi-modal-with-template-instance.component.html',
   styleUrl: '../../flexi-modal-instance.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
@@ -19,12 +19,12 @@ import {FlexiModalInstance} from "../../flexi-modal-instance";
     FlexiModalInstanceLayoutComponent,
     FlexiModalInstanceHeaderComponent,
     FlexiModalInstanceFooterComponent,
-    FlexiModalTemplateHeaderComponent,
-    FlexiModalTemplateFooterComponent,
+    FlexiModalWithTemplateHeaderComponent,
+    FlexiModalWithTemplateFooterComponent,
     NgTemplateOutlet,
   ]
 })
-export class FlexiModalTemplateInstanceComponent<ContentT extends object>
+export class FlexiModalWithTemplateInstanceComponent<ContentT extends object>
 extends FlexiModalInstance<FlexiModalWithTemplate<ContentT>>
 implements AfterViewInit {
 

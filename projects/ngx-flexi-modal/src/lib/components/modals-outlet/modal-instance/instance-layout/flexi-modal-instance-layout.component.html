@@ -14,6 +14,7 @@
     class="fm-modal--body"
     [class.no-border]="!theme().styling.frameBorder"
     [class.no-shadow]="!theme().styling.frameShadow"
+    #body
   >
     @if (
       (config.closable || config.maximizable)
@@ -53,10 +54,7 @@
   <div
     class="fm-modal--header-actions"
     [class]="'position-' + (modal().maximized() ? 'inside' : theme().styling.headerActions)"
-    [class.single-action]="
-      (config.maximizable && !config.closable)
-      || (!config.maximizable && config.closable)
-    "
+    [class.corner]="!config.maximizable && config.closable"
   >
     @if (config.closable) {
       <div
@@ -66,8 +64,10 @@
         (click)="modal().close()"
         (keydown.enter)="modal().close()"
       >
-        <span class="line"></span>
-        <span class="line"></span>
+        <div class="icon-content">
+          <span class="line"></span>
+          <span class="line"></span>
+        </div>
       </div>
     }
     @if (config.maximizable) {
@@ -79,8 +79,10 @@
         (click)="modal().toggleMaximize()"
         (keydown.enter)="modal().toggleMaximize()"
       >
-        <span class="square top-square"></span>
-        <span class="square bottom-square"></span>
+        <div class="icon-content">
+          <span class="square top-square"></span>
+          <span class="square bottom-square"></span>
+        </div>
       </div>
     }
   </div>

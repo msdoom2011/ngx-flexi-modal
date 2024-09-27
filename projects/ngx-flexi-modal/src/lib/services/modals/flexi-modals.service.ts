@@ -226,17 +226,14 @@ export class FlexiModalsService<
   private _normalizeOptions<ModalOptionsT extends Partial<IFlexiModalOptions<any>>>(
     takeUntilOrOptions: ModalOptionsT | Observable<unknown> | undefined
   ): ModalOptionsT {
-    const options = <ModalOptionsT>{
+    return <ModalOptionsT>{
       ...flexiModalOptionsDefault,
       ...(this._defaultOptions || {}),
-      ...(
-        takeUntilOrOptions instanceof Observable
-          ? { aliveUntil: takeUntilOrOptions }
-          : (takeUntilOrOptions || {})
+      ...(isPlainObject(takeUntilOrOptions)
+        ? (normalizeOptions(takeUntilOrOptions) || {})
+        : { aliveUntil: takeUntilOrOptions }
       )
     };
-
-    return <ModalOptionsT>normalizeOptions(options);
   }
 
   private _showModal<ModalT extends FlexiModal>(modal: ModalT): ModalT | null {

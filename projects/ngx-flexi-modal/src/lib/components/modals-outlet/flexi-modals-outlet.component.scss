@@ -3,8 +3,7 @@
   box-sizing: border-box;
 }
 
-.fm-modals--backdrop,
-.fm-modal-instance {
+.fm-modals--backdrop {
   position: absolute;
   inset: 0;
   z-index: 10;

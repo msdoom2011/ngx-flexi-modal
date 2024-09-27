@@ -1,0 +1,27 @@
+@if (icon()) {
+  <div class="icon">
+    @switch(icon()) {
+      @case ('error') {
+        <div>My Error</div>
+      }
+      @case ('warning') {
+        <div>My Warning</div>
+      }
+      @case ('success') {
+        <div>My Success</div>
+      }
+      @case ('info') {
+        <div>My Info</div>
+      }
+      @case ('confirm') {
+        <div>My Confirm</div>
+      }
+    }
+  </div>
+}
+
+<div [class]="['message', 'align-' + messageAlign()]">
+  @for (paragraph of message(); track $index) {
+    <p>{{ paragraph }}</p>
+  }
+</div>

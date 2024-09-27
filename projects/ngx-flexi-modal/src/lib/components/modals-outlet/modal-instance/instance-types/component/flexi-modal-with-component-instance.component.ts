@@ -5,15 +5,15 @@ import {NgComponentOutlet} from "@angular/common";
 import {FlexiModalInstanceHeaderComponent} from "../../instance-layout/header/flexi-modal-instance-header.component";
 import {FlexiModalInstanceFooterComponent} from "../../instance-layout/footer/flexi-modal-instance-footer.component";
 import {FlexiModalInstanceLayoutComponent} from "../../instance-layout/flexi-modal-instance-layout.component";
-import {FlexiModalComponentHeaderComponent} from "./header/flexi-modal-component-header.component";
-import {FlexiModalComponentFooterComponent} from "./footer/flexi-modal-component-footer.component";
+import {FlexiModalWithComponentHeaderComponent} from "./header/flexi-modal-with-component-header.component";
+import {FlexiModalWithComponentFooterComponent} from "./footer/flexi-modal-with-component-footer.component";
 import {FlexiModalWithComponent} from "../../../../../models/flexi-modal-with-component";
 import {IFlexiModalAware} from "../../../../../services/modals/flexi-modals.definitions";
 import {FlexiModalInstance} from "../../flexi-modal-instance";
 
 @Component({
-  selector: 'fm-modal-component-instance',
-  templateUrl: './flexi-modal-component-instance.component.html',
+  selector: 'fm-modal-with-component-instance',
+  templateUrl: './flexi-modal-with-component-instance.component.html',
   styleUrl: '../../flexi-modal-instance.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
@@ -21,12 +21,12 @@ import {FlexiModalInstance} from "../../flexi-modal-instance";
     FlexiModalInstanceLayoutComponent,
     FlexiModalInstanceHeaderComponent,
     FlexiModalInstanceFooterComponent,
-    FlexiModalComponentHeaderComponent,
-    FlexiModalComponentFooterComponent,
+    FlexiModalWithComponentHeaderComponent,
+    FlexiModalWithComponentFooterComponent,
     NgComponentOutlet,
   ],
 })
-export class FlexiModalComponentInstanceComponent<ComponentT extends Partial<IFlexiModalAware>>
+export class FlexiModalWithComponentInstanceComponent<ComponentT extends Partial<IFlexiModalAware>>
 extends FlexiModalInstance<FlexiModalWithComponent<ComponentT, any>>
 implements AfterViewInit {
 

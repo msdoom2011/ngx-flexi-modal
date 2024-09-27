@@ -47,7 +47,7 @@ $outer-h-padding: 30px;
     right: 0;
     height: 24px;
 
-    &.single-action {
+    &.corner {
       top: -26px;
       right: -26px;
     }
@@ -62,9 +62,6 @@ $outer-h-padding: 30px;
 }
 
 .fm-modal--header-action {
-  display: flex;
-  justify-content: center;
-  align-items: center;
   position: relative;
   cursor: pointer;
   width: 24px;
@@ -74,6 +71,14 @@ $outer-h-padding: 30px;
     background 300ms ease,
     box-shadow 300ms ease,
     opacity 300ms ease;
+
+  .icon-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+  }
 
   &:hover {
     opacity: 1;
@@ -119,7 +124,7 @@ $outer-h-padding: 30px;
       box-shadow 300ms ease,
       filter 300ms ease;
 
-    & > * {
+    .icon-content {
       opacity: 0.5;
       transition: opacity 300ms ease;
     }
@@ -140,7 +145,7 @@ $outer-h-padding: 30px;
     &:hover {
       filter: brightness(0.9);
 
-      & > * {
+      .icon-content {
         opacity: 1;
       }
     }
@@ -294,6 +299,10 @@ $outer-h-padding: 30px;
   box-sizing: content-box;
   pointer-events: none;
 
+  :host:not(.maximized).position-top.header-actions-outside & {
+    padding-top: calc($outer-v-padding + 24px);
+  }
+
   :host.width-fit-window & {
     box-sizing: border-box;
     max-width: 100%;
@@ -343,6 +352,7 @@ $outer-h-padding: 30px;
   :host.maximized & {
     border-radius: 0;
     box-shadow: none;
+    animation: none;
   }
 
   :host.maximized.scroll-modal & {
