@@ -1,10 +1,102 @@
-import {animate, query, sequence, style} from "@angular/animations";
+import {animate, group, query, sequence, style, transition, trigger} from "@angular/animations";
 
 import {FLEXI_MODAL_HEADER_ACTIONS_OUTER_SELECTOR} from "./flexi-modal-instance-layout.component";
 import {
   IFlexiModalAnimationConfig,
   TFlexiModalOpeningAnimation
 } from "../../../../services/modals/flexi-modals.definitions";
+
+export const getMaximizeAnimation = (animationName: string) => {
+  return trigger(animationName, [
+    transition('minimized => maximized', [
+      group([
+        query('.fm-modal--body-wrapper', [
+          style({
+            height: '{{ height }}',
+            width: '{{ width }}',
+            paddingTop: '{{ paddingTop }}',
+            paddingBottom: '{{ paddingBottom }}',
+            paddingLeft: '{{ paddingLeft }}',
+            paddingRight: '{{ paddingRight }}',
+            minWidth: '0',
+            maxWidth: '100%',
+            minHeight: 0,
+            maxHeight: '100%',
+            margin: '0 auto',
+            overflow: 'hidden',
+          }),
+          animate('600ms ease-in-out', style({
+            width: '*',
+            height: '*',
+            paddingTop: '*',
+            paddingBottom: '*',
+            paddingLeft: '*',
+            paddingRight: '*',
+          })),
+        ]),
+        query('.fm-modal--body', [
+          style({
+            minHeight: '{{ height }}',
+            height: '100%'
+          }),
+        ])
+      ]),
+    ], {
+      params: {
+        width: '0',
+        height: '0',
+        paddingTop: '0',
+        paddingBottom: '0',
+        paddingLeft: '0',
+        paddingRight: '0',
+      }
+    }),
+    transition('maximized => minimized', [
+      group([
+        query('.fm-modal--container', [
+          style({
+            height: '100vh',
+            overflow: 'hidden',
+            alignItems: '{{ alignItems }}',
+          })
+        ]),
+        query('.fm-modal--body-wrapper', [
+          style({
+            width: '100%',
+            height: '100%',
+            minHeight: 0,
+            minWidth: 0,
+            maxWidth: '100%',
+            paddingTop: 0,
+            paddingBottom: 0,
+            paddingLeft: 0,
+            paddingRight: 0,
+            overflow: 'hidden',
+            margin: '0 auto',
+          }),
+          animate('600ms ease-in-out', style({
+            width: '*',
+            height: '*',
+            paddingTop: '*',
+            paddingBottom: '*',
+            paddingLeft: '*',
+            paddingRight: '*',
+          })),
+        ]),
+        query('.fm-modal--body', [
+          style({
+            width: '100%',
+            minHeight: '100%',
+          }),
+        ]),
+      ]),
+    ], {
+      params: {
+        alignItems: 'flex-start',
+      }
+    }),
+  ]);
+};
 
 export const flexiModalOpeningAnimations: Record<TFlexiModalOpeningAnimation, IFlexiModalAnimationConfig | null> = {
   'fade-in': null,
@@ -33,7 +125,9 @@ export const flexiModalOpeningAnimations: Record<TFlexiModalOpeningAnimation, IF
 
   'zoom-out': {
     fallback: 'slide',
-    validate: () => true,
+    validate: (modalBodyElement: HTMLDivElement) => {
+      return modalBodyElement.getBoundingClientRect().height < 800;
+    },
     transition: () => ([
       style({
         transform: 'perspective(30cm) translate3d(0, 0, 300px)'

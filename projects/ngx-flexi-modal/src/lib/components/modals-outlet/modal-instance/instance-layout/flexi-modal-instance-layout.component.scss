@@ -303,7 +303,7 @@ $outer-h-padding: 30px;
   }
 }
 
-.fm-modal--paddings {
+.fm-modal--body-wrapper {
   position: relative;
   z-index: 10;
   padding: $outer-v-padding $outer-h-padding;
@@ -381,6 +381,7 @@ $outer-h-padding: 30px;
 
 .fm-modal--content {
   min-height: 80px;
+  flex-grow: 1;
 
   &.scrollable {
     overflow: auto;
@@ -388,6 +389,5 @@ $outer-h-padding: 30px;
 
   :host.maximized & {
     height: 100%;
-    flex-grow: 1;
   }
 }

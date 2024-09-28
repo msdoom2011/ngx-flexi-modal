@@ -10,7 +10,7 @@
 }
 
 <div class="fm-modal--container">
-  <div class="fm-modal--paddings" [style]="bodyStyles()">
+  <div class="fm-modal--body-wrapper" [style]="bodyStyles()" #bodyWrapper>
     <div
       class="fm-modal--body"
       [class.no-border]="!theme().styling.frameBorder"

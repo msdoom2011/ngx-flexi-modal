@@ -13,21 +13,34 @@ import {
   signal,
   viewChild
 } from '@angular/core';
+import {AnimationBuilder} from "@angular/animations";
 import {NgComponentOutlet, NgTemplateOutlet} from "@angular/common";
 import {toObservable} from "@angular/core/rxjs-interop";
-import {AnimationBuilder} from "@angular/animations";
-import {filter, Subject, takeUntil} from "rxjs";
+import {filter, skip, Subject, takeUntil} from "rxjs";
 
+import {flexiModalOpeningAnimations, getMaximizeAnimation} from "./flexi-modal-instance-layout.animations";
 import {FlexiModalInstanceFooterComponent} from "./footer/flexi-modal-instance-footer.component";
 import {FlexiModalInstanceHeaderComponent} from "./header/flexi-modal-instance-header.component";
 import {TFlexiModalOpeningAnimation} from "../../../../services/modals/flexi-modals.definitions";
 import {FlexiModalsThemeService} from "../../../../services/theme/flexi-modals-theme.service";
-import {flexiModalOpeningAnimations} from "./flexi-modal-instance-layout.animations";
 import {modalWidthPresets} from "../../../../services/modals/flexi-modals.constants";
 import {FlexiModal} from "../../../../models/flexi-modal";
 
 export const FLEXI_MODAL_HEADER_ACTION_CLASS = 'fm-modal--header-action';
 export const FLEXI_MODAL_HEADER_ACTIONS_OUTER_SELECTOR = '.fm-modal--header-actions.position-outside';
+
+interface IMaximizeAnimationParams {
+  width: string;
+  height: string;
+  paddingTop: string;
+  paddingBottom: string;
+  paddingLeft: string;
+  paddingRight: string;
+}
+
+interface IMinimizeAnimationParams {
+  alignItems: string;
+}
 
 @Component({
   selector: 'fm-modal-instance-layout',
@@ -45,8 +58,15 @@ export const FLEXI_MODAL_HEADER_ACTIONS_OUTER_SELECTOR = '.fm-modal--header-acti
     'class': 'fm-modal--viewport',
     '[class.scrollable]': 'modal().config().scroll === "modal"',
     '[class.maximized]': 'modal().maximized()',
-    '[class]': 'hostClasses()'
-  }
+    '[class]': 'hostClasses()',
+    '[@maximizeInOut]': `{
+      value: modal().maximized() ? "maximized" : "minimized",
+      params: getMaximizeAnimationParams(),
+    }`,
+  },
+  animations: [
+    getMaximizeAnimation('maximizeInOut')
+  ],
 })
 export class FlexiModalInstanceLayoutComponent implements OnInit, OnDestroy {
 
@@ -61,10 +81,11 @@ export class FlexiModalInstanceLayoutComponent implements OnInit, OnDestroy {
 
   // Queries
   private readonly _bodyRef = viewChild.required<ElementRef<HTMLDivElement>>('body');
+  private readonly _bodyWrapperRef = viewChild.required<ElementRef<HTMLDivElement>>('bodyWrapper');
 
   // Signals
   public readonly theme = this._themeService.theme;
-  private readonly _scrollTopRequired = signal<boolean>(true);
+  private readonly _maximizedChanged = signal<boolean>(false);
 
   // Private
   private readonly _destroy$ = new Subject<void>();
@@ -149,11 +170,12 @@ export class FlexiModalInstanceLayoutComponent implements OnInit, OnDestroy {
   public ngOnInit(): void {
     toObservable(this.modal().maximized, { injector: this._injector })
       .pipe(
+        skip(1),
         filter(() => this.modal().active()),
         takeUntil(this._destroy$),
       )
       .subscribe(() => {
-        this._scrollTopRequired.set(true);
+        this._maximizedChanged.set(true);
       });
   }
 
@@ -169,10 +191,44 @@ export class FlexiModalInstanceLayoutComponent implements OnInit, OnDestroy {
   }});
 
   public readonly ngAfterRender = afterRender({ read: () => {
-    if (this._scrollTopRequired()) {
+    if (this._maximizedChanged()) {
       this._elementRef.nativeElement.scrollTop = 0;
     }
   }});
+
+
+  // Public methods
+
+  public getMaximizeAnimationParams(): IMaximizeAnimationParams | IMinimizeAnimationParams {
+    const hostElement = this._elementRef.nativeElement;
+    const bodyElement = this._bodyRef().nativeElement;
+    const bodyWrapperElement = this._bodyWrapperRef().nativeElement;
+    const bodyBox = bodyElement.getBoundingClientRect();
+    const hostBox = hostElement.getBoundingClientRect();
+    const hostStyles = window.getComputedStyle(hostElement);
+    const bodyWrapperStyles = window.getComputedStyle(bodyWrapperElement);
+
+    if (!this.modal().maximized()) {
+      return {
+        alignItems: (
+          bodyBox.height
+          + parseInt(bodyWrapperStyles.paddingTop)
+          + parseInt(bodyWrapperStyles.paddingBottom)
+        ) > hostBox.height
+          ? 'flex-start'
+          : hostStyles.alignItems,
+      };
+    }
+
+    return {
+      width: bodyBox.width + 'px',
+      height: bodyBox.height + 'px',
+      paddingTop: bodyWrapperStyles.paddingTop,
+      paddingBottom: bodyWrapperStyles.paddingBottom,
+      paddingLeft: bodyWrapperStyles.paddingLeft,
+      paddingRight: bodyWrapperStyles.paddingRight,
+    };
+  }
 
 
   // Private methods
@@ -190,8 +246,8 @@ export class FlexiModalInstanceLayoutComponent implements OnInit, OnDestroy {
       return this._runOpeningAnimation(animationConfig.fallback);
     }
 
-    const animationFactory = this._animationBuilder.build(animationConfig.transition());
-    const player = animationFactory.create(bodyElement);
+    const factory = this._animationBuilder.build(animationConfig.transition());
+    const player = factory.create(bodyElement);
 
     player.play();
     player.onDone(() => {
