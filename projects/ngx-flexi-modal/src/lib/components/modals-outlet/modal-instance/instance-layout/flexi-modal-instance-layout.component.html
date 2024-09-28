@@ -17,24 +17,13 @@
       [class.no-shadow]="!theme().styling.frameShadow"
       #body
     >
-      @if (
-        (config.closable || config.maximizable)
-        && (config.maximized || theme().styling.headerActions === 'inside')
-      ) {
-        <div class="fm-modal--header-wrapper">
-          <div class="fm-modal--header-content">
-            <ng-container *ngTemplateOutlet="headerTpl" />
-          </div>
-
-          <ng-container *ngTemplateOutlet="headerActionsTpl" />
+      <div class="fm-modal--header-wrapper">
+        <div class="fm-modal--header-content">
+          <ng-content select="fm-modal-instance-header" />
         </div>
 
-      } @else {
-        @if (!!theme().styling.headerActions) {
-          <ng-container *ngTemplateOutlet="headerActionsTpl" />
-        }
-        <ng-container *ngTemplateOutlet="headerTpl" />
-      }
+        <ng-container *ngTemplateOutlet="headerActionsTpl" />
+      </div>
 
       <div
         class="fm-modal--content"
@@ -48,15 +37,14 @@
   </div>
 </div>
 
-<ng-template #headerTpl>
-  <ng-content select="fm-modal-instance-header" />
-</ng-template>
-
 <ng-template #headerActionsTpl>
+  @let position = modal().maximized() ? 'inside' : theme().styling.headerActions;
+
   <div
     class="fm-modal--header-actions"
-    [class]="'position-' + (modal().maximized() ? 'inside' : theme().styling.headerActions)"
+    [class]="'position-' + position"
     [class.corner]="!config.maximizable && config.closable"
+    [@fadeInOutActions]="position"
   >
     @if (config.closable) {
       <div
@@ -72,6 +60,7 @@
         </div>
       </div>
     }
+
     @if (config.maximizable) {
       <div
         tabindex="0"

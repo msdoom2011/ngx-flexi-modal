@@ -17,11 +17,11 @@ import {
 import {filter, fromEvent, Subject, Subscription, takeUntil} from "rxjs";
 import {toObservable} from "@angular/core/rxjs-interop";
 
-import {FLEXI_MODAL_HEADER_ACTION_CLASS} from "./instance-layout/flexi-modal-instance-layout.component";
 import {FlexiModalsThemeService} from "../../../services/theme/flexi-modals-theme.service";
 import {FlexiModalsService} from "../../../services/modals/flexi-modals.service";
 import {findFocusableElements} from "../../../tools/utils";
 import {FlexiModal} from "../../../models/flexi-modal";
+import {FLEXI_MODAL_HEADER_ACTION_CLASS} from "./instance-layout/flexi-modal-instance-layout.constants";
 
 @Directive({
   host: {

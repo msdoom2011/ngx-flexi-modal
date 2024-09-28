@@ -1,8 +1,8 @@
-import {computed, Signal, signal} from "@angular/core";
-import {BehaviorSubject} from "rxjs";
+import {computed, signal} from "@angular/core";
+import {BehaviorSubject, filter, Observable} from "rxjs";
 
 import {flexiModalActionOptionsDefault, flexiModalOptionsDefault} from "../services/modals/flexi-modals.constants";
-import {IFlexiModalConfig, IFlexiModalOptions} from "../services/modals/flexi-modals.definitions";
+import {IFlexiModalConfig, IFlexiModalOptions, TFlexiModalEvent} from "../services/modals/flexi-modals.definitions";
 import {FlexiModalsService} from "../services/modals/flexi-modals.service";
 import {FlexiModalActions} from "./actions/flexi-modal-actions";
 import {generateRandomId} from "../tools/utils";
@@ -20,6 +20,8 @@ export abstract class FlexiModal<
 
   public readonly actions!: FlexiModalActions<this>;
 
+  public readonly events$!: Observable<TFlexiModalEvent>;
+
   constructor(
     public service: FlexiModalsService,
 
@@ -34,6 +36,9 @@ export abstract class FlexiModal<
   ) {
     this.actions = new FlexiModalActions(this.service, this);
     this.setOptions(options);
+
+    this.events$ = this.service.events$
+      .pipe(filter(($event) => $event.id === this.id()))
   }
 
 

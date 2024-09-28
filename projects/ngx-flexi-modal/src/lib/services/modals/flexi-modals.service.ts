@@ -4,7 +4,6 @@ import {
   EmbeddedViewRef,
   inject,
   Injectable,
-  NgZone,
   signal,
   TemplateRef,
   Type

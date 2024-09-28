@@ -20,6 +20,7 @@ $outer-h-padding: 30px;
   width: 100%;
   height: 100vh;
   z-index: 10;
+  pointer-events: none;
 
   :host.maximized & {
     display: block;
@@ -308,7 +309,6 @@ $outer-h-padding: 30px;
   z-index: 10;
   padding: $outer-v-padding $outer-h-padding;
   box-sizing: content-box;
-  pointer-events: none;
 
   :host:not(.maximized).position-top.header-actions-outside & {
     padding-top: calc($outer-v-padding + 24px);

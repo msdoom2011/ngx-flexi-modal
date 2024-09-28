@@ -1,21 +1,24 @@
 @if (modals().length) {
-  @if (!modalActive()?.config()?.maximized) {
-    <div class="fm-modals--backdrop" @fadeInOut></div>
-  }
+  <div
+    class="fm-modals--backdrop"
+    [@fadeInOutBackdrop]="{ value: true, params: { delay: backdropAnimationDelay() }}"
+    (@fadeInOutBackdrop.done)="onBackdropAnimationDone()"
+    [@.disabled]="backdropAnimationDisabled()"
+  ></div>
 
   @for(modal of modals(); track modal.id()) {
     @switch (modal.type) {
       @case ('COMPONENT') {
         <fm-modal-with-component-instance
           [modal]="$any(modal)"
-          @fadeInOut
+          @fadeInOutInstance
           #modals
         />
       }
       @case ('TEMPLATE') {
         <fm-modal-with-template-instance
           [modal]="$any(modal)"
-          @fadeInOut
+          @fadeInOutInstance
           #modals
         />
       }

@@ -6,7 +6,8 @@
   height: var(--fm-header-height);
   background-color: var(--fm-color-header-bg);
   border-bottom: 1px solid var(--fm-color-border);
-  border-radius: var(--fm-frame-border-radius) var(--fm-frame-border-radius) 0 0;
+  border-top-left-radius: inherit;
+  border-top-right-radius: inherit;
   white-space: nowrap;
   overflow: hidden;
 }

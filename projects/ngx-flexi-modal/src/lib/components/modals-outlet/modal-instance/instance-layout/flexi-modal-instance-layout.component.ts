@@ -13,34 +13,23 @@ import {
   signal,
   viewChild
 } from '@angular/core';
-import {AnimationBuilder} from "@angular/animations";
 import {NgComponentOutlet, NgTemplateOutlet} from "@angular/common";
 import {toObservable} from "@angular/core/rxjs-interop";
 import {filter, skip, Subject, takeUntil} from "rxjs";
+import {AnimationBuilder} from "@angular/animations";
 
-import {flexiModalOpeningAnimations, getMaximizeAnimation} from "./flexi-modal-instance-layout.animations";
+import {flexiModalOpeningAnimations, getMaximizeAnimations} from "./flexi-modal-instance-layout.animations";
 import {FlexiModalInstanceFooterComponent} from "./footer/flexi-modal-instance-footer.component";
 import {FlexiModalInstanceHeaderComponent} from "./header/flexi-modal-instance-header.component";
 import {TFlexiModalOpeningAnimation} from "../../../../services/modals/flexi-modals.definitions";
 import {FlexiModalsThemeService} from "../../../../services/theme/flexi-modals-theme.service";
 import {modalWidthPresets} from "../../../../services/modals/flexi-modals.constants";
 import {FlexiModal} from "../../../../models/flexi-modal";
-
-export const FLEXI_MODAL_HEADER_ACTION_CLASS = 'fm-modal--header-action';
-export const FLEXI_MODAL_HEADER_ACTIONS_OUTER_SELECTOR = '.fm-modal--header-actions.position-outside';
-
-interface IMaximizeAnimationParams {
-  width: string;
-  height: string;
-  paddingTop: string;
-  paddingBottom: string;
-  paddingLeft: string;
-  paddingRight: string;
-}
-
-interface IMinimizeAnimationParams {
-  alignItems: string;
-}
+import {FLEXI_MODAL_HEADER_ACTION_CLASS} from "./flexi-modal-instance-layout.constants";
+import {
+  IFlexiModalMaximizeAnimationParams,
+  IFlexiModalMinimizeAnimationParams
+} from "./flexi-modal-instance-layout.definitions";
 
 @Component({
   selector: 'fm-modal-instance-layout',
@@ -65,7 +54,7 @@ interface IMinimizeAnimationParams {
     }`,
   },
   animations: [
-    getMaximizeAnimation('maximizeInOut')
+    ...getMaximizeAnimations('maximizeInOut', 'fadeInOutActions'),
   ],
 })
 export class FlexiModalInstanceLayoutComponent implements OnInit, OnDestroy {
@@ -199,13 +188,14 @@ export class FlexiModalInstanceLayoutComponent implements OnInit, OnDestroy {
 
   // Public methods
 
-  public getMaximizeAnimationParams(): IMaximizeAnimationParams | IMinimizeAnimationParams {
+  public getMaximizeAnimationParams(): IFlexiModalMaximizeAnimationParams | IFlexiModalMinimizeAnimationParams {
     const hostElement = this._elementRef.nativeElement;
     const bodyElement = this._bodyRef().nativeElement;
     const bodyWrapperElement = this._bodyWrapperRef().nativeElement;
     const bodyBox = bodyElement.getBoundingClientRect();
     const hostBox = hostElement.getBoundingClientRect();
     const hostStyles = window.getComputedStyle(hostElement);
+    const bodyStyles = window.getComputedStyle(bodyElement);
     const bodyWrapperStyles = window.getComputedStyle(bodyWrapperElement);
 
     if (!this.modal().maximized()) {
@@ -227,6 +217,7 @@ export class FlexiModalInstanceLayoutComponent implements OnInit, OnDestroy {
       paddingBottom: bodyWrapperStyles.paddingBottom,
       paddingLeft: bodyWrapperStyles.paddingLeft,
       paddingRight: bodyWrapperStyles.paddingRight,
+      borderRadius: bodyStyles.borderRadius,
     };
   }
 
