@@ -18,14 +18,19 @@ import {toObservable} from "@angular/core/rxjs-interop";
 import {filter, skip, Subject, takeUntil} from "rxjs";
 import {AnimationBuilder} from "@angular/animations";
 
-import {flexiModalOpeningAnimations, getMaximizeAnimations} from "./flexi-modal-instance-layout.animations";
+import {
+  flexiModalOpeningAnimations,
+  getLoaderAnimations,
+  getMaximizeAnimations
+} from "./flexi-modal-instance-layout.animations";
 import {FlexiModalInstanceFooterComponent} from "./footer/flexi-modal-instance-footer.component";
 import {FlexiModalInstanceHeaderComponent} from "./header/flexi-modal-instance-header.component";
 import {TFlexiModalOpeningAnimation} from "../../../../services/modals/flexi-modals.definitions";
+import {FlexiModalInstanceLoaderComponent} from "./loader/flexi-modal-instance-loader.component";
 import {FlexiModalsThemeService} from "../../../../services/theme/flexi-modals-theme.service";
+import {FLEXI_MODAL_HEADER_ACTION_CLASS} from "./flexi-modal-instance-layout.constants";
 import {modalWidthPresets} from "../../../../services/modals/flexi-modals.constants";
 import {FlexiModal} from "../../../../models/flexi-modal";
-import {FLEXI_MODAL_HEADER_ACTION_CLASS} from "./flexi-modal-instance-layout.constants";
 import {
   IFlexiModalMaximizeAnimationParams,
   IFlexiModalMinimizeAnimationParams
@@ -38,10 +43,11 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [
+    NgTemplateOutlet,
     NgComponentOutlet,
     FlexiModalInstanceFooterComponent,
     FlexiModalInstanceHeaderComponent,
-    NgTemplateOutlet
+    FlexiModalInstanceLoaderComponent,
   ],
   host: {
     'class': 'fm-modal--viewport',
@@ -55,6 +61,7 @@ import {
   },
   animations: [
     ...getMaximizeAnimations('maximizeInOut', 'fadeInOutActions'),
+    ...getLoaderAnimations('fadeInOutLoader'),
   ],
 })
 export class FlexiModalInstanceLayoutComponent implements OnInit, OnDestroy {

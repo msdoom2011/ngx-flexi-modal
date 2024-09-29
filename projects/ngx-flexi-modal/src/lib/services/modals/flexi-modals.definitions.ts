@@ -69,8 +69,8 @@ export interface IFlexiModalConfig<FlexiModalT extends FlexiModal> {
   title: string | undefined;
   aliveUntil: Observable<unknown> | undefined;
   actions: Array<IFlexiModalActionConfig> | undefined;
-  onClose: (($event: FlexiModalBeforeCloseEvent<FlexiModalT>) => unknown) | undefined;
-  onOpen: (($event: FlexiModalOpenEvent<FlexiModalT>) => unknown) | undefined;
+  onOpen: (($event: FlexiModalOpenEvent<FlexiModalT>) => void) | undefined;
+  onClose: (($event: FlexiModalBeforeCloseEvent<FlexiModalT>) => void) | undefined;
   animation: TFlexiModalOpeningAnimation;
   position: TFlexiModalPosition;
   scroll: TFlexiModalScroll;
@@ -146,12 +146,3 @@ export type IFlexiModalActionOptions = (
   Partial<Omit<IFlexiModalActionConfig, 'label'>>
   & IFlexiModalActionOptionsRequired
 );
-
-
-// Animations
-
-export interface IFlexiModalAnimationConfig {
-  fallback: TFlexiModalOpeningAnimation;
-  validate: (modalBodyElement: HTMLDivElement) => boolean;
-  transition: () => Array<AnimationMetadata>;
-}

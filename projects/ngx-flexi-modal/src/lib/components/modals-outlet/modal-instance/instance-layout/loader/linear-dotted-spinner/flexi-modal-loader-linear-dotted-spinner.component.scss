@@ -1,0 +1,30 @@
+.spinner {
+  opacity: 0.7;
+  position: relative;
+  width: 200px;
+  height: 6px;
+  overflow: hidden;
+}
+
+.dot {
+  opacity: 0;
+  position: absolute;
+  display: block;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--fm-color-body-text);
+}
+
+@for $i from 1 through 5 {
+  @keyframes translation-#{$i} {
+    from { transform: translate3d(#{$i * 4 - 20}px, 0, 0); opacity: 0; }
+    50% { transform: translate3d(#{95 + $i * 4}px, 0, 0); opacity: 1; }
+    to { transform: translate3d(#{220 + $i * 4}px, 0, 0); opacity: 0; }
+  }
+
+  .dot:nth-child(#{$i}) {
+    transform: translate3d(#{$i * 4 - 5}px, 0, 0);
+    animation: translation-#{$i} 2.4s #{500 - 500 / 5 * $i}ms ease infinite;
+  }
+}

@@ -7,6 +7,11 @@ import {FlexiModalsService} from "../services/modals/flexi-modals.service";
 import {FlexiModalActions} from "./actions/flexi-modal-actions";
 import {generateRandomId} from "../tools/utils";
 
+interface ILoadingInfo {
+  loading: boolean;
+  animation: boolean;
+}
+
 export abstract class FlexiModal<
   ConfigT extends IFlexiModalConfig<any> = IFlexiModalConfig<any>,
   OptionsT extends IFlexiModalOptions<any> = IFlexiModalOptions<any>,
@@ -17,6 +22,8 @@ export abstract class FlexiModal<
   public abstract readonly type: string;
 
   private readonly _config = signal<ConfigT>(<ConfigT>{});
+
+  private readonly _loading = signal<ILoadingInfo>({ loading: false, animation: true });
 
   public readonly actions!: FlexiModalActions<this>;
 
@@ -60,6 +67,14 @@ export abstract class FlexiModal<
     return this.service.modals()[this.service.modals().length - 1]?.id === this.id;
   });
 
+  public readonly loading = computed<boolean>(() => {
+    return this._loading().loading;
+  });
+
+  public readonly loadingInfo = computed<ILoadingInfo>(() => {
+    return this._loading();
+  });
+
   public readonly maximized = computed<boolean>(() => {
     return this._config().maximized;
   });
@@ -89,6 +104,21 @@ export abstract class FlexiModal<
 
   public toggleMaximize(): void {
     return this.maximized() ? this.minimize() : this.maximize();
+  }
+
+  public startLoading(animation: boolean = true): void {
+    console.log('fsldkfjlksjfklsdjf');
+    this._loading.set({
+      loading: true,
+      animation: animation,
+    });
+  }
+
+  public stopLoading(animation: boolean = true): void {
+    this._loading.set({
+      loading: false,
+      animation: animation,
+    });
   }
 
   public close(): void {

@@ -278,6 +278,7 @@ $outer-h-padding: 30px;
   position: absolute;
   background: rgba(0, 0, 0, 0);
   inset: 0;
+  pointer-events: all;
 }
 
 .fm-modal--header-wrapper {
@@ -380,6 +381,7 @@ $outer-h-padding: 30px;
 }
 
 .fm-modal--content {
+  position: relative;
   min-height: 80px;
   flex-grow: 1;
 

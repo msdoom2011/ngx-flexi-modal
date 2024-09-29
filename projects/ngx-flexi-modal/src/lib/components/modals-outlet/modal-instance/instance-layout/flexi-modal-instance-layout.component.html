@@ -1,15 +1,15 @@
 @let config = modal().config();
 
-@if (isOverlayVisible()) {
-  <div class="fm-modals--backdrop"></div>
-}
-
-@if (config.closable) {
-  <!-- eslint-disable-next-line -->
-  <div class="fm-modal--closing-layer" (click)="modal().close()"></div>
-}
-
 <div class="fm-modal--container">
+  @if (isOverlayVisible()) {
+    <div class="fm-modals--backdrop"></div>
+  }
+
+  @if (config.closable) {
+    <!-- eslint-disable-next-line -->
+    <div class="fm-modal--closing-layer" (click)="modal().close()"></div>
+  }
+
   <div class="fm-modal--body-wrapper" [style]="bodyStyles()" #bodyWrapper>
     <div
       class="fm-modal--body"
@@ -29,6 +29,13 @@
         class="fm-modal--content"
         [class.scrollable]="config.scroll === 'content'"
       >
+        @if (modal().loading()) {
+          <fm-modal-instance-loader
+            @fadeInOutLoader
+            [@.disabled]="!modal().loadingInfo().animation"
+          />
+        }
+
         <ng-content />
       </div>
 

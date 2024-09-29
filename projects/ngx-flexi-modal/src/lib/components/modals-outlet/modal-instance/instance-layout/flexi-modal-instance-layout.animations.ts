@@ -1,15 +1,15 @@
 import {animate, animateChild, group, query, sequence, style, transition, trigger} from "@angular/animations";
 
+import {IFlexiModalAnimationConfig} from "./flexi-modal-instance-layout.definitions";
+import {
+  TFlexiModalOpeningAnimation
+} from "../../../../services/modals/flexi-modals.definitions";
 import {
   FLEXI_MODAL_BODY_CLASS,
   FLEXI_MODAL_BODY_WRAPPER_CLASS,
   FLEXI_MODAL_CONTAINER_CLASS,
   FLEXI_MODAL_HEADER_ACTIONS_OUTSIDE_SELECTOR
 } from "./flexi-modal-instance-layout.constants";
-import {
-  IFlexiModalAnimationConfig,
-  TFlexiModalOpeningAnimation
-} from "../../../../services/modals/flexi-modals.definitions";
 
 export const getMaximizeAnimations = (animationName: string, actionsAnimationName: string) => {
   const duration = 500;
@@ -131,6 +131,23 @@ export const getMaximizeAnimations = (animationName: string, actionsAnimationNam
         style({ opacity: 0, display: 'flex' }),
         animate(`${duration}ms ease-in-out`, style({ opacity: 1 })),
       ]),
+    ])
+  ];
+};
+
+export const getLoaderAnimations = (animationName: string) => {
+  const duration = 400;
+
+  return [
+    trigger(animationName, [
+      transition(':enter', [
+        style({ opacity: 0 }),
+        animate(`${duration}ms ease-in-out`, style({ opacity: 1 })),
+      ]),
+      transition(':leave', [
+        style({ opacity: 1 }),
+        animate(`${duration}ms ease-in-out`, style({ opacity: 0 }))
+      ])
     ])
   ];
 };

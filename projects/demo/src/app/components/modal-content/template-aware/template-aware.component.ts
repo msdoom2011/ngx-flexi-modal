@@ -1,7 +1,8 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, input, OnDestroy, OnInit} from '@angular/core';
+import {FlexiModalComponent} from 'ngx-flexi-modal';
 
 @Component({
-  selector: 'app-template-aware',
+  selector: 'fm-app-template-aware',
   standalone: true,
   imports: [],
   templateUrl: './template-aware.component.html',
@@ -9,8 +10,12 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 })
 export class TemplateAwareComponent implements OnInit, OnDestroy {
 
+  public modal = input.required<FlexiModalComponent>();
+
   public ngOnInit() {
     console.log('TEMPLATE MODAL INITIALIZED!!!');
+
+    this.modal().startLoading();
   }
 
   public ngOnDestroy(): void {

@@ -34,13 +34,13 @@
   height="fit-content"
   position="center"
   scroll="modal"
-  [maximized]="true"
+  [maximized]="false"
   [closable]="true"
   [maximizable]="true"
   (open)="onTemplateModalOpened($event)"
   #modal
 >
-  <app-template-aware *fmModalBody />
+  <fm-app-template-aware *fmModalBody [modal]="modal" />
 
   <button
     class="fm-modal-action-button primary"

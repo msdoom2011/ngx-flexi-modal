@@ -104,6 +104,10 @@ export class FlexiModalComponent implements DoCheck, OnChanges, AfterContentInit
     return !!this.modal()?.config().maximized;
   });
 
+  public readonly loading = computed<boolean>(() => {
+    return !!this.modal()?.loading();
+  });
+
   private readonly _bodyTpl = computed<TemplateRef<any> | undefined>(() => {
     return this._bodyRef()?.templateRef;
   });
@@ -299,6 +303,14 @@ export class FlexiModalComponent implements DoCheck, OnChanges, AfterContentInit
 
   public toggleMaximize(): void {
     this.modal()?.toggleMaximize();
+  }
+
+  public startLoading(animation: boolean = true): void {
+    this.modal()?.startLoading(animation);
+  }
+
+  public stopLoading(animation: boolean = true): void {
+    this.modal()?.stopLoading(animation);
   }
 
 

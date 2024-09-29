@@ -26,6 +26,7 @@ export function extendModalOptions(
     ...('title' in userOptions ? { title: userOptions.title } : {}),
     ...('theme' in userOptions ? { theme: userOptions.theme } : {}),
     ...('aliveUntil' in userOptions ? { aliveUntil: userOptions.aliveUntil } : {}),
+    ...(userOptions.onOpen ? { onOpen: userOptions.onOpen } : {}),
     ...(userOptions.onClose ? { onClose: userOptions.onClose } : {}),
   };
 }

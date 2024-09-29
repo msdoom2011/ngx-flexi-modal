@@ -1,4 +1,4 @@
-import {Component, computed, inject, OnInit, signal} from '@angular/core';
+import {Component, computed, inject, signal} from '@angular/core';
 import {
   FlexiModalBodyDirective,
   FlexiModalActionDirective,
@@ -95,7 +95,10 @@ export class ShowcaseComponent {
       title: 'Error: Failed to process your request, Failed to process your request',
       message:
         'Oops! Some unfortunate error occurred. ' +
-        'Please try again later or contact our administrator to get further instructions.'
+        'Please try again later or contact our administrator to get further instructions.',
+      onOpen: ($event: FlexiModalOpenEvent) => {
+        $event.modal.startLoading();
+      }
     });
   }
 
