@@ -15,7 +15,9 @@ export class TemplateAwareComponent implements OnInit, OnDestroy {
   public ngOnInit() {
     console.log('TEMPLATE MODAL INITIALIZED!!!');
 
-    this.modal().startLoading();
+    setTimeout(() => {
+      this.modal().startLoading();
+    }, 1000);
   }
 
   public ngOnDestroy(): void {

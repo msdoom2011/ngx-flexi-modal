@@ -116,18 +116,11 @@ export abstract class FlexiModal<
   }
 
   public startLoading(animation: boolean = true): void {
-    console.log('fsldkfjlksjfklsdjf');
-    this._loading.set({
-      loading: true,
-      animation: animation,
-    });
+    this._loading.set({ loading: true, animation: animation });
   }
 
   public stopLoading(animation: boolean = true): void {
-    this._loading.set({
-      loading: false,
-      animation: animation,
-    });
+    this._loading.set({ loading: false, animation: animation });
   }
 
   public close(): void {

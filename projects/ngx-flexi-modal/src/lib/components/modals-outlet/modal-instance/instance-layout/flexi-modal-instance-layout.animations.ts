@@ -136,18 +136,24 @@ export const getMaximizeAnimations = (animationName: string, actionsAnimationNam
 };
 
 export const getLoaderAnimations = (animationName: string) => {
-  const duration = 400;
-
   return [
     trigger(animationName, [
-      transition(':enter', [
+      transition('* => true', [
         style({ opacity: 0 }),
-        animate(`${duration}ms ease-in-out`, style({ opacity: 1 })),
-      ]),
-      transition(':leave', [
+        animate(`{{ duration }}ms ease-in-out`, style({ opacity: 1 })),
+      ], {
+        params: {
+          duration: 400,
+        },
+      }),
+      transition('* => false', [
         style({ opacity: 1 }),
-        animate(`${duration}ms ease-in-out`, style({ opacity: 0 }))
-      ])
+        animate(`{{ duration }}ms ease-in-out`, style({ opacity: 0 })),
+      ], {
+        params: {
+          duration: 400,
+        },
+      })
     ])
   ];
 };

@@ -1,7 +1,7 @@
 @let config = modal().config();
 
 <div class="fm-modal--container">
-  @if (overlayVisible()) {
+  @if (backdropVisible()) {
     <div class="fm-modals--backdrop"></div>
   }
 
@@ -25,22 +25,24 @@
         <ng-container *ngTemplateOutlet="headerActionsTpl" />
       </div>
 
-      <div
-        class="fm-modal--content"
-        [class.scrollable]="config.scroll === 'content'"
-      >
-        @if (modal().loading()) {
+      <div class="fm-modal--content-wrapper">
+        @if (loaderVisible()) {
           <fm-modal-instance-loader
+            class="fm-modal--loader"
             [modal]="modal()"
-            @fadeInOutLoader
+            [class.visible]="modal().loading()"
+            [@fadeInOutLoader]="modal().loading()"
+            (@fadeInOutLoader.done)="onLoadingAnimationDone()"
             [@.disabled]="!modal().loadingInfo().animation"
           />
         }
 
-        <ng-content />
-      </div>
+        <div class="fm-modal--content" [class.scrollable]="config.scroll === 'content'">
+          <ng-content />
+        </div>
 
-      <ng-content select="fm-modal-instance-footer" />
+        <ng-content select="fm-modal-instance-footer" />
+      </div>
     </div>
   </div>
 </div>

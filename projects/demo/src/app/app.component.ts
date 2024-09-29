@@ -2,6 +2,7 @@ import {Component} from '@angular/core';
 import {
   FlexiModalActionTplDirective,
   FlexiModalHeaderTplDirective,
+  FlexiModalSpinnerTplDirective,
   FlexiModalsOutletComponent
 } from "ngx-flexi-modal";
 
@@ -14,6 +15,7 @@ import {ShowcaseComponent} from "./components/showcase/showcase.component";
     FlexiModalsOutletComponent,
     FlexiModalActionTplDirective,
     FlexiModalHeaderTplDirective,
+    FlexiModalSpinnerTplDirective,
     ShowcaseComponent,
   ],
   templateUrl: './app.component.html',

@@ -1,10 +1,6 @@
-import {Observable} from "rxjs";
-
-import {FlexiModalBeforeCloseEvent} from "../../services/modals/events/flexi-modal-before-close.event";
+import {IFlexiModalOptions} from "../../services/modals/flexi-modals.definitions";
 import {FlexiModalWithComponent} from "../../models/flexi-modal-with-component";
 import {FlexiModalAction} from "../../models/actions/flexi-modal-action";
-import {TFlexiModalOpeningAnimation} from "../../services/modals/flexi-modals.definitions";
-import {FlexiModalOpenEvent} from "../../services/modals/events/flexi-modal-open.event";
 
 export type TFlexiModalBasicIcon = keyof IFlexiModalBasicOptionsByTypes | null;
 export type TFlexiModalBasicAlign = 'left' | 'center' | 'right';
@@ -17,12 +13,13 @@ export interface IFlexiModalBasicOptionsByTypes {
   confirm: IFlexiModalConfirmOptions;
 }
 
-export interface IFlexiModalBasicOptions extends IFlexiModalBasicInputs {
-  title?: string;
-  onOpen?: (($event: FlexiModalOpenEvent<FlexiModalWithComponent>) => void) | undefined;
-  onClose?: (($event: FlexiModalBeforeCloseEvent<FlexiModalWithComponent>) => void) | undefined;
-  aliveUntil?: Observable<unknown>;
-  theme?: string;
+export interface IFlexiModalBasicOptions
+extends IFlexiModalOptions<FlexiModalWithComponent>, IFlexiModalBasicInputs {
+  // title?: string;
+  // onOpen?: (($event: FlexiModalOpenEvent<FlexiModalWithComponent>) => void) | undefined;
+  // onClose?: (($event: FlexiModalBeforeCloseEvent<FlexiModalWithComponent>) => void) | undefined;
+  // aliveUntil?: Observable<unknown>;
+  // theme?: string;
 }
 
 export interface IFlexiModalConfirmOptions extends IFlexiModalBasicOptions {

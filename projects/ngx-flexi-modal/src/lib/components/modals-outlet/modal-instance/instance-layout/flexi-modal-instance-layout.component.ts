@@ -3,7 +3,7 @@ import {
   afterRender,
   ChangeDetectionStrategy,
   Component,
-  computed,
+  computed, effect,
   ElementRef,
   inject,
   Injector,
@@ -18,15 +18,11 @@ import {toObservable} from "@angular/core/rxjs-interop";
 import {filter, skip, Subject, takeUntil} from "rxjs";
 import {AnimationBuilder} from "@angular/animations";
 
-import {
-  flexiModalOpeningAnimations,
-  getLoaderAnimations,
-  getMaximizeAnimations
-} from "./flexi-modal-instance-layout.animations";
 import {FlexiModalInstanceFooterComponent} from "./footer/flexi-modal-instance-footer.component";
 import {FlexiModalInstanceHeaderComponent} from "./header/flexi-modal-instance-header.component";
 import {TFlexiModalOpeningAnimation} from "../../../../services/modals/flexi-modals.definitions";
 import {FlexiModalInstanceLoaderComponent} from "./loader/flexi-modal-instance-loader.component";
+import {IFlexiModalTheme} from "../../../../services/theme/flexi-modals-theme.definitions";
 import {FLEXI_MODAL_HEADER_ACTION_CLASS} from "./flexi-modal-instance-layout.constants";
 import {modalWidthPresets} from "../../../../services/modals/flexi-modals.constants";
 import {FlexiModal} from "../../../../models/flexi-modal";
@@ -34,7 +30,11 @@ import {
   IFlexiModalMaximizeAnimationParams,
   IFlexiModalMinimizeAnimationParams
 } from "./flexi-modal-instance-layout.definitions";
-import {IFlexiModalTheme} from "../../../../services/theme/flexi-modals-theme.definitions";
+import {
+  flexiModalOpeningAnimations,
+  getLoaderAnimations,
+  getMaximizeAnimations
+} from "./flexi-modal-instance-layout.animations";
 
 @Component({
   selector: 'fm-modal-instance-layout',
@@ -69,7 +69,6 @@ export class FlexiModalInstanceLayoutComponent implements OnInit, OnDestroy {
   // Dependencies
   private readonly _injector = inject(Injector);
   private readonly _elementRef = inject(ElementRef<HTMLElement>);
-  // private readonly _themeService = inject(FlexiModalsThemeService);
   private readonly _animationBuilder = inject(AnimationBuilder);
 
   // Inputs
@@ -80,7 +79,7 @@ export class FlexiModalInstanceLayoutComponent implements OnInit, OnDestroy {
   private readonly _bodyWrapperRef = viewChild.required<ElementRef<HTMLDivElement>>('bodyWrapper');
 
   // Signals
-  // public readonly theme = this._themeService.theme;
+  public readonly loaderVisible = signal<boolean>(false);
   private readonly _maximizedChanged = signal<boolean>(false);
 
   // Private
@@ -93,7 +92,7 @@ export class FlexiModalInstanceLayoutComponent implements OnInit, OnDestroy {
     return this.modal().theme();
   });
 
-  public readonly overlayVisible = computed<boolean>(() => {
+  public readonly backdropVisible = computed<boolean>(() => {
     const modal = this.modal();
 
     return (
@@ -165,6 +164,24 @@ export class FlexiModalInstanceLayoutComponent implements OnInit, OnDestroy {
   });
 
 
+  // Effects
+
+  /**
+   * Making loader visible.
+   *
+   * Using directly 'modal().loading()' is not possible due to issue with conditional animation disabling.
+   * As a workaround, instead of using 'modal().loading()' directly, the loader visibility control
+   * is performed by the intermediate 'loaderVisible()' signal.
+   */
+  private _loadingEffect = effect(() => {
+    if (this.modal().loading()) {
+      this.loaderVisible.set(true);
+    }
+  }, {
+    allowSignalWrites: true,
+  });
+
+
   // Lifecycle hooks
 
   public ngOnInit(): void {
@@ -195,6 +212,23 @@ export class FlexiModalInstanceLayoutComponent implements OnInit, OnDestroy {
       this._elementRef.nativeElement.scrollTop = 0;
     }
   }});
+
+
+  // Callbacks
+
+  /**
+   * Hiding loading by setting loaderVisible signal to false.
+   *
+   * Switching loader visibility using the (@fadeInOutLoader.done) event is a forced step.
+   * Angular requires that values in [@.disabled] expression to be updated before the loader disappear from the DOM.
+   * In case of hiding the loader using the seemingly obvious 'modal().loading()' condition directly,
+   * Angular doesn't update the [@.disabled] binding value and just hides loader using the previous animation settings.
+   */
+  public onLoadingAnimationDone(): void {
+    if (!this.modal().loading()) {
+      this.loaderVisible.set(false);
+    }
+  }
 
 
   // Public methods

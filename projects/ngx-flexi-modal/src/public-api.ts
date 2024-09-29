@@ -22,6 +22,7 @@ export * from './lib/components/modals-outlet/modal-instance/instance-types/comp
 export * from './lib/components/modals-outlet/modal-instance/instance-types/template/flexi-modal-with-template-instance.component';
 export * from './lib/components/modals-outlet/directives/flexi-modal-action-tpl.directive';
 export * from './lib/components/modals-outlet/directives/flexi-modal-header-tpl.directive';
+export * from './lib/components/modals-outlet/directives/flexi-modal-spinner-tpl.directive';
 export * from './lib/components/modal/flexi-modal.component';
 export * from './lib/components/modal/directives/flexi-modal-action.directive';
 export * from './lib/components/modal/directives/flexi-modal-body.directive';

@@ -380,6 +380,15 @@ $outer-h-padding: 30px;
   }
 }
 
+.fm-modal--content-wrapper {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  position: relative;
+  border-radius: inherit;
+  height: 100%;
+}
+
 .fm-modal--content {
   position: relative;
   min-height: 80px;
@@ -391,5 +400,13 @@ $outer-h-padding: 30px;
 
   :host.maximized & {
     height: 100%;
+  }
+}
+
+.fm-modal--loader {
+  opacity: 0;
+
+  &.visible {
+    opacity: 1;
   }
 }

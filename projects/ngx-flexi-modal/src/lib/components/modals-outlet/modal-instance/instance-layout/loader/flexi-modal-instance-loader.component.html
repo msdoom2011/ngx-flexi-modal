@@ -1,5 +1,11 @@
-<div class="fm-modal--loading">
-  <div class="fm-modal--loading-spinner">
+<div class="fm-modal--loading-spinner">
+  @if (spinnerTpl()) {
+    <ng-container *ngTemplateOutlet="spinnerTpl() || null; context: {
+      $type: theme().styling.spinnerType,
+      $theme: modal().config().theme || globalThemeName(),
+    }" />
+
+  } @else {
     @switch (theme().styling.spinnerType) {
       @case ('round-dotted') {
         <fm-loader-round-dotted-spinner />
@@ -14,5 +20,5 @@
         <fm-loader-linear-dashed-spinner />
       }
     }
-  </div>
+  }
 </div>

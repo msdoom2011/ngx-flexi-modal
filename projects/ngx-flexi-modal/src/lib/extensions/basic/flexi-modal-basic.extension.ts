@@ -2,7 +2,7 @@ import {FlexiModalBasicComponent} from "./components/modal-basic/flexi-modal-bas
 import {MODAL_NO_BUTTON_ID, MODAL_YES_BUTTON_ID} from "./flexi-modal-basic.constants";
 import {IFlexiModalExtension} from "../../services/modals/flexi-modals.definitions";
 import {IFlexiModalBasicOptionsByTypes} from "./flexi-modal-basic.definitions";
-import {extendModalOptions} from "./flexi-modal-basic.helpers";
+import {extendBasicModalOptions} from "./flexi-modal-basic.helpers";
 
 export const flexiModalBasicExtension: IFlexiModalExtension<IFlexiModalBasicOptionsByTypes> = {
 
@@ -16,7 +16,7 @@ export const flexiModalBasicExtension: IFlexiModalExtension<IFlexiModalBasicOpti
       },
     },
     convert(config: IFlexiModalBasicOptionsByTypes['error']) {
-      return extendModalOptions(this.options, config)
+      return extendBasicModalOptions(this.options, config)
     }
   },
 
@@ -30,7 +30,7 @@ export const flexiModalBasicExtension: IFlexiModalExtension<IFlexiModalBasicOpti
       },
     },
     convert(config: IFlexiModalBasicOptionsByTypes['warning']) {
-      return extendModalOptions(this.options, config)
+      return extendBasicModalOptions(this.options, config)
     }
   },
 
@@ -44,7 +44,7 @@ export const flexiModalBasicExtension: IFlexiModalExtension<IFlexiModalBasicOpti
       },
     },
     convert(config: IFlexiModalBasicOptionsByTypes['success']) {
-      return extendModalOptions(this.options, config);
+      return extendBasicModalOptions(this.options, config);
     }
   },
 
@@ -58,7 +58,7 @@ export const flexiModalBasicExtension: IFlexiModalExtension<IFlexiModalBasicOpti
       },
     },
     convert(config: IFlexiModalBasicOptionsByTypes['info']) {
-      return extendModalOptions(this.options, config);
+      return extendBasicModalOptions(this.options, config);
     }
   },
 
@@ -73,7 +73,7 @@ export const flexiModalBasicExtension: IFlexiModalExtension<IFlexiModalBasicOpti
       },
     },
     convert(config: IFlexiModalBasicOptionsByTypes['confirm']) {
-      const options = extendModalOptions(this.options, config);
+      const options = extendBasicModalOptions(this.options, config);
 
       options.actions = [
         {

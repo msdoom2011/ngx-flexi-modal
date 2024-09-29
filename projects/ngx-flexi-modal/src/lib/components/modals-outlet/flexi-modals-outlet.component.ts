@@ -12,11 +12,12 @@ import {
   TemplateRef
 } from '@angular/core';
 import {NgComponentOutlet, NgForOf, NgTemplateOutlet} from "@angular/common";
-import {animate, style, transition, trigger} from "@angular/animations";
 import {Subject, takeUntil} from "rxjs";
 
 import {FlexiModalBeforeCloseEvent} from "../../services/modals/events/flexi-modal-before-close.event";
 import {FlexiModalBeforeOpenEvent} from "../../services/modals/events/flexi-modal-before-open.event";
+import {FlexiModalSpinnerTplDirective} from "./directives/flexi-modal-spinner-tpl.directive";
+import {getBackdropAnimation, getInstanceAnimation} from "./flexi-modals-outlet.animations";
 import {FlexiModalActionTplDirective} from "./directives/flexi-modal-action-tpl.directive";
 import {FlexiModalHeaderTplDirective} from "./directives/flexi-modal-header-tpl.directive";
 import {FlexiModalsThemeService} from "../../services/theme/flexi-modals-theme.service";
@@ -42,29 +43,8 @@ import {
     NgForOf,
   ],
   animations: [
-    trigger('fadeInOutBackdrop', [
-      transition(':enter', [
-        style({ opacity: 0 }),
-        animate(`300ms {{ delay }}ms ease-in-out`, style({ opacity: 1 }))
-      ], {
-        params: {
-          delay: 0,
-        }
-      }),
-      transition(':leave', [
-        animate(`300ms ease-in-out`, style({ opacity: 0 }))
-      ])
-    ]),
-
-    trigger('fadeInOutInstance', [
-      transition(':enter', [
-        style({ opacity: 0 }),
-        animate(`300ms ease-in-out`, style({ opacity: 1 }))
-      ]),
-      transition(':leave', [
-        animate(`300ms ease-in-out`, style({ opacity: 0 }))
-      ])
-    ])
+    getBackdropAnimation('fadeInOutBackdrop'),
+    getInstanceAnimation('fadeInOutInstance'),
   ],
 })
 export class FlexiModalsOutletComponent implements OnInit {
@@ -84,6 +64,7 @@ export class FlexiModalsOutletComponent implements OnInit {
   // Queries
   private readonly _modalActionTplRef = contentChild(FlexiModalActionTplDirective);
   private readonly _modalHeaderTplRef = contentChild(FlexiModalHeaderTplDirective);
+  private readonly _modalSpinnerTplRef = contentChild(FlexiModalSpinnerTplDirective);
 
   // Private props
   private readonly _destroy$ = new Subject<void>();
@@ -98,6 +79,10 @@ export class FlexiModalsOutletComponent implements OnInit {
 
   public readonly modalHeaderTpl = computed<TemplateRef<any> | undefined>(() => {
     return this._modalHeaderTplRef()?.templateRef;
+  });
+
+  public readonly modalSpinnerTpl = computed<TemplateRef<any> | undefined>(() => {
+    return this._modalSpinnerTplRef()?.templateRef;
   });
 
 

@@ -1,5 +1,8 @@
 export type IFlexiModalThemes = Record<string, IFlexiModalTheme>;
 
+export type TFlexiModalHeaderActionsPosition = 'outside' | 'inside';
+export type TFlexiModalSpinnerType = 'round-dotted' | 'round-dashed' | 'linear-dotted' | 'linear-dashed';
+
 export interface IFlexiModalTheme {
   colors: IFlexiModalColorScheme;
   styling: IFlexiModalStylingConfig;
@@ -36,8 +39,8 @@ export interface IFlexiModalStylingConfig {
   frameBorder: boolean;
   frameShadow: string | boolean;
   frameRounding: number | boolean;
-  spinnerType: 'round-dotted' | 'round-dashed' | 'linear-dotted' | 'linear-dashed';
-  headerActions: 'outside' | 'inside' | boolean;
+  spinnerType: TFlexiModalSpinnerType;
+  headerActions: TFlexiModalHeaderActionsPosition | boolean;
   headerActionsWithBg: boolean;
   headerHeight: number;
   headerFontSize: string;

@@ -97,7 +97,7 @@ export class ShowcaseComponent {
         'Oops! Some unfortunate error occurred. ' +
         'Please try again later or contact our administrator to get further instructions.',
       onOpen: ($event: FlexiModalOpenEvent) => {
-        $event.modal.startLoading();
+        $event.modal.startLoading(false);
       }
     });
   }
@@ -125,7 +125,16 @@ export class ShowcaseComponent {
 
   public onOpenConfirm(): void {
     this.modals.show('confirm', {
-      message: 'You have unsaved changes. Are you really sure want to proceed and quit?'
+      message: 'You have unsaved changes. Are you really sure want to proceed and quit?',
+      onOpen: (($event) => {
+        setTimeout(() => {
+          $event.modal.startLoading();
+
+          setTimeout(() => {
+            $event.modal.stopLoading();
+          }, 2000);
+        }, 1000);
+      }),
     });
   }
 
