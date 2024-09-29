@@ -3,19 +3,19 @@ import {computed, Inject, Injectable, Optional, signal} from "@angular/core";
 import {FLEXI_MODAL_STYLING_OPTIONS, FLEXI_MODAL_COLOR_SCHEME, FLEXI_MODAL_THEME} from "../../flexi-modals.tokens";
 import {normalizeOptions} from "../../tools/utils";
 import {
-  flexiModalCssStylesValueGetters,
-  flexiModalDefaultStyles,
-  flexiModalCssStylesVars,
-  flexiModalCssColorsVars,
-  flexiModalDefaultColors,
-  FLEXI_MODAL_DEFAULT_THEME
+  fmStylingCssValueGetters,
+  fmDefaultStyling,
+  fmStylingCssVars,
+  fmColorSchemeCssVars,
+  fmDefaultColorScheme,
+  FM_DEFAULT_THEME
 } from "./flexi-modals-theme.constants";
 import {
-  IFlexiModalStylingOptions,
-  IFlexiModalColorScheme,
-  IFlexiModalTheme,
-  IFlexiModalThemeOptions,
-  IFlexiModalThemes
+  IFmModalStylingOptions,
+  IFmModalColorScheme,
+  IFmModalTheme,
+  IFmModalThemeOptions,
+  IFmModalThemes
 } from "./flexi-modals-theme.definitions";
 
 @Injectable({
@@ -23,11 +23,11 @@ import {
 })
 export class FlexiModalsThemeService {
 
-  private readonly _themes = signal<IFlexiModalThemes>({});
+  private readonly _themes = signal<IFmModalThemes>({});
 
   private readonly _themeName = signal<string>('');
 
-  public readonly theme = computed<IFlexiModalTheme>(() => {
+  public readonly theme = computed<IFmModalTheme>(() => {
     return this._themes()[this._themeName()];
   });
 
@@ -35,14 +35,14 @@ export class FlexiModalsThemeService {
     return this._themeName();
   });
 
-  public readonly themes = computed<IFlexiModalThemes>(() => {
+  public readonly themes = computed<IFmModalThemes>(() => {
     return this._themes();
   });
 
   constructor(
-    @Optional() @Inject(FLEXI_MODAL_THEME) themeConfigs: Array<IFlexiModalThemeOptions>,
-    @Optional() @Inject(FLEXI_MODAL_COLOR_SCHEME) defaultColorScheme: IFlexiModalColorScheme,
-    @Optional() @Inject(FLEXI_MODAL_STYLING_OPTIONS) defaultStylingOptions: IFlexiModalStylingOptions,
+    @Optional() @Inject(FLEXI_MODAL_THEME) themeConfigs: Array<IFmModalThemeOptions>,
+    @Optional() @Inject(FLEXI_MODAL_COLOR_SCHEME) defaultColorScheme: IFmModalColorScheme,
+    @Optional() @Inject(FLEXI_MODAL_STYLING_OPTIONS) defaultStylingOptions: IFmModalStylingOptions,
   ) {
     if (themeConfigs?.length && (defaultColorScheme || defaultStylingOptions)) {
       console.warn(
@@ -65,7 +65,7 @@ export class FlexiModalsThemeService {
 
   // Public methods
 
-  public registerTheme(themeOptions: IFlexiModalThemeOptions): void {
+  public registerTheme(themeOptions: IFmModalThemeOptions): void {
     if (this.isThemeExist(themeOptions.name)) {
       throw new Error(`The flexi modal theme with name "${themeOptions.name}" is already registered!`);
     }
@@ -82,7 +82,7 @@ export class FlexiModalsThemeService {
     return themeName in this._themes();
   }
 
-  public getTheme(themeName: string): IFlexiModalTheme | undefined {
+  public getTheme(themeName: string): IFmModalTheme | undefined {
     return this._themes()[themeName];
   }
 
@@ -107,23 +107,23 @@ export class FlexiModalsThemeService {
     this._applyThemeStyles(
       targetElement,
       theme.colors,
-      flexiModalCssColorsVars
+      fmColorSchemeCssVars
     );
 
     this._applyThemeStyles(
       targetElement,
       theme.styling,
-      flexiModalCssStylesVars,
-      flexiModalCssStylesValueGetters
+      fmStylingCssVars,
+      fmStylingCssValueGetters
     );
   }
 
   private _initializeWithDefaults(): void {
-    this._themeName.set(FLEXI_MODAL_DEFAULT_THEME);
+    this._themeName.set(FM_DEFAULT_THEME);
     this._themes.set({
-      [FLEXI_MODAL_DEFAULT_THEME]: {
-        colors: flexiModalDefaultColors,
-        styling: flexiModalDefaultStyles,
+      [FM_DEFAULT_THEME]: {
+        colors: fmDefaultColorScheme,
+        styling: fmDefaultStyling,
       }
     });
   }
@@ -132,21 +132,21 @@ export class FlexiModalsThemeService {
   // Private methods
 
   private _initializeWithOptions(
-    colorsScheme: IFlexiModalColorScheme,
-    stylingOptions: IFlexiModalStylingOptions,
+    colorsScheme: IFmModalColorScheme,
+    stylingOptions: IFmModalStylingOptions,
   ): void {
 
-    this._themeName.set(FLEXI_MODAL_DEFAULT_THEME);
+    this._themeName.set(FM_DEFAULT_THEME);
     this._themes.set({
-      [FLEXI_MODAL_DEFAULT_THEME]: this._composeThemeConfig(colorsScheme, stylingOptions),
+      [FM_DEFAULT_THEME]: this._composeThemeConfig(colorsScheme, stylingOptions),
     });
   }
 
-  private _initializeWithThemes(themeConfigs: Array<IFlexiModalThemeOptions>): void {
-    const themes: IFlexiModalThemes = {};
+  private _initializeWithThemes(themeConfigs: Array<IFmModalThemeOptions>): void {
+    const themes: IFmModalThemes = {};
     let themeDefault = '';
 
-    themeConfigs.forEach((themeConfig: IFlexiModalThemeOptions) => {
+    themeConfigs.forEach((themeConfig: IFmModalThemeOptions) => {
       if (!this._validateThemeConfig(themeConfig)) {
         return;
       }
@@ -162,7 +162,7 @@ export class FlexiModalsThemeService {
     this._themeName.set(themeDefault || themeConfigs[0].name);
   }
 
-  private _validateThemeConfig(themeConfig: IFlexiModalThemeOptions): boolean {
+  private _validateThemeConfig(themeConfig: IFmModalThemeOptions): boolean {
     if (!themeConfig.name || typeof themeConfig.name !== 'string') {
       console.warn(`"${themeConfig.name}" is not a valid theme name. This theme was skipped.`);
 
@@ -199,17 +199,17 @@ export class FlexiModalsThemeService {
   }
 
   private _composeThemeConfig(
-    colorsScheme: Partial<IFlexiModalColorScheme> | undefined,
-    stylingOptions: IFlexiModalStylingOptions | undefined
-  ): IFlexiModalTheme {
+    colorsScheme: Partial<IFmModalColorScheme> | undefined,
+    stylingOptions: IFmModalStylingOptions | undefined
+  ): IFmModalTheme {
 
     return {
       colors: {
-        ...flexiModalDefaultColors,
+        ...fmDefaultColorScheme,
         ...(colorsScheme || {}),
       },
       styling: {
-        ...flexiModalDefaultStyles,
+        ...fmDefaultStyling,
         ...(stylingOptions
           ? normalizeOptions(stylingOptions, ['headerActions', 'frameShadow'])
           : {}

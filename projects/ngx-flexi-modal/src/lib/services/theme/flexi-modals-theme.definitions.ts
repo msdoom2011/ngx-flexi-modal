@@ -1,21 +1,20 @@
-export type IFlexiModalThemes = Record<string, IFlexiModalTheme>;
+export type IFmModalThemes = Record<string, IFmModalTheme>;
+export type TFmModalHeaderActionsPosition = 'outside' | 'inside';
+export type TFmModalSpinnerType = 'round-dotted' | 'round-dashed' | 'linear-dotted' | 'linear-dashed';
 
-export type TFlexiModalHeaderActionsPosition = 'outside' | 'inside';
-export type TFlexiModalSpinnerType = 'round-dotted' | 'round-dashed' | 'linear-dotted' | 'linear-dashed';
-
-export interface IFlexiModalTheme {
-  colors: IFlexiModalColorScheme;
-  styling: IFlexiModalStylingConfig;
+export interface IFmModalTheme {
+  colors: IFmModalColorScheme;
+  styling: IFmModalStylingConfig;
 }
 
-export interface IFlexiModalThemeOptions {
+export interface IFmModalThemeOptions {
   name: string;
   default?: boolean;
-  colors?: Partial<IFlexiModalColorScheme>;
-  styling?: IFlexiModalStylingOptions;
+  colors?: Partial<IFmModalColorScheme>;
+  styling?: IFmModalStylingOptions;
 }
 
-export interface IFlexiModalColorScheme {
+export interface IFmModalColorScheme {
   border: string;
   backdrop: string;
   headerText: string;
@@ -33,14 +32,14 @@ export interface IFlexiModalColorScheme {
   actionFocusOutline: string;
 }
 
-export type IFlexiModalStylingOptions = Partial<IFlexiModalStylingConfig>;
+export type IFmModalStylingOptions = Partial<IFmModalStylingConfig>;
 
-export interface IFlexiModalStylingConfig {
+export interface IFmModalStylingConfig {
   frameBorder: boolean;
   frameShadow: string | boolean;
   frameRounding: number | boolean;
-  spinnerType: TFlexiModalSpinnerType;
-  headerActions: TFlexiModalHeaderActionsPosition | boolean;
+  spinnerType: TFmModalSpinnerType;
+  headerActions: TFmModalHeaderActionsPosition | boolean;
   headerActionsWithBg: boolean;
   headerHeight: number;
   headerFontSize: string;

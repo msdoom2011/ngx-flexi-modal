@@ -1,9 +1,9 @@
 import {Component} from '@angular/core';
 import {
-  FlexiModalActionTplDirective,
-  FlexiModalHeaderTplDirective,
-  FlexiModalSpinnerTplDirective,
-  FlexiModalsOutletComponent
+  FmModalActionTplDirective,
+  FmModalHeaderTplDirective,
+  FmModalSpinnerTplDirective,
+  FmModalsOutletComponent
 } from "ngx-flexi-modal";
 
 import {ShowcaseComponent} from "./components/showcase/showcase.component";
@@ -12,10 +12,10 @@ import {ShowcaseComponent} from "./components/showcase/showcase.component";
   selector: 'fm-app-root',
   standalone: true,
   imports: [
-    FlexiModalsOutletComponent,
-    FlexiModalActionTplDirective,
-    FlexiModalHeaderTplDirective,
-    FlexiModalSpinnerTplDirective,
+    FmModalsOutletComponent,
+    FmModalActionTplDirective,
+    FmModalHeaderTplDirective,
+    FmModalSpinnerTplDirective,
     ShowcaseComponent,
   ],
   templateUrl: './app.component.html',

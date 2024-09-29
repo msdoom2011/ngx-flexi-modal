@@ -1,10 +1,10 @@
-import {IFlexiModalActionConfig, IFlexiModalConfig,} from "./flexi-modals.definitions";
+import {IFmModalActionConfig, IFmModalConfig,} from "./flexi-modals.definitions";
 
-export const MODAL_WITH_COMPONENT_TYPE = 'COMPONENT';
+export const FM_MODAL_WITH_COMPONENT_TYPE = 'COMPONENT';
 
-export const MODAL_WITH_TEMPLATE_TYPE = 'TEMPLATE';
+export const FM_MODAL_WITH_TEMPLATE_TYPE = 'TEMPLATE';
 
-export enum FlexiModalEventType {
+export enum FmModalEventType {
   BeforeOpen = 'BEFORE_OPEN',
   Open = 'OPEN',
   BeforeClose = 'BEFORE_CLOSE',
@@ -13,7 +13,7 @@ export enum FlexiModalEventType {
 }
 
 // TODO: adjust modal window size. Make it configurable outside
-export const modalWidthPresets = {
+export const fmModalWidthPresets = {
   large: '800px',
   big: '600px',
   medium: '500px',
@@ -21,7 +21,7 @@ export const modalWidthPresets = {
   tiny: '300px',
 }
 
-export const flexiModalOptionsDefault: IFlexiModalConfig<any> = {
+export const fmModalOptionsDefault: IFmModalConfig<any> = {
   id: '',
   title: undefined,
   actions: undefined,
@@ -41,7 +41,7 @@ export const flexiModalOptionsDefault: IFlexiModalConfig<any> = {
   data: {},
 };
 
-export const flexiModalActionOptionsDefault: IFlexiModalActionConfig = {
+export const fmModalActionOptionsDefault: IFmModalActionConfig = {
   id: '',
   label: '',
   icon: undefined,

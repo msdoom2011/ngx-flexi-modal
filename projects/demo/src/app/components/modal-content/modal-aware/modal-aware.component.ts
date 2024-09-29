@@ -1,5 +1,5 @@
 import {Component, input, OnDestroy, OnInit} from '@angular/core';
-import {IFlexiModalAware, FlexiModalWithComponent} from "ngx-flexi-modal";
+import {IFlexiModalAware, FmModalWithComponent} from "ngx-flexi-modal";
 
 @Component({
   selector: 'fm-app-modal-aware',
@@ -10,7 +10,7 @@ import {IFlexiModalAware, FlexiModalWithComponent} from "ngx-flexi-modal";
 })
 export class ModalAwareComponent implements OnInit, OnDestroy, IFlexiModalAware {
 
-  public modal = input<FlexiModalWithComponent>();
+  public modal = input<FmModalWithComponent>();
 
   public ngOnInit() {
     console.log('SERVICE MODAL INITIALIZED!!!');

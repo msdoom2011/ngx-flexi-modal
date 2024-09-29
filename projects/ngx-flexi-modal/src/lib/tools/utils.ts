@@ -1,6 +1,6 @@
-import {IFlexiModalComponentOptions, IFlexiModalOptions} from "../services/modals/flexi-modals.definitions";
-import {IFlexiModalBasicInputs} from "../extensions/basic/flexi-modal-basic.definitions";
-import {FlexiModalWithComponent} from "../models/flexi-modal-with-component";
+import {IFmModalWithComponentOptions, IFmModalOptions} from "../services/modals/flexi-modals.definitions";
+import {IFmModalBasicInputs} from "../extensions/basic/fm-modal-basic.definitions";
+import {FmModalWithComponent} from "../models/fm-modal-with-component";
 
 export function generateRandomId(): number {
   return Math.round(new Date().valueOf() * Math.random() / 10000);
@@ -63,14 +63,14 @@ export function normalizeOptions(
   return options;
 }
 
-export function extendComponentModalOptions<ComponentT, InputsT extends object>(
-  basicOptions: IFlexiModalComponentOptions<ComponentT, Partial<InputsT>>,
-  userOptions: IFlexiModalOptions<FlexiModalWithComponent<ComponentT, InputsT>> & Partial<InputsT>,
+export function extendModalWithComponentOptions<ComponentT, InputsT extends object>(
+  basicOptions: IFmModalWithComponentOptions<ComponentT, Partial<InputsT>>,
+  userOptions: IFmModalOptions<FmModalWithComponent<ComponentT, InputsT>> & Partial<InputsT>,
   inputNames: Array<keyof InputsT>,
-): IFlexiModalComponentOptions<ComponentT, InputsT> {
+): IFmModalWithComponentOptions<ComponentT, InputsT> {
 
   const userOptionsNormalized = normalizeOptions({...userOptions});
-  const inputOptions = <Partial<IFlexiModalBasicInputs>>{ ...(basicOptions.inputs || {}) };
+  const inputOptions = <Partial<IFmModalBasicInputs>>{ ...(basicOptions.inputs || {}) };
 
   for (const inputName of inputNames) {
     if (inputName in userOptions) {
@@ -80,11 +80,11 @@ export function extendComponentModalOptions<ComponentT, InputsT extends object>(
 
   for (const inputName of [...inputNames, 'inputs']) {
     if (inputName in userOptionsNormalized) {
-      delete userOptionsNormalized[<keyof IFlexiModalBasicInputs>inputName];
+      delete userOptionsNormalized[<keyof IFmModalBasicInputs>inputName];
     }
   }
 
-  return <IFlexiModalComponentOptions<ComponentT, InputsT>>{
+  return <IFmModalWithComponentOptions<ComponentT, InputsT>>{
     ...basicOptions,
     inputs: inputOptions,
     ...userOptionsNormalized,

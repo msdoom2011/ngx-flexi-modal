@@ -79,7 +79,7 @@ export const appConfig: ApplicationConfig = {
           },
           styling: {
             headerHeight: 40,
-            headerActions: 'outside',
+            headerActions: 'inside',
             headerFontSize: '1.17em',
             headerFontWeight: 'bold',
             headerActionsWithBg: true,

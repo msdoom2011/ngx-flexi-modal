@@ -1,5 +1,5 @@
 import {Component} from "@angular/core";
-import {FlexiModalBasicComponent} from "ngx-flexi-modal";
+import {FmModalBasicComponent} from "ngx-flexi-modal";
 
 @Component({
   selector: "fm-modal-basic-custom",
@@ -7,4 +7,4 @@ import {FlexiModalBasicComponent} from "ngx-flexi-modal";
   styleUrl: './modal-basic-custom.component.scss',
   standalone: true,
 })
-export class ModalBasicCustomComponent extends FlexiModalBasicComponent {}
+export class ModalBasicCustomComponent extends FmModalBasicComponent {}

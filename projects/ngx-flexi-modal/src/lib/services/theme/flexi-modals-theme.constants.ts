@@ -1,8 +1,8 @@
-import {IFlexiModalStylingConfig, IFlexiModalColorScheme} from "./flexi-modals-theme.definitions";
+import {IFmModalStylingConfig, IFmModalColorScheme} from "./flexi-modals-theme.definitions";
 
-export const FLEXI_MODAL_DEFAULT_THEME = 'default';
+export const FM_DEFAULT_THEME = 'default';
 
-export const flexiModalDefaultColors: IFlexiModalColorScheme = {
+export const fmDefaultColorScheme: IFmModalColorScheme = {
   border: '#ccc',
   backdrop: 'rgba(4, 67, 81, 0.5)',
   headerText: '#333',
@@ -20,7 +20,7 @@ export const flexiModalDefaultColors: IFlexiModalColorScheme = {
   actionFocusOutline: 'rgba(109, 166, 173, 0.4)',
 }
 
-export const flexiModalDefaultStyles: IFlexiModalStylingConfig = {
+export const fmDefaultStyling: IFmModalStylingConfig = {
   frameShadow: '0 5px 20px rgba(0, 0, 0, 0.3)',
   frameBorder: false,
   frameRounding: 4,
@@ -32,8 +32,8 @@ export const flexiModalDefaultStyles: IFlexiModalStylingConfig = {
   spinnerType: 'round-dotted',
 };
 
-export const flexiModalCssColorsVars: (
-  Record<keyof IFlexiModalColorScheme, string>
+export const fmColorSchemeCssVars: (
+  Record<keyof IFmModalColorScheme, string>
 )= {
   border: '--fm-color-border',
   backdrop: '--fm-color-backdrop',
@@ -52,8 +52,8 @@ export const flexiModalCssColorsVars: (
   actionFocusOutline: '--fm-color-action-focus-outline',
 };
 
-export const flexiModalCssStylesVars: (
-  Record<keyof IFlexiModalStylingConfig, string>
+export const fmStylingCssVars: (
+  Record<keyof IFmModalStylingConfig, string>
 ) = {
   frameRounding: '--fm-frame-border-radius',
   frameShadow: '--fm-frame-box-shadow',
@@ -66,8 +66,8 @@ export const flexiModalCssStylesVars: (
   spinnerType: '',
 };
 
-export const flexiModalCssStylesValueGetters: (
-  Record<keyof IFlexiModalStylingConfig, ((value: any) => string) | undefined>
+export const fmStylingCssValueGetters: (
+  Record<keyof IFmModalStylingConfig, ((value: any) => string) | undefined>
 ) = {
   frameRounding: (rounding: number | undefined) => typeof rounding === 'number' ? rounding + 'px' : '0',
   headerHeight: (height: number) => height >= 30 ? `${height}px` : '30px',

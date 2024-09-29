@@ -11,56 +11,56 @@ import {
 import {BehaviorSubject, filter, Observable, Subject} from "rxjs";
 
 import {FLEXI_MODAL_DEFAULT_OPTIONS, FLEXI_MODAL_EXTENSION} from "../../flexi-modals.tokens";
-import {FlexiModalBeforeCloseEvent} from "./events/flexi-modal-before-close.event";
-import {FlexiModalBeforeOpenEvent} from "./events/flexi-modal-before-open.event";
-import {FlexiModalWithComponent} from "../../models/flexi-modal-with-component";
-import {FlexiModalWithTemplate} from "../../models/flexi-modal-with-template";
+import {FmModalBeforeCloseEvent} from "./events/fm-modal-before-close.event";
+import {FmModalBeforeOpenEvent} from "./events/fm-modal-before-open.event";
+import {FmModalWithComponent} from "../../models/fm-modal-with-component";
+import {FmModalWithTemplate} from "../../models/fm-modal-with-template";
 import {FlexiModalsThemeService} from "../theme/flexi-modals-theme.service";
-import {FlexiModalUpdateEvent} from "./events/flexi-modal-update.event";
-import {FlexiModalCloseEvent} from "./events/flexi-modal-close.event";
-import {FlexiModalOpenEvent} from "./events/flexi-modal-open.event";
-import {flexiModalOptionsDefault} from "./flexi-modals.constants";
+import {FmModalUpdateEvent} from "./events/fm-modal-update.event";
+import {FmModalCloseEvent} from "./events/fm-modal-close.event";
+import {FmModalOpenEvent} from "./events/fm-modal-open.event";
+import {fmModalOptionsDefault} from "./flexi-modals.constants";
 import {isPlainObject, normalizeOptions} from "../../tools/utils";
-import {FlexiModal} from "../../models/flexi-modal";
+import {FmModal} from "../../models/fm-modal";
 import {
-  IFlexiModalComponentOptions,
-  IFlexiModalExtension,
-  IFlexiModalExtensionOptionsByTypes,
-  IFlexiModalExtensionTypeConfig,
-  IFlexiModalOptions,
-  IFlexiModalTemplateOptions,
-  TFlexiModalEvent
+  IFmModalWithComponentOptions,
+  IFmExtension,
+  IFmExtensionOptionsByTypes,
+  IFmExtensionTypeConfig,
+  IFmModalOptions,
+  IFmModalWithTemplateOptions,
+  TFmModalEvent
 } from "./flexi-modals.definitions";
 
 @Injectable({
   providedIn: 'root'
 })
 export class FlexiModalsService<
-  ExtensionOptionsByTypesT extends IFlexiModalExtensionOptionsByTypes = IFlexiModalExtensionOptionsByTypes
+  ExtensionOptionsByTypesT extends IFmExtensionOptionsByTypes = IFmExtensionOptionsByTypes
 > {
 
   private readonly _themes = inject(FlexiModalsThemeService);
 
-  private readonly _extensionsArr = inject<Array<IFlexiModalExtension<ExtensionOptionsByTypesT>>>(FLEXI_MODAL_EXTENSION);
+  private readonly _extensionsArr = inject<Array<IFmExtension<ExtensionOptionsByTypesT>>>(FLEXI_MODAL_EXTENSION);
 
-  private readonly _defaultOptions = inject<IFlexiModalOptions<any> | undefined>(FLEXI_MODAL_DEFAULT_OPTIONS, { optional: true });
+  private readonly _defaultOptions = inject<IFmModalOptions<any> | undefined>(FLEXI_MODAL_DEFAULT_OPTIONS, { optional: true });
 
-  private readonly _extensions: Record<keyof ExtensionOptionsByTypesT, IFlexiModalExtensionTypeConfig> = <any>{};
+  private readonly _extensions: Record<keyof ExtensionOptionsByTypesT, IFmExtensionTypeConfig> = <any>{};
 
-  private readonly _events$ = new Subject<TFlexiModalEvent>();
+  private readonly _events$ = new Subject<TFmModalEvent>();
 
-  private readonly _modals = signal<Array<FlexiModal>>([]);
+  private readonly _modals = signal<Array<FmModal>>([]);
 
-  public modals = computed<Array<FlexiModal>>(() => {
+  public modals = computed<Array<FmModal>>(() => {
     return this._modals();
   });
 
-  public get events$(): Observable<TFlexiModalEvent>{
+  public get events$(): Observable<TFmModalEvent>{
     return this._events$.pipe(filter($event => !$event.stopped));
   }
 
   constructor() {
-    this._extensions = <Record<keyof ExtensionOptionsByTypesT, IFlexiModalExtensionTypeConfig>>(
+    this._extensions = <Record<keyof ExtensionOptionsByTypesT, IFmExtensionTypeConfig>>(
       this._extensionsArr.reduce((result, extension) => ({...result, ...extension}), {})
     );
 
@@ -73,31 +73,31 @@ export class FlexiModalsService<
     }
   }
 
-  public registerExtension(extension: IFlexiModalExtension<any>): void {
+  public registerExtension(extension: IFmExtension<any>): void {
     Object.assign(this._extensions, extension);
   }
 
   public showComponent<ComponentT extends object = any>(
     component: Type<ComponentT>,
-  ): FlexiModalWithComponent<ComponentT> | null;
+  ): FmModalWithComponent<ComponentT> | null;
 
   public showComponent<ComponentT extends object = any>(
     component: Type<ComponentT>,
     takeUntil$: Observable<any>
-  ): FlexiModalWithComponent<ComponentT> | null;
+  ): FmModalWithComponent<ComponentT> | null;
 
   public showComponent<ComponentT extends object = any>(
     component: Type<ComponentT>,
-    options: IFlexiModalComponentOptions<ComponentT>
-  ): FlexiModalWithComponent<ComponentT> | null;
+    options: IFmModalWithComponentOptions<ComponentT>
+  ): FmModalWithComponent<ComponentT> | null;
 
   public showComponent<ComponentT extends object = any>(
     component: Type<ComponentT>,
-    takeUntilOrOptions?: Observable<any> | IFlexiModalComponentOptions<ComponentT>
-  ): FlexiModalWithComponent<ComponentT> | null {
+    takeUntilOrOptions?: Observable<any> | IFmModalWithComponentOptions<ComponentT>
+  ): FmModalWithComponent<ComponentT> | null {
 
     const content$ = new BehaviorSubject<ComponentRef<ComponentT> | null>(null);
-    const modal = new FlexiModalWithComponent(
+    const modal = new FmModalWithComponent(
       this, this._themes, component, content$,
       this._normalizeOptions(takeUntilOrOptions)
     );
@@ -107,25 +107,25 @@ export class FlexiModalsService<
 
   public showTemplate<ContextT extends object = {}>(
     template: TemplateRef<ContextT>,
-  ): FlexiModalWithTemplate<ContextT> | null;
+  ): FmModalWithTemplate<ContextT> | null;
 
   public showTemplate<ContextT extends object = {}>(
     template: TemplateRef<ContextT>,
     takeUntil$: Observable<unknown>,
-  ): FlexiModalWithTemplate<ContextT> | null;
+  ): FmModalWithTemplate<ContextT> | null;
 
   public showTemplate<ContextT extends object = {}>(
     template: TemplateRef<ContextT>,
-    options: IFlexiModalTemplateOptions<ContextT>,
-  ): FlexiModalWithTemplate<ContextT> | null;
+    options: IFmModalWithTemplateOptions<ContextT>,
+  ): FmModalWithTemplate<ContextT> | null;
 
   public showTemplate<ContextT extends object = {}>(
     template: TemplateRef<ContextT>,
-    takeUntilOrOptions?: Observable<any> | IFlexiModalTemplateOptions<ContextT>,
-  ): FlexiModalWithTemplate<ContextT> | null {
+    takeUntilOrOptions?: Observable<any> | IFmModalWithTemplateOptions<ContextT>,
+  ): FmModalWithTemplate<ContextT> | null {
 
     const content$ = new BehaviorSubject<EmbeddedViewRef<ContextT> | null>(null);
-    const modal = new FlexiModalWithTemplate(
+    const modal = new FmModalWithTemplate(
       this, this._themes, template, content$,
       this._normalizeOptions(takeUntilOrOptions)
     );
@@ -139,7 +139,7 @@ export class FlexiModalsService<
   >(
     modalType: T,
     options: ExtensionOptionsByTypesT[T]
-  ): FlexiModalWithComponent<ComponentT> | null {
+  ): FmModalWithComponent<ComponentT> | null {
 
     const modalTypeConfig = this._extensions[modalType];
 
@@ -153,7 +153,7 @@ export class FlexiModalsService<
     );
   }
 
-  public updateModal(modalId: string, changes: IFlexiModalOptions<any>): void {
+  public updateModal(modalId: string, changes: IFmModalOptions<any>): void {
     const modal = this.getModalById(modalId);
 
     if (!modal) {
@@ -166,7 +166,7 @@ export class FlexiModalsService<
       return [ ...modals ];
     });
 
-    this._events$.next(new FlexiModalUpdateEvent(
+    this._events$.next(new FmModalUpdateEvent(
       modal,
       changes,
     ));
@@ -179,7 +179,7 @@ export class FlexiModalsService<
       return;
     }
 
-    const $beforeCloseEvent = new FlexiModalBeforeCloseEvent(modal);
+    const $beforeCloseEvent = new FmModalBeforeCloseEvent(modal);
 
     this._events$.next($beforeCloseEvent);
 
@@ -192,7 +192,7 @@ export class FlexiModalsService<
     }
 
     this._modals.update(modals => modals.filter(modalInst => modalInst.id() !== modalId));
-    this._events$.next(new FlexiModalCloseEvent(modal));
+    this._events$.next(new FmModalCloseEvent(modal));
   }
 
   public closeAll(): void {
@@ -201,7 +201,7 @@ export class FlexiModalsService<
     });
   }
 
-  public getModalActive<ModalT extends FlexiModal = FlexiModal>(): ModalT | undefined {
+  public getModalActive<ModalT extends FmModal = FmModal>(): ModalT | undefined {
     const modals = this._modals();
 
     if (!modals.length) {
@@ -211,7 +211,7 @@ export class FlexiModalsService<
     return <ModalT>modals[modals.length - 1];
   }
 
-  public getModalById<ModalT extends FlexiModal = FlexiModal>(modalId: string): ModalT | undefined {
+  public getModalById<ModalT extends FmModal = FmModal>(modalId: string): ModalT | undefined {
     if (!modalId) {
       return;
     }
@@ -222,11 +222,11 @@ export class FlexiModalsService<
 
   // Private implementation
 
-  private _normalizeOptions<ModalOptionsT extends Partial<IFlexiModalOptions<any>>>(
+  private _normalizeOptions<ModalOptionsT extends Partial<IFmModalOptions<any>>>(
     takeUntilOrOptions: ModalOptionsT | Observable<unknown> | undefined
   ): ModalOptionsT {
     return <ModalOptionsT>{
-      ...flexiModalOptionsDefault,
+      ...fmModalOptionsDefault,
       ...(this._defaultOptions || {}),
       ...(isPlainObject(takeUntilOrOptions)
         ? (normalizeOptions(takeUntilOrOptions) || {})
@@ -235,8 +235,8 @@ export class FlexiModalsService<
     };
   }
 
-  private _showModal<ModalT extends FlexiModal>(modal: ModalT): ModalT | null {
-    const $beforeOpenEvent = new FlexiModalBeforeOpenEvent(modal);
+  private _showModal<ModalT extends FmModal>(modal: ModalT): ModalT | null {
+    const $beforeOpenEvent = new FmModalBeforeOpenEvent(modal);
 
     this._events$.next($beforeOpenEvent);
 
@@ -249,7 +249,7 @@ export class FlexiModalsService<
     modal.content$
       .pipe(filter(Boolean))
       .subscribe(() => {
-        const $openEvent = new FlexiModalOpenEvent(modal);
+        const $openEvent = new FmModalOpenEvent(modal);
 
         this._events$.next($openEvent);
 

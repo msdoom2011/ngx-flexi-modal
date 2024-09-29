@@ -1,11 +1,11 @@
 import {EnvironmentProviders, makeEnvironmentProviders, Provider} from "@angular/core";
 
-import {flexiModalBasicExtension} from "./extensions/basic/flexi-modal-basic.extension";
-import {IFlexiModalExtension, IFlexiModalOptions} from "./services/modals/flexi-modals.definitions";
+import {IFmExtension, IFmModalOptions} from "./services/modals/flexi-modals.definitions";
+import {fmModalBasicExtension} from "./extensions/basic/fm-modal-basic.extension";
 import {
-  IFlexiModalStylingOptions,
-  IFlexiModalColorScheme,
-  IFlexiModalThemeOptions
+  IFmModalStylingOptions,
+  IFmModalColorScheme,
+  IFmModalThemeOptions
 } from "./services/theme/flexi-modals-theme.definitions";
 import {
   FLEXI_MODAL_STYLING_OPTIONS,
@@ -23,7 +23,7 @@ import {
  */
 export function provideFlexiModals(...providers: Array<Array<Provider>> | Array<Provider>): EnvironmentProviders {
   return makeEnvironmentProviders([
-    { provide: FLEXI_MODAL_EXTENSION, useValue: flexiModalBasicExtension, multi: true },
+    { provide: FLEXI_MODAL_EXTENSION, useValue: fmModalBasicExtension, multi: true },
     ...providers,
   ]);
 }
@@ -31,28 +31,28 @@ export function provideFlexiModals(...providers: Array<Array<Provider>> | Array<
 /**
  * Allows to specify default options for any created flexi modal.
  *
- * @param { IFlexiModalOptions } options An object containing default modal option values
+ * @param { IFmModalOptions } options An object containing default modal option values
  * @returns Array<Provider>
  */
-export function withDefaultOptions(options: IFlexiModalOptions<any>): Array<Provider> {
+export function withDefaultOptions(options: IFmModalOptions<any>): Array<Provider> {
   return [
     { provide: FLEXI_MODAL_DEFAULT_OPTIONS, useValue: options },
   ];
 }
 
-export function withColorScheme(colors: Partial<IFlexiModalColorScheme>): Array<Provider> {
+export function withColorScheme(colors: Partial<IFmModalColorScheme>): Array<Provider> {
   return [
     { provide: FLEXI_MODAL_COLOR_SCHEME, useValue: colors },
   ];
 }
 
-export function withStyling(options: IFlexiModalStylingOptions): Array<Provider> {
+export function withStyling(options: IFmModalStylingOptions): Array<Provider> {
   return [
     { provide: FLEXI_MODAL_STYLING_OPTIONS, useValue: options },
   ];
 }
 
-export function withThemes(themes: Array<IFlexiModalThemeOptions>): Array<Provider> {
+export function withThemes(themes: Array<IFmModalThemeOptions>): Array<Provider> {
   return [
     ...themes.map(themeConfig => (
       { provide: FLEXI_MODAL_THEME, useValue: themeConfig, multi: true }
@@ -60,7 +60,7 @@ export function withThemes(themes: Array<IFlexiModalThemeOptions>): Array<Provid
   ];
 }
 
-export function withExtensions(extensions: Array<IFlexiModalExtension<any>>): Array<Provider> {
+export function withExtensions(extensions: Array<IFmExtension<any>>): Array<Provider> {
   return extensions.map(extension => (
     { provide: FLEXI_MODAL_EXTENSION, useValue: extension, multi: true }
   ));

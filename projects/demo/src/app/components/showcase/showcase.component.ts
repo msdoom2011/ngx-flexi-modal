@@ -1,11 +1,11 @@
 import {Component, computed, inject, signal} from '@angular/core';
 import {
-  FlexiModalBodyDirective,
-  FlexiModalActionDirective,
-  FlexiModalComponent,
-  FlexiModalFooterDirective,
-  FlexiModalHeaderDirective,
-  FlexiModalOpenEvent,
+  FmModalBodyDirective,
+  FmModalActionDirective,
+  FmModalComponent,
+  FmModalFooterDirective,
+  FmModalHeaderDirective,
+  FmModalOpenEvent,
   FlexiModalsService,
   FlexiModalsThemeService,
 } from "ngx-flexi-modal";
@@ -17,12 +17,12 @@ import {ModalAwareComponent} from "../modal-content/modal-aware/modal-aware.comp
   selector: 'fm-app-showcase',
   standalone: true,
   imports: [
-    FlexiModalComponent,
-    FlexiModalBodyDirective,
-    FlexiModalBodyDirective,
-    FlexiModalHeaderDirective,
-    FlexiModalFooterDirective,
-    FlexiModalActionDirective,
+    FmModalComponent,
+    FmModalBodyDirective,
+    FmModalBodyDirective,
+    FmModalHeaderDirective,
+    FmModalFooterDirective,
+    FmModalActionDirective,
     ModalAwareComponent,
     TemplateAwareComponent,
   ],
@@ -96,7 +96,7 @@ export class ShowcaseComponent {
       message:
         'Oops! Some unfortunate error occurred. ' +
         'Please try again later or contact our administrator to get further instructions.',
-      onOpen: ($event: FlexiModalOpenEvent) => {
+      onOpen: ($event: FmModalOpenEvent) => {
         $event.modal.startLoading(false);
       }
     });
@@ -125,20 +125,24 @@ export class ShowcaseComponent {
 
   public onOpenConfirm(): void {
     this.modals.show('confirm', {
+      title: 'You have unsaved changes. Are you really sure want to proceed and quit?',
       message: 'You have unsaved changes. Are you really sure want to proceed and quit?',
       onOpen: (($event) => {
+        $event.modal.startLoading(false);
+
         setTimeout(() => {
-          $event.modal.startLoading();
+          $event.modal.update({ closable: true });
 
           setTimeout(() => {
+            $event.modal.update({ closable: false });
             $event.modal.stopLoading();
-          }, 2000);
-        }, 1000);
+          }, 4000);
+        }, 2000);
       }),
     });
   }
 
-  public onTemplateModalOpened($event: FlexiModalOpenEvent): void {
+  public onTemplateModalOpened($event: FmModalOpenEvent): void {
     console.log($event);
     console.log('TEMPLATE MODAL OPENED!!!');
   }

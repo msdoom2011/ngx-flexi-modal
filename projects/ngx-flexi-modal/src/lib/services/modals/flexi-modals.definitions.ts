@@ -1,32 +1,31 @@
 import {InputSignal, TemplateRef, Type} from "@angular/core";
-import {AnimationMetadata} from "@angular/animations";
 import {Observable} from "rxjs";
 
-import {FlexiModalActionDirective} from "../../components/modal/directives/flexi-modal-action.directive";
-import {IFlexiModalBasicOptionsByTypes} from "../../extensions/basic/flexi-modal-basic.definitions";
-import {FlexiModalBeforeCloseEvent} from "./events/flexi-modal-before-close.event";
-import {FlexiModalBeforeOpenEvent} from "./events/flexi-modal-before-open.event";
-import {FlexiModalWithComponent} from "../../models/flexi-modal-with-component";
-import {FlexiModalWithTemplate} from "../../models/flexi-modal-with-template";
-import {FlexiModalAction} from "../../models/actions/flexi-modal-action";
-import {FlexiModalUpdateEvent} from "./events/flexi-modal-update.event";
-import {FlexiModalCloseEvent} from "./events/flexi-modal-close.event";
-import {FlexiModalOpenEvent} from "./events/flexi-modal-open.event";
-import {modalWidthPresets} from "./flexi-modals.constants";
-import {FlexiModal} from "../../models/flexi-modal";
+import {FmModalActionDirective} from "../../components/modal/directives/fm-modal-action.directive";
+import {IFmModalBasicExtensionOptionsByTypes} from "../../extensions/basic/fm-modal-basic.definitions";
+import {FmModalBeforeCloseEvent} from "./events/fm-modal-before-close.event";
+import {FmModalBeforeOpenEvent} from "./events/fm-modal-before-open.event";
+import {FmModalWithComponent} from "../../models/fm-modal-with-component";
+import {FmModalWithTemplate} from "../../models/fm-modal-with-template";
+import {FmModalAction} from "../../models/actions/fm-modal-action";
+import {FmModalUpdateEvent} from "./events/fm-modal-update.event";
+import {FmModalCloseEvent} from "./events/fm-modal-close.event";
+import {FmModalOpenEvent} from "./events/fm-modal-open.event";
+import {fmModalWidthPresets} from "./flexi-modals.constants";
+import {FmModal} from "../../models/fm-modal";
 
-export type TFlexiModalWidth = 'fit-content' | 'fit-window' | (keyof typeof modalWidthPresets) | number;
-export type TFlexiModalHeight = 'fit-content' | number;
-export type TFlexiModalScroll = 'modal' | 'content';
-export type TFlexiModalButtonPosition = 'left' | 'center' | 'right';
-export type TFlexiModalPosition = 'top' | 'center';
-export type TFlexiModalOpeningAnimation = 'fade-in' | 'zoom-in' | 'zoom-out' | 'slide' | 'appear' | 'fall-down' | 'roll-out';
-export type TFlexiModalEvent = (
-  FlexiModalBeforeOpenEvent
-  | FlexiModalOpenEvent
-  | FlexiModalBeforeCloseEvent
-  | FlexiModalCloseEvent
-  | FlexiModalUpdateEvent
+export type TFmModalWidth = 'fit-content' | 'fit-window' | (keyof typeof fmModalWidthPresets) | number;
+export type TFmModalHeight = 'fit-content' | number;
+export type TFmModalScroll = 'modal' | 'content';
+export type TFmModalButtonPosition = 'left' | 'center' | 'right';
+export type TFmModalPosition = 'top' | 'center';
+export type TFmModalOpeningAnimation = 'fade-in' | 'zoom-in' | 'zoom-out' | 'slide' | 'appear' | 'fall-down' | 'roll-out';
+export type TFmModalEvent = (
+  FmModalBeforeOpenEvent
+  | FmModalOpenEvent
+  | FmModalBeforeCloseEvent
+  | FmModalCloseEvent
+  | FmModalUpdateEvent
 );
 
 
@@ -38,44 +37,44 @@ export type TFlexiModalEvent = (
  * The modal input is optional intentionally to ensure ability to use the same component outside the modal context.
  */
 export interface IFlexiModalAware {
-  modal: InputSignal<FlexiModalWithComponent | undefined>;
+  modal: InputSignal<FmModalWithComponent | undefined>;
 }
 
 
 // Extensions
 
-export interface IFlexiModalExtensionOptionsByTypes extends IFlexiModalBasicOptionsByTypes {
+export interface IFmExtensionOptionsByTypes extends IFmModalBasicExtensionOptionsByTypes {
   // Must be empty here
 }
 
-export type IFlexiModalExtension<ModalTypeT extends IFlexiModalExtensionOptionsByTypes> = {
-  [K in keyof ModalTypeT]: IFlexiModalExtensionTypeConfig;
+export type IFmExtension<ModalTypeT extends IFmExtensionOptionsByTypes> = {
+  [K in keyof ModalTypeT]: IFmExtensionTypeConfig;
 }
 
-export interface IFlexiModalExtensionTypeConfig<
+export interface IFmExtensionTypeConfig<
   ShortcutModalOptionsT extends object = any,
   ComponentT = any
 > {
   component: Type<ComponentT>;
-  options: IFlexiModalComponentOptions<ComponentT>;
-  convert: (config: ShortcutModalOptionsT) => IFlexiModalComponentOptions<ComponentT>;
+  options: IFmModalWithComponentOptions<ComponentT>;
+  convert: (config: ShortcutModalOptionsT) => IFmModalWithComponentOptions<ComponentT>;
 }
 
 
 // Modal config
 
-export interface IFlexiModalConfig<FlexiModalT extends FlexiModal> {
+export interface IFmModalConfig<ModalT extends FmModal> {
   id: string;
   title: string | undefined;
   aliveUntil: Observable<unknown> | undefined;
-  actions: Array<IFlexiModalActionConfig> | undefined;
-  onOpen: (($event: FlexiModalOpenEvent<FlexiModalT>) => void) | undefined;
-  onClose: (($event: FlexiModalBeforeCloseEvent<FlexiModalT>) => void) | undefined;
-  animation: TFlexiModalOpeningAnimation;
-  position: TFlexiModalPosition;
-  scroll: TFlexiModalScroll;
-  height: TFlexiModalHeight;
-  width: TFlexiModalWidth;
+  actions: Array<IFmModalActionConfig> | undefined;
+  onOpen: (($event: FmModalOpenEvent<ModalT>) => void) | undefined;
+  onClose: (($event: FmModalBeforeCloseEvent<ModalT>) => void) | undefined;
+  animation: TFmModalOpeningAnimation;
+  position: TFmModalPosition;
+  scroll: TFmModalScroll;
+  height: TFmModalHeight;
+  width: TFmModalWidth;
   classes: Array<string> | undefined;
   theme: string | undefined;
   maximized: boolean;
@@ -88,61 +87,59 @@ export interface IFlexiModalConfig<FlexiModalT extends FlexiModal> {
   data: {};
 }
 
-type TModalOptions<ConfigT extends IFlexiModalConfig<any>> = (
+type TModalOptions<ConfigT extends IFmModalConfig<any>> = (
   Partial<Omit<ConfigT, 'actions'>>
-  & { actions?: Array<IFlexiModalActionOptions> }
+  & { actions?: Array<IFmModalActionOptions> }
 );
 
-export type IFlexiModalOptions<
-  FlexiModalT extends FlexiModal
-> = TModalOptions<IFlexiModalConfig<FlexiModalT>>;
+export type IFmModalOptions<ModalT extends FmModal> = TModalOptions<IFmModalConfig<ModalT>>;
 
 
 // Component Modals
 
-export interface IFlexiModalComponentConfig<ComponentT, InputsT extends object = Record<string, any>>
-extends IFlexiModalConfig<FlexiModalWithComponent<ComponentT>> {
+export interface IFmModalWithComponentConfig<ComponentT, InputsT extends object = Record<string, any>>
+extends IFmModalConfig<FmModalWithComponent<ComponentT>> {
   inputs: InputsT;
 }
 
-export type IFlexiModalComponentOptions<ComponentT, InputsT extends object = Record<string, any>
-> = TModalOptions<IFlexiModalComponentConfig<ComponentT, InputsT>>;
+export type IFmModalWithComponentOptions<ComponentT, InputsT extends object = Record<string, any>
+> = TModalOptions<IFmModalWithComponentConfig<ComponentT, InputsT>>;
 
 
 // Template Modals
 
-export interface IFlexiModalTemplateConfig<ContextT extends object>
-extends IFlexiModalConfig<FlexiModalWithTemplate<ContextT>> {
+export interface IFmModalWithTemplateConfig<ContextT extends object>
+extends IFmModalConfig<FmModalWithTemplate<ContextT>> {
   context: ContextT | null,
   headerTpl: TemplateRef<unknown> | undefined;
   footerTpl: TemplateRef<unknown> | undefined;
-  actionsTpl: Array<FlexiModalActionDirective>;
+  actionsTpl: Array<FmModalActionDirective>;
 }
 
-export type IFlexiModalTemplateOptions<
+export type IFmModalWithTemplateOptions<
   ContextT extends object
-> = TModalOptions<IFlexiModalTemplateConfig<ContextT>>;
+> = TModalOptions<IFmModalWithTemplateConfig<ContextT>>;
 
 
 // Actions
 
-interface IFlexiModalActionOptionsRequired {
+interface IFmModalActionOptionsRequired {
   label: string;
 }
 
-export interface IFlexiModalActionConfig {
+export interface IFmModalActionConfig {
   id: string;
   label: string;
-  onClick: (($event: MouseEvent, action: FlexiModalAction) => unknown) | undefined;
+  onClick: (($event: MouseEvent, action: FmModalAction) => unknown) | undefined;
   disabled: boolean;
   closeOnClick: boolean;
   primary: boolean;
-  position: TFlexiModalButtonPosition;
+  position: TFmModalButtonPosition;
   classes: Array<string> | undefined;
   icon: string | undefined;
 }
 
-export type IFlexiModalActionOptions = (
-  Partial<Omit<IFlexiModalActionConfig, 'label'>>
-  & IFlexiModalActionOptionsRequired
+export type IFmModalActionOptions = (
+  Partial<Omit<IFmModalActionConfig, 'label'>>
+  & IFmModalActionOptionsRequired
 );
