@@ -3,6 +3,8 @@ import {BehaviorSubject, filter, Observable} from "rxjs";
 
 import {flexiModalActionOptionsDefault, flexiModalOptionsDefault} from "../services/modals/flexi-modals.constants";
 import {IFlexiModalConfig, IFlexiModalOptions, TFlexiModalEvent} from "../services/modals/flexi-modals.definitions";
+import {FlexiModalsThemeService} from "../services/theme/flexi-modals-theme.service";
+import {IFlexiModalTheme} from "../services/theme/flexi-modals-theme.definitions";
 import {FlexiModalsService} from "../services/modals/flexi-modals.service";
 import {FlexiModalActions} from "./actions/flexi-modal-actions";
 import {generateRandomId} from "../tools/utils";
@@ -31,6 +33,7 @@ export abstract class FlexiModal<
 
   constructor(
     public service: FlexiModalsService,
+    public themes: FlexiModalsThemeService,
 
     // The content that appears inside the modal
     public content: ContentToRenderT,
@@ -65,6 +68,12 @@ export abstract class FlexiModal<
 
   public readonly active = computed<boolean>(() => {
     return this.service.modals()[this.service.modals().length - 1]?.id === this.id;
+  });
+
+  public readonly theme = computed<IFlexiModalTheme>(() => {
+    return this._config().theme
+      ? this.themes.getTheme(this._config().theme || '') || this.themes.theme()
+      : this.themes.theme();
   });
 
   public readonly loading = computed<boolean>(() => {

@@ -36,7 +36,7 @@ export interface IFlexiModalStylingConfig {
   frameBorder: boolean;
   frameShadow: string | boolean;
   frameRounding: number | boolean;
-  loaderType: 'round-dotted' | 'round-dashed' | 'linear-dotted' | 'linear-dashed';
+  spinnerType: 'round-dotted' | 'round-dashed' | 'linear-dotted' | 'linear-dashed';
   headerActions: 'outside' | 'inside' | boolean;
   headerActionsWithBg: boolean;
   headerHeight: number;

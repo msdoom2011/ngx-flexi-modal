@@ -33,7 +33,7 @@ export abstract class FlexiModalInstance<ModalT extends FlexiModal> implements O
 
   // Dependencies
   protected readonly _service = inject(FlexiModalsService);
-  protected readonly _themeService = inject(FlexiModalsThemeService);
+  protected readonly _themes = inject(FlexiModalsThemeService);
   protected readonly _elementRef = inject(ElementRef<HTMLElement>);
   protected readonly _injector = inject(Injector);
   protected readonly _zone = inject(NgZone);
@@ -52,7 +52,7 @@ export abstract class FlexiModalInstance<ModalT extends FlexiModal> implements O
   // Private props
   private readonly _destroy$ = new Subject<void>();
   private _destroySubscription: Subscription | null = null;
-  private _themeOld = this._themeService.themeName();
+  private _themeOld = this._themes.themeName();
 
 
   // Computed
@@ -130,13 +130,11 @@ export abstract class FlexiModalInstance<ModalT extends FlexiModal> implements O
   });
 
   private readonly _themeEffect = effect(() => {
-    const theme = this.modal().config().theme;
+    const themeName = this.modal().config().theme;
 
-    if (!theme || theme === this._themeOld) {
-      return;
+    if (themeName && themeName !== this._themeOld) {
+      this._themes.applyThemeStyles(this._elementRef.nativeElement, themeName);
     }
-
-    this._themeService.applyThemeStyles(this._elementRef.nativeElement, theme);
   });
 
 

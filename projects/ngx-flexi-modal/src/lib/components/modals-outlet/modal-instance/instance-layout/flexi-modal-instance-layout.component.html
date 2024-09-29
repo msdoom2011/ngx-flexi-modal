@@ -1,7 +1,7 @@
 @let config = modal().config();
 
 <div class="fm-modal--container">
-  @if (isOverlayVisible()) {
+  @if (overlayVisible()) {
     <div class="fm-modals--backdrop"></div>
   }
 
@@ -31,6 +31,7 @@
       >
         @if (modal().loading()) {
           <fm-modal-instance-loader
+            [modal]="modal()"
             @fadeInOutLoader
             [@.disabled]="!modal().loadingInfo().animation"
           />

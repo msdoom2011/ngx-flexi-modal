@@ -82,6 +82,10 @@ export class FlexiModalsThemeService {
     return themeName in this._themes();
   }
 
+  public getTheme(themeName: string): IFlexiModalTheme | undefined {
+    return this._themes()[themeName];
+  }
+
   public setTheme(themeName: string): void {
     if (!this.isThemeExist(themeName)) {
       throw new Error(`Unable to switch theme. Theme with '${themeName}' is not registered`);

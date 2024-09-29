@@ -27,7 +27,6 @@ import {FlexiModalInstanceFooterComponent} from "./footer/flexi-modal-instance-f
 import {FlexiModalInstanceHeaderComponent} from "./header/flexi-modal-instance-header.component";
 import {TFlexiModalOpeningAnimation} from "../../../../services/modals/flexi-modals.definitions";
 import {FlexiModalInstanceLoaderComponent} from "./loader/flexi-modal-instance-loader.component";
-import {FlexiModalsThemeService} from "../../../../services/theme/flexi-modals-theme.service";
 import {FLEXI_MODAL_HEADER_ACTION_CLASS} from "./flexi-modal-instance-layout.constants";
 import {modalWidthPresets} from "../../../../services/modals/flexi-modals.constants";
 import {FlexiModal} from "../../../../models/flexi-modal";
@@ -35,6 +34,7 @@ import {
   IFlexiModalMaximizeAnimationParams,
   IFlexiModalMinimizeAnimationParams
 } from "./flexi-modal-instance-layout.definitions";
+import {IFlexiModalTheme} from "../../../../services/theme/flexi-modals-theme.definitions";
 
 @Component({
   selector: 'fm-modal-instance-layout',
@@ -69,7 +69,7 @@ export class FlexiModalInstanceLayoutComponent implements OnInit, OnDestroy {
   // Dependencies
   private readonly _injector = inject(Injector);
   private readonly _elementRef = inject(ElementRef<HTMLElement>);
-  private readonly _themeService = inject(FlexiModalsThemeService);
+  // private readonly _themeService = inject(FlexiModalsThemeService);
   private readonly _animationBuilder = inject(AnimationBuilder);
 
   // Inputs
@@ -80,7 +80,7 @@ export class FlexiModalInstanceLayoutComponent implements OnInit, OnDestroy {
   private readonly _bodyWrapperRef = viewChild.required<ElementRef<HTMLDivElement>>('bodyWrapper');
 
   // Signals
-  public readonly theme = this._themeService.theme;
+  // public readonly theme = this._themeService.theme;
   private readonly _maximizedChanged = signal<boolean>(false);
 
   // Private
@@ -89,7 +89,11 @@ export class FlexiModalInstanceLayoutComponent implements OnInit, OnDestroy {
 
   // Computed
 
-  public readonly isOverlayVisible = computed<boolean>(() => {
+  public readonly theme = computed<IFlexiModalTheme>(() => {
+    return this.modal().theme();
+  });
+
+  public readonly overlayVisible = computed<boolean>(() => {
     const modal = this.modal();
 
     return (

@@ -15,6 +15,7 @@ import {FlexiModalBeforeCloseEvent} from "./events/flexi-modal-before-close.even
 import {FlexiModalBeforeOpenEvent} from "./events/flexi-modal-before-open.event";
 import {FlexiModalWithComponent} from "../../models/flexi-modal-with-component";
 import {FlexiModalWithTemplate} from "../../models/flexi-modal-with-template";
+import {FlexiModalsThemeService} from "../theme/flexi-modals-theme.service";
 import {FlexiModalUpdateEvent} from "./events/flexi-modal-update.event";
 import {FlexiModalCloseEvent} from "./events/flexi-modal-close.event";
 import {FlexiModalOpenEvent} from "./events/flexi-modal-open.event";
@@ -37,6 +38,8 @@ import {
 export class FlexiModalsService<
   ExtensionOptionsByTypesT extends IFlexiModalExtensionOptionsByTypes = IFlexiModalExtensionOptionsByTypes
 > {
+
+  private readonly _themes = inject(FlexiModalsThemeService);
 
   private readonly _extensionsArr = inject<Array<IFlexiModalExtension<ExtensionOptionsByTypesT>>>(FLEXI_MODAL_EXTENSION);
 
@@ -94,7 +97,10 @@ export class FlexiModalsService<
   ): FlexiModalWithComponent<ComponentT> | null {
 
     const content$ = new BehaviorSubject<ComponentRef<ComponentT> | null>(null);
-    const modal = new FlexiModalWithComponent(this, component, content$, this._normalizeOptions(takeUntilOrOptions));
+    const modal = new FlexiModalWithComponent(
+      this, this._themes, component, content$,
+      this._normalizeOptions(takeUntilOrOptions)
+    );
 
     return this._showModal(modal);
   }
@@ -119,7 +125,10 @@ export class FlexiModalsService<
   ): FlexiModalWithTemplate<ContextT> | null {
 
     const content$ = new BehaviorSubject<EmbeddedViewRef<ContextT> | null>(null);
-    const modal = new FlexiModalWithTemplate(this, template, content$, this._normalizeOptions(takeUntilOrOptions));
+    const modal = new FlexiModalWithTemplate(
+      this, this._themes, template, content$,
+      this._normalizeOptions(takeUntilOrOptions)
+    );
 
     return this._showModal(modal);
   }

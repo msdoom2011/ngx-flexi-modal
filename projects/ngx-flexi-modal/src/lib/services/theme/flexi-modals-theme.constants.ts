@@ -29,7 +29,7 @@ export const flexiModalDefaultStyles: IFlexiModalStylingConfig = {
   headerHeight: 40,
   headerFontSize: '1.17em',
   headerFontWeight: '600',
-  loaderType: 'round-dotted',
+  spinnerType: 'round-dotted',
 };
 
 export const flexiModalCssColorsVars: (
@@ -63,7 +63,7 @@ export const flexiModalCssStylesVars: (
   headerActions: '',
   headerActionsWithBg: '',
   frameBorder: '',
-  loaderType: '',
+  spinnerType: '',
 };
 
 export const flexiModalCssStylesValueGetters: (
@@ -77,5 +77,5 @@ export const flexiModalCssStylesValueGetters: (
   headerActionsWithBg: undefined,
   headerFontSize: undefined,
   headerFontWeight: undefined,
-  loaderType: undefined,
+  spinnerType: undefined,
 }
