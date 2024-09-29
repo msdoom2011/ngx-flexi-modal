@@ -1,0 +1,18 @@
+<div class="fm-modal--loading">
+  <div class="fm-modal--loading-spinner">
+    @switch (theme().styling.spinnerType) {
+      @case ('round-dotted') {
+        <fm-loader-round-dotted-spinner />
+      }
+      @case ('round-dashed') {
+        <fm-loader-round-dashed-spinner />
+      }
+      @case ('linear-dotted') {
+        <fm-loader-linear-dotted-spinner />
+      }
+      @case ('linear-dashed') {
+        <fm-loader-linear-dashed-spinner />
+      }
+    }
+  </div>
+</div>

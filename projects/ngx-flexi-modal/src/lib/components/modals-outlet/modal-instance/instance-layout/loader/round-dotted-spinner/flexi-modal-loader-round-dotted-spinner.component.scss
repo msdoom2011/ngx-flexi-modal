@@ -1,0 +1,27 @@
+.spinner {
+  opacity: 0.4;
+  position: relative;
+  left: -20px;
+}
+
+.dot {
+  position: absolute;
+  display: block;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--fm-color-body-text);
+  transform-origin: 20px center;
+}
+
+@for $i from 1 through 5 {
+  @keyframes rotation-#{$i} {
+    from { transform: rotate(#{50 + $i * 13}deg); }
+    to { transform: rotate(#{50 + 360 + $i * 13}deg); }
+  }
+
+  .dot:nth-child(#{$i}) {
+    transform: rotate3d(0, 0, 1, #{50 + $i * 13}deg);
+    animation: rotation-#{$i} 1.8s #{500 - 500 / 5 * $i}ms ease infinite;
+  }
+}
