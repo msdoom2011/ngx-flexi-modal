@@ -82,7 +82,7 @@ export const appConfig: ApplicationConfig = {
             headerActions: 'outside',
             headerFontSize: '1.17em',
             headerFontWeight: 'bold',
-            headerActionsWithBg: false,
+            headerActionsWithBg: true,
           }
         },
       ])

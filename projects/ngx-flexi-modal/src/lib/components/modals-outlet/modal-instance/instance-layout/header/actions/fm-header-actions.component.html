@@ -1,0 +1,39 @@
+@if (modal().config().closable) {
+  <div
+    tabindex="0"
+    class="fm-modal-close-btn"
+    [class]="headerActionClasses()"
+    (click)="modal().close()"
+    (keydown.enter)="modal().close()"
+    @showHeaderAction
+  >
+    <div class="icon-content">
+      <span class="line"></span>
+      <span class="line"></span>
+    </div>
+  </div>
+}
+
+@if (modal().config().maximizable) {
+  <div
+    tabindex="0"
+    class="fm-modal-maximize-btn"
+    [class]="headerActionClasses()"
+    [class.maximized]="modal().maximized()"
+    (click)="modal().toggleMaximize()"
+    (keydown.enter)="modal().toggleMaximize()"
+    @showHeaderAction
+  >
+    <div class="icon-content">
+        <span class="frame">
+          <span class="border left"></span>
+          <span class="border bottom"></span>
+        </span>
+
+      <span class="arrow">
+          <span class="stem"></span>
+          <span class="corner"></span>
+        </span>
+    </div>
+  </div>
+}

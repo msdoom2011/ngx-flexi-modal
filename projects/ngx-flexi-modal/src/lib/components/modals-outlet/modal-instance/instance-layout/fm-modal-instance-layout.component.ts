@@ -3,7 +3,8 @@ import {
   afterRender,
   ChangeDetectionStrategy,
   Component,
-  computed, effect,
+  computed,
+  effect,
   ElementRef,
   inject,
   Injector,
@@ -16,24 +17,20 @@ import {
 import {NgComponentOutlet, NgTemplateOutlet} from "@angular/common";
 import {toObservable} from "@angular/core/rxjs-interop";
 import {filter, skip, Subject, takeUntil} from "rxjs";
-import {animate, AnimationBuilder, sequence, style, transition, trigger} from "@angular/animations";
+import {AnimationBuilder} from "@angular/animations";
 
+import {IFmModalMaximizeAnimationParams, IFmModalMinimizeAnimationParams} from "./fm-modal-instance-layout.definitions";
+import {TFmModalOpeningAnimation} from "../../../../services/modals/flexi-modals.definitions";
 import {FmModalInstanceFooterComponent} from "./footer/fm-modal-instance-footer.component";
 import {FmModalInstanceHeaderComponent} from "./header/fm-modal-instance-header.component";
-import {TFmModalOpeningAnimation} from "../../../../services/modals/flexi-modals.definitions";
 import {FmModalInstanceLoaderComponent} from "./loader/fm-modal-instance-loader.component";
-import {IFmModalTheme} from "../../../../services/theme/flexi-modals-theme.definitions";
-import {FM_MODAL_HEADER_ACTION_CLASS} from "./fm-modal-instance-layout.constants";
 import {fmModalWidthPresets} from "../../../../services/modals/flexi-modals.constants";
+import {FmHeaderActionsComponent} from "./header/actions/fm-header-actions.component";
 import {FmModal} from "../../../../models/fm-modal";
 import {
-  IFmModalMaximizeAnimationParams,
-  IFmModalMinimizeAnimationParams
-} from "./fm-modal-instance-layout.definitions";
-import {
-  fmModalOpeningAnimations, getHeaderActionAnimations,
-  getLoaderAnimations,
-  getMaximizeAnimations
+  fmModalOpeningAnimations,
+  getLoaderAnimation,
+  getMaximizeAnimation
 } from "./fm-modal-instance-layout.animations";
 
 @Component({
@@ -48,6 +45,7 @@ import {
     FmModalInstanceFooterComponent,
     FmModalInstanceHeaderComponent,
     FmModalInstanceLoaderComponent,
+    FmHeaderActionsComponent,
   ],
   host: {
     'class': 'fm-modal--viewport',
@@ -60,9 +58,8 @@ import {
     }`,
   },
   animations: [
-    ...getMaximizeAnimations('maximizeInOut', 'fadeInOutActions'),
-    ...getLoaderAnimations('fadeInOutLoader'),
-    ...getHeaderActionAnimations('showHeaderAction'),
+    getMaximizeAnimation('maximizeInOut'),
+    getLoaderAnimation('fadeInOutLoader'),
   ],
 })
 export class FmModalInstanceLayoutComponent implements OnInit, OnDestroy {
@@ -89,10 +86,6 @@ export class FmModalInstanceLayoutComponent implements OnInit, OnDestroy {
 
   // Computed
 
-  public readonly theme = computed<IFmModalTheme>(() => {
-    return this.modal().theme();
-  });
-
   public readonly backdropVisible = computed<boolean>(() => {
     const modal = this.modal();
 
@@ -105,7 +98,7 @@ export class FmModalInstanceLayoutComponent implements OnInit, OnDestroy {
 
   public readonly hostClasses = computed<Array<string>>(() => {
     const { width, height, scroll, maximized, position } = this.modal().config();
-    const { headerActions } = this.theme().styling;
+    const { headerActions } = this.modal().theme().styling;
 
     return [
       `scroll-${scroll}`,
@@ -113,13 +106,6 @@ export class FmModalInstanceLayoutComponent implements OnInit, OnDestroy {
       ...(!maximized ? [`position-${position}`] : []),
       ...(height && typeof height === 'string' ? [ `height-${height}` ] : []),
       ...(width && typeof width === 'string' ? [ `width-${height}` ] : []),
-    ];
-  });
-
-  public readonly headerActionClasses = computed<Array<string>>(() => {
-    return [
-      FM_MODAL_HEADER_ACTION_CLASS,
-      ...(!this.theme().styling.headerActionsWithBg ? ['no-background'] : []),
     ];
   });
 

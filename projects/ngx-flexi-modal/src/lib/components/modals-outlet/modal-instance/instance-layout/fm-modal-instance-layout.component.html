@@ -1,4 +1,5 @@
 @let config = modal().config();
+@let theme = modal().theme();
 
 <div class="fm-modal--container">
   @if (backdropVisible()) {
@@ -13,8 +14,8 @@
   <div class="fm-modal--body-wrapper" [style]="bodyStyles()" #bodyWrapper>
     <div
       class="fm-modal--body"
-      [class.no-border]="!theme().styling.frameBorder"
-      [class.no-shadow]="!theme().styling.frameShadow"
+      [class.no-border]="!theme.styling.frameBorder"
+      [class.no-shadow]="!theme.styling.frameShadow"
       #body
     >
       <div class="fm-modal--header-wrapper">
@@ -22,7 +23,7 @@
           <ng-content select="fm-modal-instance-header" />
         </div>
 
-        <ng-container *ngTemplateOutlet="headerActionsTpl" />
+        <fm-header-actions [modal]="modal()" />
       </div>
 
       <div class="fm-modal--content-wrapper">
@@ -36,7 +37,6 @@
             [@.disabled]="!modal().loadingInfo().animation"
           />
         }
-
         <div class="fm-modal--content" [class.scrollable]="config.scroll === 'content'">
           <ng-content />
         </div>
@@ -46,54 +46,3 @@
     </div>
   </div>
 </div>
-
-<ng-template #headerActionsTpl>
-  @let position = modal().maximized() ? 'inside' : theme().styling.headerActions;
-
-  <div
-    class="fm-modal--header-actions"
-    [class]="'position-' + position"
-    [class.corner]="!config.maximizable && config.closable"
-    [@fadeInOutActions]="position"
-  >
-    @if (config.closable) {
-      <div
-        tabindex="0"
-        class="fm-modal-close-btn"
-        [class]="headerActionClasses()"
-        (click)="modal().close()"
-        (keydown.enter)="modal().close()"
-        @showHeaderAction
-      >
-        <div class="icon-content">
-          <span class="line"></span>
-          <span class="line"></span>
-        </div>
-      </div>
-    }
-
-    @if (config.maximizable) {
-      <div
-        tabindex="0"
-        class="fm-modal-maximize-btn"
-        [class]="headerActionClasses()"
-        [class.maximized]="modal().maximized()"
-        (click)="modal().toggleMaximize()"
-        (keydown.enter)="modal().toggleMaximize()"
-        @showHeaderAction
-      >
-        <div class="icon-content">
-          <span class="frame">
-            <span class="border left"></span>
-            <span class="border bottom"></span>
-          </span>
-
-          <span class="arrow">
-            <span class="stem"></span>
-            <span class="corner"></span>
-          </span>
-        </div>
-      </div>
-    }
-  </div>
-</ng-template>
