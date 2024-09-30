@@ -10,8 +10,8 @@
   width: 5px;
   height: 5px;
   border-radius: 50%;
-  background: var(--fm-color-body-text);
   transform-origin: 20px center;
+  background: var(--fm-color-body-text);
 }
 
 @for $i from 1 through 5 {
