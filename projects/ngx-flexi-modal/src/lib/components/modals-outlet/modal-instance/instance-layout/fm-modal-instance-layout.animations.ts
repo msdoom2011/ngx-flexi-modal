@@ -1,14 +1,14 @@
-import {animate, animateChild, group, query, sequence, style, transition, trigger} from "@angular/animations";
+import {animate, animateChild, group, query, sequence, style, transition, trigger} from '@angular/animations';
 
-import {TFmModalOpeningAnimation} from "../../../../services/modals/flexi-modals.definitions";
-import {IFmModalAnimationConfig} from "./fm-modal-instance-layout.definitions";
+import {TFmModalOpeningAnimation} from '../../../../services/modals/flexi-modals.definitions';
+import {IFmModalAnimationConfig} from './fm-modal-instance-layout.definitions';
 import {
   FM_MODAL_BODY_CLASS,
   FM_MODAL_BODY_WRAPPER_CLASS,
   FM_MODAL_CONTAINER_CLASS,
   FM_MODAL_HEADER_ACTIONS_OUTSIDE_SELECTOR,
   FM_MODAL_HEADER_WRAPPER_CLASS
-} from "./fm-modal-instance-layout.constants";
+} from './fm-modal-instance-layout.constants';
 
 export const getMaximizeAnimation = (animationName: string) => {
   const duration = 500;
@@ -129,7 +129,7 @@ export const getLoaderAnimation = (animationName: string) => {
   return trigger(animationName, [
     transition('* => true', [
       style({ opacity: 0 }),
-      animate(`{{ duration }}ms ease-in-out`, style({ opacity: 1 })),
+      animate('{{ duration }}ms ease-in-out', style({ opacity: 1 })),
     ], {
       params: {
         duration: 400,
@@ -137,7 +137,7 @@ export const getLoaderAnimation = (animationName: string) => {
     }),
     transition('* => false', [
       style({ opacity: 1 }),
-      animate(`{{ duration }}ms ease-in-out`, style({ opacity: 0 })),
+      animate('{{ duration }}ms ease-in-out', style({ opacity: 0 })),
     ], {
       params: {
         duration: 400,

@@ -1,9 +1,9 @@
 import {Component, computed, input} from '@angular/core';
 
-import {TFmModalHeaderActionsPosition} from "../../../../../../services/theme/flexi-modals-theme.definitions";
-import {getHeaderActionAnimation, getHeaderActionsAnimation} from "./fm-header-actions.animations";
-import {FM_MODAL_HEADER_ACTION_CLASS} from "../../fm-modal-instance-layout.constants";
-import {FmModal} from "../../../../../../models/fm-modal";
+import {TFmModalHeaderActionsPosition} from '../../../../../../services/theme/flexi-modals-theme.definitions';
+import {getHeaderActionAnimation, getHeaderActionsAnimation} from './fm-header-actions.animations';
+import {FM_MODAL_HEADER_ACTION_CLASS} from '../../fm-modal-instance-layout.constants';
+import {FmModal} from '../../../../../../models/fm-modal';
 
 @Component({
   selector: 'fm-header-actions',

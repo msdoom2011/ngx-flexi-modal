@@ -1,4 +1,4 @@
-import {IFmModalStylingConfig, IFmModalColorScheme} from "./flexi-modals-theme.definitions";
+import {IFmModalStylingConfig, IFmModalColorScheme} from './flexi-modals-theme.definitions';
 
 export const FM_DEFAULT_THEME = 'default';
 

@@ -1,4 +1,4 @@
-import {IFmModalActionConfig, IFmModalConfig,} from "./flexi-modals.definitions";
+import {IFmModalActionConfig, IFmModalConfig,} from './flexi-modals.definitions';
 
 export const FM_MODAL_WITH_COMPONENT_TYPE = 'COMPONENT';
 

@@ -1,8 +1,8 @@
-import {computed, signal} from "@angular/core";
-import {Observable, tap} from "rxjs";
+import {computed, signal} from '@angular/core';
+import {Observable, tap} from 'rxjs';
 
-import {IFmModalActionConfig} from "../../services/modals/flexi-modals.definitions";
-import {FmModal} from "../fm-modal";
+import {IFmModalActionConfig} from '../../services/modals/flexi-modals.definitions';
+import {FmModal} from '../fm-modal';
 
 export class FmModalAction {
 

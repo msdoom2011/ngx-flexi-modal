@@ -14,24 +14,24 @@ import {
   signal,
   viewChild
 } from '@angular/core';
-import {NgComponentOutlet, NgTemplateOutlet} from "@angular/common";
-import {toObservable} from "@angular/core/rxjs-interop";
-import {filter, skip, Subject, takeUntil} from "rxjs";
-import {AnimationBuilder} from "@angular/animations";
+import {NgComponentOutlet, NgTemplateOutlet} from '@angular/common';
+import {toObservable} from '@angular/core/rxjs-interop';
+import {filter, skip, Subject, takeUntil} from 'rxjs';
+import {AnimationBuilder} from '@angular/animations';
 
-import {IFmModalMaximizeAnimationParams, IFmModalMinimizeAnimationParams} from "./fm-modal-instance-layout.definitions";
-import {TFmModalOpeningAnimation} from "../../../../services/modals/flexi-modals.definitions";
-import {FmModalInstanceFooterComponent} from "./footer/fm-modal-instance-footer.component";
-import {FmModalInstanceHeaderComponent} from "./header/fm-modal-instance-header.component";
-import {FmModalInstanceLoaderComponent} from "./loader/fm-modal-instance-loader.component";
-import {fmModalWidthPresets} from "../../../../services/modals/flexi-modals.constants";
-import {FmHeaderActionsComponent} from "./header/actions/fm-header-actions.component";
-import {FmModal} from "../../../../models/fm-modal";
+import {IFmModalMaximizeAnimationParams, IFmModalMinimizeAnimationParams} from './fm-modal-instance-layout.definitions';
+import {TFmModalOpeningAnimation} from '../../../../services/modals/flexi-modals.definitions';
+import {FmModalInstanceFooterComponent} from './footer/fm-modal-instance-footer.component';
+import {FmModalInstanceHeaderComponent} from './header/fm-modal-instance-header.component';
+import {FmModalInstanceLoaderComponent} from './loader/fm-modal-instance-loader.component';
+import {fmModalWidthPresets} from '../../../../services/modals/flexi-modals.constants';
+import {FmHeaderActionsComponent} from './header/actions/fm-header-actions.component';
+import {FmModal} from '../../../../models/fm-modal';
 import {
   fmModalOpeningAnimations,
   getLoaderAnimation,
   getMaximizeAnimation
-} from "./fm-modal-instance-layout.animations";
+} from './fm-modal-instance-layout.animations';
 
 @Component({
   selector: 'fm-modal-instance-layout',

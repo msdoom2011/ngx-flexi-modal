@@ -14,6 +14,7 @@ module.exports = tseslint.config(
     ],
     processor: angular.processInlineTemplates,
     rules: {
+      'quotes': ['error', 'single'],
       'newline-after-var': 'error',
       'padding-line-between-statements': [
         'error',

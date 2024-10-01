@@ -1,5 +1,5 @@
-import {FmModal} from "../../../../models/fm-modal";
-import {FmModalEvent} from "./fm-modal.event";
+import {FmModal} from '../../../../models/fm-modal';
+import {FmModalEvent} from './fm-modal.event';
 
 export abstract class FmModalPreventableEvent<
   ModalT extends FmModal

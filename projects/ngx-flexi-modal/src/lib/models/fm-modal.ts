@@ -1,13 +1,13 @@
-import {computed, signal} from "@angular/core";
-import {BehaviorSubject, filter, Observable} from "rxjs";
+import {computed, signal} from '@angular/core';
+import {BehaviorSubject, filter, Observable} from 'rxjs';
 
-import {fmModalActionOptionsDefault, fmModalOptionsDefault} from "../services/modals/flexi-modals.constants";
-import {IFmModalConfig, IFmModalOptions, TFmModalEvent} from "../services/modals/flexi-modals.definitions";
-import {FlexiModalsThemeService} from "../services/theme/flexi-modals-theme.service";
-import {IFmModalTheme} from "../services/theme/flexi-modals-theme.definitions";
-import {FlexiModalsService} from "../services/modals/flexi-modals.service";
-import {FmModalActions} from "./actions/fm-modal-actions";
-import {generateRandomId} from "../tools/utils";
+import {fmModalActionOptionsDefault, fmModalOptionsDefault} from '../services/modals/flexi-modals.constants';
+import {IFmModalConfig, IFmModalOptions, TFmModalEvent} from '../services/modals/flexi-modals.definitions';
+import {FlexiModalsThemeService} from '../services/theme/flexi-modals-theme.service';
+import {IFmModalTheme} from '../services/theme/flexi-modals-theme.definitions';
+import {FlexiModalsService} from '../services/modals/flexi-modals.service';
+import {FmModalActions} from './actions/fm-modal-actions';
+import {generateRandomId} from '../tools/utils';
 
 interface ILoadingInfo {
   loading: boolean;

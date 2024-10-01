@@ -1,15 +1,15 @@
 import {AfterViewInit, ChangeDetectionStrategy, Component, input} from '@angular/core';
-import {SIGNAL} from "@angular/core/primitives/signals";
-import {NgComponentOutlet} from "@angular/common";
+import {SIGNAL} from '@angular/core/primitives/signals';
+import {NgComponentOutlet} from '@angular/common';
 
-import {FmModalInstanceHeaderComponent} from "../../instance-layout/header/fm-modal-instance-header.component";
-import {FmModalInstanceFooterComponent} from "../../instance-layout/footer/fm-modal-instance-footer.component";
-import {FmModalInstanceLayoutComponent} from "../../instance-layout/fm-modal-instance-layout.component";
-import {FmModalWithComponentHeaderComponent} from "./header/fm-modal-with-component-header.component";
-import {FmModalWithComponentFooterComponent} from "./footer/fm-modal-with-component-footer.component";
-import {FmModalWithComponent} from "../../../../../models/fm-modal-with-component";
-import {IFlexiModalAware} from "../../../../../services/modals/flexi-modals.definitions";
-import {FmModalInstance} from "../../fm-modal-instance";
+import {FmModalInstanceHeaderComponent} from '../../instance-layout/header/fm-modal-instance-header.component';
+import {FmModalInstanceFooterComponent} from '../../instance-layout/footer/fm-modal-instance-footer.component';
+import {FmModalInstanceLayoutComponent} from '../../instance-layout/fm-modal-instance-layout.component';
+import {FmModalWithComponentHeaderComponent} from './header/fm-modal-with-component-header.component';
+import {FmModalWithComponentFooterComponent} from './footer/fm-modal-with-component-footer.component';
+import {FmModalWithComponent} from '../../../../../models/fm-modal-with-component';
+import {IFlexiModalAware} from '../../../../../services/modals/flexi-modals.definitions';
+import {FmModalInstance} from '../../fm-modal-instance';
 
 @Component({
   selector: 'fm-modal-with-component-instance',

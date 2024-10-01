@@ -1,19 +1,19 @@
-import {EnvironmentProviders, makeEnvironmentProviders, Provider} from "@angular/core";
+import {EnvironmentProviders, makeEnvironmentProviders, Provider} from '@angular/core';
 
-import {IFmExtension, IFmModalOptions} from "./services/modals/flexi-modals.definitions";
-import {fmModalBasicExtension} from "./extensions/basic/fm-modal-basic.extension";
+import {IFmExtension, IFmModalOptions} from './services/modals/flexi-modals.definitions';
+import {fmModalBasicExtension} from './extensions/basic/fm-modal-basic.extension';
 import {
   IFmModalStylingOptions,
   IFmModalColorScheme,
   IFmModalThemeOptions
-} from "./services/theme/flexi-modals-theme.definitions";
+} from './services/theme/flexi-modals-theme.definitions';
 import {
   FLEXI_MODAL_STYLING_OPTIONS,
   FLEXI_MODAL_COLOR_SCHEME,
   FLEXI_MODAL_DEFAULT_OPTIONS,
   FLEXI_MODAL_EXTENSION,
   FLEXI_MODAL_THEME
-} from "./flexi-modals.tokens";
+} from './flexi-modals.tokens';
 
 /**
  * Registers flexi modals services in application

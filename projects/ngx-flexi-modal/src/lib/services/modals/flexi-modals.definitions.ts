@@ -1,18 +1,18 @@
-import {InputSignal, TemplateRef, Type} from "@angular/core";
-import {Observable} from "rxjs";
+import {InputSignal, TemplateRef, Type} from '@angular/core';
+import {Observable} from 'rxjs';
 
-import {FmModalActionDirective} from "../../components/modal/directives/fm-modal-action.directive";
-import {IFmModalBasicExtensionOptionsByTypes} from "../../extensions/basic/fm-modal-basic.definitions";
-import {FmModalBeforeCloseEvent} from "./events/fm-modal-before-close.event";
-import {FmModalBeforeOpenEvent} from "./events/fm-modal-before-open.event";
-import {FmModalWithComponent} from "../../models/fm-modal-with-component";
-import {FmModalWithTemplate} from "../../models/fm-modal-with-template";
-import {FmModalAction} from "../../models/actions/fm-modal-action";
-import {FmModalUpdateEvent} from "./events/fm-modal-update.event";
-import {FmModalCloseEvent} from "./events/fm-modal-close.event";
-import {FmModalOpenEvent} from "./events/fm-modal-open.event";
-import {fmModalWidthPresets} from "./flexi-modals.constants";
-import {FmModal} from "../../models/fm-modal";
+import {FmModalActionDirective} from '../../components/modal/directives/fm-modal-action.directive';
+import {IFmModalBasicExtensionOptionsByTypes} from '../../extensions/basic/fm-modal-basic.definitions';
+import {FmModalBeforeCloseEvent} from './events/fm-modal-before-close.event';
+import {FmModalBeforeOpenEvent} from './events/fm-modal-before-open.event';
+import {FmModalWithComponent} from '../../models/fm-modal-with-component';
+import {FmModalWithTemplate} from '../../models/fm-modal-with-template';
+import {FmModalAction} from '../../models/actions/fm-modal-action';
+import {FmModalUpdateEvent} from './events/fm-modal-update.event';
+import {FmModalCloseEvent} from './events/fm-modal-close.event';
+import {FmModalOpenEvent} from './events/fm-modal-open.event';
+import {fmModalWidthPresets} from './flexi-modals.constants';
+import {FmModal} from '../../models/fm-modal';
 
 export type TFmModalWidth = 'fit-content' | 'fit-window' | (keyof typeof fmModalWidthPresets) | number;
 export type TFmModalHeight = 'fit-content' | number;

@@ -1,7 +1,7 @@
-import {IFmModalOptions} from "../flexi-modals.definitions";
-import {FmModalEventType} from "../flexi-modals.constants";
-import {FmModalEvent} from "./abstract/fm-modal.event";
-import {FmModal} from "../../../models/fm-modal";
+import {IFmModalOptions} from '../flexi-modals.definitions';
+import {FmModalEventType} from '../flexi-modals.constants';
+import {FmModalEvent} from './abstract/fm-modal.event';
+import {FmModal} from '../../../models/fm-modal';
 
 export class FmModalUpdateEvent<
   ModalT extends FmModal = FmModal,

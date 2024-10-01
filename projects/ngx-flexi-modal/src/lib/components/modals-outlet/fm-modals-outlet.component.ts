@@ -11,23 +11,23 @@ import {
   signal,
   TemplateRef
 } from '@angular/core';
-import {NgComponentOutlet, NgForOf, NgTemplateOutlet} from "@angular/common";
-import {Subject, takeUntil} from "rxjs";
+import {NgComponentOutlet, NgForOf, NgTemplateOutlet} from '@angular/common';
+import {Subject, takeUntil} from 'rxjs';
 
-import {FmModalBeforeCloseEvent} from "../../services/modals/events/fm-modal-before-close.event";
-import {FmModalBeforeOpenEvent} from "../../services/modals/events/fm-modal-before-open.event";
-import {getBackdropAnimation, getInstanceAnimation} from "./fm-modals-outlet.animations";
-import {FlexiModalsThemeService} from "../../services/theme/flexi-modals-theme.service";
-import {FmModalSpinnerTplDirective} from "./directives/fm-modal-spinner-tpl.directive";
-import {FmModalActionTplDirective} from "./directives/fm-modal-action-tpl.directive";
-import {FmModalHeaderTplDirective} from "./directives/fm-modal-header-tpl.directive";
-import {FlexiModalsService} from "../../services/modals/flexi-modals.service";
+import {FmModalBeforeCloseEvent} from '../../services/modals/events/fm-modal-before-close.event';
+import {FmModalBeforeOpenEvent} from '../../services/modals/events/fm-modal-before-open.event';
+import {getBackdropAnimation, getInstanceAnimation} from './fm-modals-outlet.animations';
+import {FlexiModalsThemeService} from '../../services/theme/flexi-modals-theme.service';
+import {FmModalSpinnerTplDirective} from './directives/fm-modal-spinner-tpl.directive';
+import {FmModalActionTplDirective} from './directives/fm-modal-action-tpl.directive';
+import {FmModalHeaderTplDirective} from './directives/fm-modal-header-tpl.directive';
+import {FlexiModalsService} from '../../services/modals/flexi-modals.service';
 import {
   FmModalWithComponentInstanceComponent
-} from "./modal-instance/instance-types/component/fm-modal-with-component-instance.component";
+} from './modal-instance/instance-types/component/fm-modal-with-component-instance.component';
 import {
   FmModalWithTemplateInstanceComponent
-} from "./modal-instance/instance-types/template/fm-modal-with-template-instance.component";
+} from './modal-instance/instance-types/template/fm-modal-with-template-instance.component';
 
 @Component({
   selector: 'fm-modals-outlet',

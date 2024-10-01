@@ -18,19 +18,19 @@ import {
   SimpleChanges,
   TemplateRef
 } from '@angular/core';
-import {filter, Subject, takeUntil} from "rxjs";
+import {filter, Subject, takeUntil} from 'rxjs';
 
-import {FmModalBeforeCloseEvent} from "../../services/modals/events/fm-modal-before-close.event";
-import {FlexiModalsThemeService} from "../../services/theme/flexi-modals-theme.service";
-import {FmModalUpdateEvent} from "../../services/modals/events/fm-modal-update.event";
-import {FmModalCloseEvent} from "../../services/modals/events/fm-modal-close.event";
-import {FmModalOpenEvent} from "../../services/modals/events/fm-modal-open.event";
-import {FmModalActionDirective} from "./directives/fm-modal-action.directive";
-import {FmModalHeaderDirective} from "./directives/fm-modal-header.directive";
-import {FmModalFooterDirective} from "./directives/fm-modal-footer.directive";
-import {FlexiModalsService} from "../../services/modals/flexi-modals.service";
-import {FmModalBodyDirective} from "./directives/fm-modal-body.directive";
-import {FmModalWithTemplate} from "../../models/fm-modal-with-template";
+import {FmModalBeforeCloseEvent} from '../../services/modals/events/fm-modal-before-close.event';
+import {FlexiModalsThemeService} from '../../services/theme/flexi-modals-theme.service';
+import {FmModalUpdateEvent} from '../../services/modals/events/fm-modal-update.event';
+import {FmModalCloseEvent} from '../../services/modals/events/fm-modal-close.event';
+import {FmModalOpenEvent} from '../../services/modals/events/fm-modal-open.event';
+import {FmModalActionDirective} from './directives/fm-modal-action.directive';
+import {FmModalHeaderDirective} from './directives/fm-modal-header.directive';
+import {FmModalFooterDirective} from './directives/fm-modal-footer.directive';
+import {FlexiModalsService} from '../../services/modals/flexi-modals.service';
+import {FmModalBodyDirective} from './directives/fm-modal-body.directive';
+import {FmModalWithTemplate} from '../../models/fm-modal-with-template';
 import {
   IFmModalWithTemplateConfig,
   IFmModalWithTemplateOptions,
@@ -39,7 +39,7 @@ import {
   TFmModalPosition,
   TFmModalScroll,
   TFmModalWidth
-} from "../../services/modals/flexi-modals.definitions";
+} from '../../services/modals/flexi-modals.definitions';
 
 @Component({
   selector: 'fm-modal',

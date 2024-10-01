@@ -14,14 +14,14 @@ import {
   viewChild,
   ViewContainerRef
 } from '@angular/core';
-import {filter, fromEvent, Subject, Subscription, takeUntil} from "rxjs";
-import {toObservable} from "@angular/core/rxjs-interop";
+import {filter, fromEvent, Subject, Subscription, takeUntil} from 'rxjs';
+import {toObservable} from '@angular/core/rxjs-interop';
 
-import {FM_MODAL_HEADER_ACTION_CLASS} from "./instance-layout/fm-modal-instance-layout.constants";
-import {FlexiModalsThemeService} from "../../../services/theme/flexi-modals-theme.service";
-import {FlexiModalsService} from "../../../services/modals/flexi-modals.service";
-import {findFocusableElements} from "../../../tools/utils";
-import {FmModal} from "../../../models/fm-modal";
+import {FM_MODAL_HEADER_ACTION_CLASS} from './instance-layout/fm-modal-instance-layout.constants';
+import {FlexiModalsThemeService} from '../../../services/theme/flexi-modals-theme.service';
+import {FlexiModalsService} from '../../../services/modals/flexi-modals.service';
+import {findFocusableElements} from '../../../tools/utils';
+import {FmModal} from '../../../models/fm-modal';
 
 @Directive({
   host: {

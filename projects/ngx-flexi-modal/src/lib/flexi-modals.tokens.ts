@@ -1,11 +1,11 @@
-import {InjectionToken} from "@angular/core";
+import {InjectionToken} from '@angular/core';
 
-import {IFmExtension, IFmModalOptions} from "./services/modals/flexi-modals.definitions";
+import {IFmExtension, IFmModalOptions} from './services/modals/flexi-modals.definitions';
 import {
   IFmModalColorScheme,
   IFmModalStylingOptions,
   IFmModalThemeOptions
-} from "./services/theme/flexi-modals-theme.definitions";
+} from './services/theme/flexi-modals-theme.definitions';
 
 export const FLEXI_MODAL_EXTENSION = new InjectionToken<Array<IFmExtension<any>>>(
   'Provider token to register modals which will be accessible using "show" method of ModalsService',

@@ -1,6 +1,6 @@
-import {IFmModalOptions} from "../../services/modals/flexi-modals.definitions";
-import {FmModalWithComponent} from "../../models/fm-modal-with-component";
-import {FmModalAction} from "../../models/actions/fm-modal-action";
+import {IFmModalOptions} from '../../services/modals/flexi-modals.definitions';
+import {FmModalWithComponent} from '../../models/fm-modal-with-component';
+import {FmModalAction} from '../../models/actions/fm-modal-action';
 
 export type TFmModalBasicIcon = keyof IFmModalBasicExtensionOptionsByTypes | null;
 export type TFmModalBasicAlign = 'left' | 'center' | 'right';

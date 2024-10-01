@@ -1,7 +1,7 @@
 import {ChangeDetectionStrategy, Component, input} from '@angular/core';
-import {NgTemplateOutlet} from "@angular/common";
+import {NgTemplateOutlet} from '@angular/common';
 
-import {FmModalWithTemplate} from "../../../../../../models/fm-modal-with-template";
+import {FmModalWithTemplate} from '../../../../../../models/fm-modal-with-template';
 
 @Component({
   selector: 'fm-modal-with-template-footer',

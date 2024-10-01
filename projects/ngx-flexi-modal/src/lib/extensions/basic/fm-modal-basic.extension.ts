@@ -1,8 +1,8 @@
-import {FmModalBasicComponent} from "./components/modal-basic/fm-modal-basic.component";
-import {FM_MODAL_NO_BUTTON_ID, FM_MODAL_YES_BUTTON_ID} from "./fm-modal-basic.constants";
-import {IFmModalBasicExtensionOptionsByTypes} from "./fm-modal-basic.definitions";
-import {IFmExtension} from "../../services/modals/flexi-modals.definitions";
-import {extendBasicModalOptions} from "./fm-modal-basic.helpers";
+import {FmModalBasicComponent} from './components/modal-basic/fm-modal-basic.component';
+import {FM_MODAL_NO_BUTTON_ID, FM_MODAL_YES_BUTTON_ID} from './fm-modal-basic.constants';
+import {IFmModalBasicExtensionOptionsByTypes} from './fm-modal-basic.definitions';
+import {IFmExtension} from '../../services/modals/flexi-modals.definitions';
+import {extendBasicModalOptions} from './fm-modal-basic.helpers';
 
 export const fmModalBasicExtension: IFmExtension<IFmModalBasicExtensionOptionsByTypes> = {
 

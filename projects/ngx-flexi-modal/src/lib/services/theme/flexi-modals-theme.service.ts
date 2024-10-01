@@ -1,7 +1,7 @@
-import {computed, Inject, Injectable, Optional, signal} from "@angular/core";
+import {computed, Inject, Injectable, Optional, signal} from '@angular/core';
 
-import {FLEXI_MODAL_STYLING_OPTIONS, FLEXI_MODAL_COLOR_SCHEME, FLEXI_MODAL_THEME} from "../../flexi-modals.tokens";
-import {normalizeOptions} from "../../tools/utils";
+import {FLEXI_MODAL_STYLING_OPTIONS, FLEXI_MODAL_COLOR_SCHEME, FLEXI_MODAL_THEME} from '../../flexi-modals.tokens';
+import {normalizeOptions} from '../../tools/utils';
 import {
   fmStylingCssValueGetters,
   fmDefaultStyling,
@@ -9,17 +9,17 @@ import {
   fmColorSchemeCssVars,
   fmDefaultColorScheme,
   FM_DEFAULT_THEME
-} from "./flexi-modals-theme.constants";
+} from './flexi-modals-theme.constants';
 import {
   IFmModalStylingOptions,
   IFmModalColorScheme,
   IFmModalTheme,
   IFmModalThemeOptions,
   IFmModalThemes
-} from "./flexi-modals-theme.definitions";
+} from './flexi-modals-theme.definitions';
 
 @Injectable({
-  providedIn: "root",
+  providedIn: 'root',
 })
 export class FlexiModalsThemeService {
 
@@ -46,8 +46,8 @@ export class FlexiModalsThemeService {
   ) {
     if (themeConfigs?.length && (defaultColorScheme || defaultStylingOptions)) {
       console.warn(
-        `Specified both providers "FLEXI_MODAL_COLOR_SCHEME" or "FLEXI_MODAL_STYLING_OPTIONS" ` +
-        `and "FLEXI_MODAL_THEME". The "FLEXI_MODAL_COLOR_SCHEME" provider was ignored.`
+        'Specified both providers "FLEXI_MODAL_COLOR_SCHEME" or "FLEXI_MODAL_STYLING_OPTIONS" ' +
+        'and "FLEXI_MODAL_THEME". The "FLEXI_MODAL_COLOR_SCHEME" provider was ignored.'
       );
     }
 

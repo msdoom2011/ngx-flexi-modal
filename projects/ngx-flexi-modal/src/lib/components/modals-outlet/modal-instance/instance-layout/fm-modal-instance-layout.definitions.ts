@@ -1,6 +1,6 @@
-import {AnimationMetadata} from "@angular/animations";
+import {AnimationMetadata} from '@angular/animations';
 
-import {TFmModalOpeningAnimation} from "../../../../services/modals/flexi-modals.definitions";
+import {TFmModalOpeningAnimation} from '../../../../services/modals/flexi-modals.definitions';
 
 export interface IFmModalAnimationConfig {
   fallback: TFmModalOpeningAnimation;

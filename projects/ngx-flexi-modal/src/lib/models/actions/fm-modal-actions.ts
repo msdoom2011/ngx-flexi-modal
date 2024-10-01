@@ -1,11 +1,11 @@
-import {computed} from "@angular/core";
-import {filter, Observable, ReplaySubject, take} from "rxjs";
+import {computed} from '@angular/core';
+import {filter, Observable, ReplaySubject, take} from 'rxjs';
 
-import {FmModalUpdateEvent} from "../../services/modals/events/fm-modal-update.event";
-import {IFmModalActionConfig} from "../../services/modals/flexi-modals.definitions";
-import {FlexiModalsService} from "../../services/modals/flexi-modals.service";
-import {FmModalAction} from "./fm-modal-action";
-import {FmModal} from "../fm-modal";
+import {FmModalUpdateEvent} from '../../services/modals/events/fm-modal-update.event';
+import {IFmModalActionConfig} from '../../services/modals/flexi-modals.definitions';
+import {FlexiModalsService} from '../../services/modals/flexi-modals.service';
+import {FmModalAction} from './fm-modal-action';
+import {FmModal} from '../fm-modal';
 
 export class FmModalActions<ModalT extends FmModal<any, any>> {
 

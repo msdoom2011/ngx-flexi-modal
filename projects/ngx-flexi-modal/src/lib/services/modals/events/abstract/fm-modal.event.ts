@@ -1,5 +1,5 @@
-import {FmModalEventType} from "../../flexi-modals.constants";
-import {FmModal} from "../../../../models/fm-modal";
+import {FmModalEventType} from '../../flexi-modals.constants';
+import {FmModal} from '../../../../models/fm-modal';
 
 export abstract class FmModalEvent<ModalT extends FmModal> {
 

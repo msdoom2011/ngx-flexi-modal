@@ -1,9 +1,9 @@
 import {ChangeDetectionStrategy, Component, inject, input} from '@angular/core';
-import {NgTemplateOutlet} from "@angular/common";
+import {NgTemplateOutlet} from '@angular/common';
 
-import {FlexiModalsThemeService} from "../../../../../../services/theme/flexi-modals-theme.service";
-import {FmModalWithTemplate} from "../../../../../../models/fm-modal-with-template";
-import {FmModalsOutletComponent} from "../../../../fm-modals-outlet.component";
+import {FlexiModalsThemeService} from '../../../../../../services/theme/flexi-modals-theme.service';
+import {FmModalWithTemplate} from '../../../../../../models/fm-modal-with-template';
+import {FmModalsOutletComponent} from '../../../../fm-modals-outlet.component';
 
 @Component({
   selector: 'fm-modal-with-template-header',

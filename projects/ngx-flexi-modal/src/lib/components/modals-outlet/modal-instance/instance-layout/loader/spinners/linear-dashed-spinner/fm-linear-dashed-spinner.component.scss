@@ -1,3 +1,5 @@
+@use "sass:math";
+
 .spinner {
   display: flex;
   opacity: 0.5;
@@ -22,6 +24,6 @@
   }
 
   .dot:nth-child(#{$i}) {
-    animation: translation-#{$i} 1.4s #{700 / 5 * $i}ms ease infinite;
+    animation: translation-#{$i} 1.4s #{math.div(700, 5) * $i}ms ease infinite;
   }
 }

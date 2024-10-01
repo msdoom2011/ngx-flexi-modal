@@ -5,22 +5,41 @@
 
 .spinner {
   position: relative;
+  opacity: 0.3;
 }
 
-.circle-outer {
-  border: 6px dashed rgb(from var(--fm-color-body-text) r g b / 0.3);
+.circle {
+  position: relative;
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  animation: rotation 2s linear infinite;
+  text-align: center;
+  line-height: 20px;
+  border: 4px solid var(--fm-color-body-text);
+  animation: rotation 1.2s linear infinite;
 }
 
-.circle-inner {
-  position: absolute;
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
+.break {
+  display: inline-block;
+  position: relative;
+  width: 5px;
+  height: 15px;
+  top: -10px;
   background: var(--fm-color-body-bg);
-  top: 3px;
-  left: 3px;
+  transform: perspective(20px) rotate3d(1, 0, 0, -45deg);
+}
+
+.tail {
+  position: absolute;
+  top: -5px;
+  left: 17px;
+  width: 20px;
+  height: 15px;
+  transform: rotate(55deg);
+  background: linear-gradient(
+      to right,
+      var(--fm-color-body-bg) 0%,
+      var(--fm-color-body-bg) 20%,
+      rgb(from var(--fm-color-body-bg) r g b/ 0) 100%
+  );
 }

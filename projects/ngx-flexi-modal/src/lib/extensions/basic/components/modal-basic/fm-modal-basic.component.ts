@@ -1,11 +1,11 @@
 import {ChangeDetectionStrategy, Component, input} from '@angular/core';
 
-import {TFmModalBasicAlign, TFmModalBasicIcon} from "../../fm-modal-basic.definitions";
-import {FmWarningIconComponent} from "../modal-icons/fm-warning-icon.component";
-import {FmSuccessIconComponent} from "../modal-icons/fm-success-icon.component";
-import {FmConfirmIconComponent} from "../modal-icons/fm-confirm-icon.component";
-import {FmErrorIconComponent} from "../modal-icons/fm-error-icon.component";
-import {FmInfoIconComponent} from "../modal-icons/fm-info-icon.component";
+import {TFmModalBasicAlign, TFmModalBasicIcon} from '../../fm-modal-basic.definitions';
+import {FmWarningIconComponent} from '../modal-icons/fm-warning-icon.component';
+import {FmSuccessIconComponent} from '../modal-icons/fm-success-icon.component';
+import {FmConfirmIconComponent} from '../modal-icons/fm-confirm-icon.component';
+import {FmErrorIconComponent} from '../modal-icons/fm-error-icon.component';
+import {FmInfoIconComponent} from '../modal-icons/fm-info-icon.component';
 
 @Component({
   selector: 'fm-modal-basic',

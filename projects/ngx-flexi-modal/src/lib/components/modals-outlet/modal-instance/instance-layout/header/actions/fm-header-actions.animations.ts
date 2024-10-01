@@ -1,10 +1,10 @@
-import {animate, sequence, style, transition, trigger} from "@angular/animations";
+import {animate, sequence, style, transition, trigger} from '@angular/animations';
 
 export const getHeaderActionsAnimation = (animationName: string)=> {
   return trigger(animationName, [
     transition('* => *', [
       style({ opacity: 0, display: 'flex' }),
-      animate(`500ms ease-in-out`, style({ opacity: 1 })),
+      animate('500ms ease-in-out', style({ opacity: 1 })),
     ]),
   ]);
 }

@@ -1,11 +1,11 @@
 import {ChangeDetectionStrategy, Component, inject, input} from '@angular/core';
-import {NgTemplateOutlet} from "@angular/common";
+import {NgTemplateOutlet} from '@angular/common';
 
-import {FlexiModalsThemeService} from "../../../../../../services/theme/flexi-modals-theme.service";
-import {IFmModalActionConfig} from "../../../../../../services/modals/flexi-modals.definitions";
-import {FmModalWithComponent} from "../../../../../../models/fm-modal-with-component";
-import {FmModalAction} from "../../../../../../models/actions/fm-modal-action";
-import {FmModalsOutletComponent} from "../../../../fm-modals-outlet.component";
+import {FlexiModalsThemeService} from '../../../../../../services/theme/flexi-modals-theme.service';
+import {IFmModalActionConfig} from '../../../../../../services/modals/flexi-modals.definitions';
+import {FmModalWithComponent} from '../../../../../../models/fm-modal-with-component';
+import {FmModalAction} from '../../../../../../models/actions/fm-modal-action';
+import {FmModalsOutletComponent} from '../../../../fm-modals-outlet.component';
 
 @Component({
   selector: 'fm-modal-with-component-footer',

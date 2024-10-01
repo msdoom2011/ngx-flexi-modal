@@ -1,8 +1,8 @@
-import {ComponentRef, Type} from "@angular/core";
+import {ComponentRef, Type} from '@angular/core';
 
-import {IFmModalWithComponentConfig, IFmModalWithComponentOptions} from "../services/modals/flexi-modals.definitions";
-import {FM_MODAL_WITH_COMPONENT_TYPE} from "../services/modals/flexi-modals.constants";
-import {FmModal} from "./fm-modal";
+import {IFmModalWithComponentConfig, IFmModalWithComponentOptions} from '../services/modals/flexi-modals.definitions';
+import {FM_MODAL_WITH_COMPONENT_TYPE} from '../services/modals/flexi-modals.constants';
+import {FmModal} from './fm-modal';
 
 export class FmModalWithComponent<
   ComponentT = any,

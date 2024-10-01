@@ -1,7 +1,7 @@
-import {Directive, inject, input, TemplateRef} from "@angular/core";
+import {Directive, inject, input, TemplateRef} from '@angular/core';
 
-import {generateRandomId, isPlainObject} from "../../../tools/utils";
-import {TFmModalButtonPosition} from "../../../services/modals/flexi-modals.definitions";
+import {generateRandomId, isPlainObject} from '../../../tools/utils';
+import {TFmModalButtonPosition} from '../../../services/modals/flexi-modals.definitions';
 
 export interface IFmModalActionDirectiveOptions {
   visible?: boolean;
