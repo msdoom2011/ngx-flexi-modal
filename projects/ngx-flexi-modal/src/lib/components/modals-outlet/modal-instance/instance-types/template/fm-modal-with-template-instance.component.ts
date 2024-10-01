@@ -1,13 +1,14 @@
-import {AfterViewInit, ChangeDetectionStrategy, Component, input} from '@angular/core';
-import {NgTemplateOutlet} from '@angular/common';
+import { AfterViewInit, ChangeDetectionStrategy, Component } from '@angular/core';
+import { NgTemplateOutlet } from '@angular/common';
 
-import {FmModalInstanceFooterComponent} from '../../instance-layout/footer/fm-modal-instance-footer.component';
-import {FmModalInstanceHeaderComponent} from '../../instance-layout/header/fm-modal-instance-header.component';
-import {FmModalInstanceLayoutComponent} from '../../instance-layout/fm-modal-instance-layout.component';
-import {FmModalWithTemplateHeaderComponent} from './header/fm-modal-with-template-header.component';
-import {FmModalWithTemplateFooterComponent} from './footer/fm-modal-with-template-footer.component';
-import {FmModalWithTemplate} from '../../../../../models/fm-modal-with-template';
-import {FmModalInstance} from '../../fm-modal-instance';
+import { FmModalInstanceFooterComponent } from '../../instance-layout/footer/fm-modal-instance-footer.component';
+import { FmModalInstanceHeaderComponent } from '../../instance-layout/header/fm-modal-instance-header.component';
+import { FmModalInstanceLayoutComponent } from '../../instance-layout/fm-modal-instance-layout.component';
+import { FmModalWithTemplateHeaderComponent } from './header/fm-modal-with-template-header.component';
+import { FmModalWithTemplateFooterComponent } from './footer/fm-modal-with-template-footer.component';
+import { FmModalWithTemplate } from '../../../../../models/fm-modal-with-template';
+import { FM_MODAL_INSTANCE } from '../../fm-modal-instance.providers';
+import { FmModalInstance } from '../../fm-modal-instance';
 
 @Component({
   selector: 'fm-modal-with-template-instance',
@@ -22,13 +23,14 @@ import {FmModalInstance} from '../../fm-modal-instance';
     FmModalWithTemplateHeaderComponent,
     FmModalWithTemplateFooterComponent,
     NgTemplateOutlet,
-  ]
+  ],
+  providers: [
+    { provide: FM_MODAL_INSTANCE, useExisting: FmModalWithTemplateInstanceComponent },
+  ],
 })
 export class FmModalWithTemplateInstanceComponent<ContentT extends object>
 extends FmModalInstance<FmModalWithTemplate<ContentT>>
 implements AfterViewInit {
-
-  public readonly modal = input.required<FmModalWithTemplate<ContentT>>();
 
   public ngAfterViewInit() {
     const content$ = this.modal().content$;

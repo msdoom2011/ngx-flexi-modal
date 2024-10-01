@@ -1,9 +1,9 @@
-import {ChangeDetectionStrategy, Component, inject, input} from '@angular/core';
-import {NgTemplateOutlet} from '@angular/common';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { NgTemplateOutlet } from '@angular/common';
 
-import {FlexiModalsThemeService} from '../../../../../../services/theme/flexi-modals-theme.service';
-import {FmModalWithTemplate} from '../../../../../../models/fm-modal-with-template';
-import {FmModalsOutletComponent} from '../../../../fm-modals-outlet.component';
+import { FlexiModalsThemeService } from '../../../../../../services/theme/flexi-modals-theme.service';
+import { FmModalWithTemplateInstanceComponent } from '../fm-modal-with-template-instance.component';
+import { FmModalsOutletComponent } from '../../../../fm-modals-outlet.component';
 
 @Component({
   selector: 'fm-modal-with-template-header',
@@ -16,13 +16,12 @@ import {FmModalsOutletComponent} from '../../../../fm-modals-outlet.component';
 export class FmModalWithTemplateHeaderComponent {
 
   // Dependencies
+  private readonly _instance = inject(FmModalWithTemplateInstanceComponent);
   private readonly _outlet = inject(FmModalsOutletComponent);
   private readonly _themes = inject(FlexiModalsThemeService);
 
-  // Inputs
-  public readonly modal = input.required<FmModalWithTemplate>();
-
   // Signals
+  public readonly modal = this._instance.modal;
   public readonly modalHeaderTpl = this._outlet.modalHeaderTpl;
   public readonly themeNameGlobal = this._themes.themeName;
 }

@@ -1,9 +1,9 @@
 @let config = modal().config();
 
-<fm-modal-instance-layout [modal]="modal()" #viewport>
+<fm-modal-instance-layout #viewport>
   @if (config.title || config.headerTpl) {
     <fm-modal-instance-header>
-      <fm-modal-with-template-header class="fm-modal--header" [modal]="modal()" />
+      <fm-modal-with-template-header class="fm-modal--header" />
     </fm-modal-instance-header>
   }
 
@@ -11,7 +11,7 @@
 
   @if (config.actionsTpl || config.footerTpl) {
     <fm-modal-instance-footer>
-      <fm-modal-with-template-footer class="fm-modal--footer" [modal]="modal()" />
+      <fm-modal-with-template-footer class="fm-modal--footer" />
     </fm-modal-instance-footer>
   }
 </fm-modal-instance-layout>

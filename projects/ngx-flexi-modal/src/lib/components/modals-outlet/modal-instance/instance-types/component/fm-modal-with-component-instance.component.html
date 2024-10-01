@@ -1,9 +1,7 @@
-@let config = modal().config();
-
-<fm-modal-instance-layout [modal]="modal()" #viewport>
-  @if (config.title) {
+<fm-modal-instance-layout #viewport>
+  @if (modal().config().title) {
     <fm-modal-instance-header>
-      <fm-modal-with-component-header class="fm-modal--header" [modal]="modal()" />
+      <fm-modal-with-component-header class="fm-modal--header" />
     </fm-modal-instance-header>
   }
 
@@ -11,7 +9,7 @@
 
   @if (modal().actions.length()) {
     <fm-modal-instance-footer>
-      <fm-modal-with-component-footer class="fm-modal--footer" [modal]="modal()" />
+      <fm-modal-with-component-footer class="fm-modal--footer" />
     </fm-modal-instance-footer>
   }
 </fm-modal-instance-layout>

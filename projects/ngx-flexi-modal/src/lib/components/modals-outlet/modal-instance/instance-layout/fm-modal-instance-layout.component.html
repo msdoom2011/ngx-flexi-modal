@@ -23,20 +23,12 @@
           <ng-content select="fm-modal-instance-header" />
         </div>
 
-        <fm-header-actions [modal]="modal()" />
+        <fm-header-actions />
       </div>
 
       <div class="fm-modal--content-wrapper">
-        @if (loaderVisible()) {
-          <fm-modal-instance-loader
-            class="fm-modal--loader"
-            [modal]="modal()"
-            [class.visible]="modal().loading()"
-            [@fadeInOutLoader]="modal().loading()"
-            (@fadeInOutLoader.done)="onLoadingAnimationDone()"
-            [@.disabled]="!modal().loadingInfo().animation"
-          />
-        }
+        <fm-modal-instance-loader />
+
         <div class="fm-modal--content" [class.scrollable]="config.scroll === 'content'">
           <ng-content />
         </div>

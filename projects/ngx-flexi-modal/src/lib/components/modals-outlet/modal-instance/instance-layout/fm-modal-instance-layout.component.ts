@@ -4,34 +4,33 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  effect,
   ElementRef,
   inject,
   Injector,
-  input,
   OnDestroy,
   OnInit,
   signal,
-  viewChild
+  viewChild,
 } from '@angular/core';
-import {NgComponentOutlet, NgTemplateOutlet} from '@angular/common';
-import {toObservable} from '@angular/core/rxjs-interop';
-import {filter, skip, Subject, takeUntil} from 'rxjs';
-import {AnimationBuilder} from '@angular/animations';
+import { NgComponentOutlet, NgTemplateOutlet } from '@angular/common';
+import { toObservable } from '@angular/core/rxjs-interop';
+import { filter, skip, Subject, takeUntil } from 'rxjs';
+import { AnimationBuilder } from '@angular/animations';
 
-import {IFmModalMaximizeAnimationParams, IFmModalMinimizeAnimationParams} from './fm-modal-instance-layout.definitions';
-import {TFmModalOpeningAnimation} from '../../../../services/modals/flexi-modals.definitions';
-import {FmModalInstanceFooterComponent} from './footer/fm-modal-instance-footer.component';
-import {FmModalInstanceHeaderComponent} from './header/fm-modal-instance-header.component';
-import {FmModalInstanceLoaderComponent} from './loader/fm-modal-instance-loader.component';
-import {fmModalWidthPresets} from '../../../../services/modals/flexi-modals.constants';
-import {FmHeaderActionsComponent} from './header/actions/fm-header-actions.component';
-import {FmModal} from '../../../../models/fm-modal';
+import { fmModalOpeningAnimations, getMaximizeAnimation } from './fm-modal-instance-layout.animations';
+import { TFmModalOpeningAnimation } from '../../../../services/modals/flexi-modals.definitions';
+import { FmModalInstanceFooterComponent } from './footer/fm-modal-instance-footer.component';
+import { FmModalInstanceHeaderComponent } from './header/fm-modal-instance-header.component';
+import { FmModalInstanceLoaderComponent } from './loader/fm-modal-instance-loader.component';
+import { fmModalWidthPresets } from '../../../../services/modals/flexi-modals.constants';
+import { FmHeaderActionsComponent } from './header/actions/fm-header-actions.component';
+import { FM_MODAL_INSTANCE } from '../fm-modal-instance.providers';
+import { FmModalInstance } from '../fm-modal-instance';
+import { FmModal } from '../../../../models/fm-modal';
 import {
-  fmModalOpeningAnimations,
-  getLoaderAnimation,
-  getMaximizeAnimation
-} from './fm-modal-instance-layout.animations';
+  IFmModalMaximizeAnimationParams,
+  IFmModalMinimizeAnimationParams,
+} from './fm-modal-instance-layout.definitions';
 
 @Component({
   selector: 'fm-modal-instance-layout',
@@ -59,7 +58,6 @@ import {
   },
   animations: [
     getMaximizeAnimation('maximizeInOut'),
-    getLoaderAnimation('fadeInOutLoader'),
   ],
 })
 export class FmModalInstanceLayoutComponent implements OnInit, OnDestroy {
@@ -68,16 +66,14 @@ export class FmModalInstanceLayoutComponent implements OnInit, OnDestroy {
   private readonly _injector = inject(Injector);
   private readonly _elementRef = inject(ElementRef<HTMLElement>);
   private readonly _animationBuilder = inject(AnimationBuilder);
-
-  // Inputs
-  public readonly modal = input.required<FmModal>();
+  private readonly _instance = inject<FmModalInstance<FmModal>>(FM_MODAL_INSTANCE);
 
   // Queries
   private readonly _bodyRef = viewChild.required<ElementRef<HTMLDivElement>>('body');
   private readonly _bodyWrapperRef = viewChild.required<ElementRef<HTMLDivElement>>('bodyWrapper');
 
   // Signals
-  public readonly loaderVisible = signal<boolean>(false);
+  public readonly modal = this._instance.modal;
   private readonly _maximizedChanged = signal<boolean>(false);
 
   // Private
@@ -151,24 +147,6 @@ export class FmModalInstanceLayoutComponent implements OnInit, OnDestroy {
   });
 
 
-  // Effects
-
-  /**
-   * Making loader visible.
-   *
-   * Using directly 'modal().loading()' is not possible due to issue with conditional animation disabling.
-   * As a workaround, instead of using 'modal().loading()' directly, the loader visibility control
-   * is performed by the intermediate 'loaderVisible()' signal.
-   */
-  private _loadingEffect = effect(() => {
-    if (this.modal().loading()) {
-      this.loaderVisible.set(true);
-    }
-  }, {
-    allowSignalWrites: true,
-  });
-
-
   // Lifecycle hooks
 
   public ngOnInit(): void {
@@ -199,23 +177,6 @@ export class FmModalInstanceLayoutComponent implements OnInit, OnDestroy {
       this._elementRef.nativeElement.scrollTop = 0;
     }
   }});
-
-
-  // Callbacks
-
-  /**
-   * Hiding loading by setting loaderVisible signal to false.
-   *
-   * Switching loader visibility using the (@fadeInOutLoader.done) event is a forced step.
-   * Angular requires that values in [@.disabled] expression to be updated before the loader disappear from the DOM.
-   * In case of hiding the loader using the seemingly obvious 'modal().loading()' condition directly,
-   * Angular doesn't update the [@.disabled] binding value and just hides loader using the previous animation settings.
-   */
-  public onLoadingAnimationDone(): void {
-    if (!this.modal().loading()) {
-      this.loaderVisible.set(false);
-    }
-  }
 
 
   // Public methods

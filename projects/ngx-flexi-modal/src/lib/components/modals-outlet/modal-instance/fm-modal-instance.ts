@@ -6,13 +6,14 @@ import {
   ElementRef,
   inject,
   Injector,
+  input,
   InputSignal,
   NgZone,
   OnDestroy,
   OnInit,
   signal,
   viewChild,
-  ViewContainerRef
+  ViewContainerRef,
 } from '@angular/core';
 import {filter, fromEvent, Subject, Subscription, takeUntil} from 'rxjs';
 import {toObservable} from '@angular/core/rxjs-interop';
@@ -24,6 +25,7 @@ import {findFocusableElements} from '../../../tools/utils';
 import {FmModal} from '../../../models/fm-modal';
 
 @Directive({
+  standalone: true,
   host: {
     '[id]': 'id()',
     '[class]': 'classes()',
@@ -39,7 +41,12 @@ export abstract class FmModalInstance<ModalT extends FmModal> implements OnInit,
   protected readonly _zone = inject(NgZone);
 
   // Inputs
-  public abstract readonly modal: InputSignal<ModalT>;
+
+  /**
+   * Specifying the explicit type of the 'modal' property is necessary due to issue
+   * of not recognizing the proper type in the child component templates
+   */
+  public readonly modal: InputSignal<ModalT> = input.required<ModalT>();
 
   // Signals
   private readonly _focusableElements = signal<Array<Element & { focus: () => any }>>([]);
