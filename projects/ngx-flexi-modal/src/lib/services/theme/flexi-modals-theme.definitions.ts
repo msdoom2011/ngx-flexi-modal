@@ -30,6 +30,7 @@ export interface IFmModalColorScheme {
   actionPrimaryText: string;
   actionPrimaryBg: string;
   actionFocusOutline: string;
+  spinner: string;
 }
 
 export type IFmModalStylingOptions = Partial<IFmModalStylingConfig>;

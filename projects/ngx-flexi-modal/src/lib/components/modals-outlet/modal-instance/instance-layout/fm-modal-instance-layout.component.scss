@@ -89,13 +89,16 @@ $outer-h-padding: 30px;
 }
 
 .fm-modal--body-wrapper {
+  display: flex;
   position: relative;
-  z-index: 10;
   padding: $outer-v-padding $outer-h-padding;
+  max-height: calc(100% - $outer-v-padding * 2);
   box-sizing: content-box;
+  z-index: 10;
 
   :host:not(.maximized).position-top.header-actions-outside & {
     padding-top: calc($outer-v-padding + 24px);
+    max-height: calc(100% - $outer-v-padding * 2 - 24px);
   }
 
   :host.width-fit-window & {
@@ -124,6 +127,7 @@ $outer-h-padding: 30px;
 .fm-modal--body {
   display: flex;
   flex-direction: column;
+  width: 100%;
   position: relative;
   pointer-events: all;
   background: var(--fm-color-body-bg);
@@ -158,9 +162,9 @@ $outer-h-padding: 30px;
     height: 100vh;
   }
 
-  :host:not(.maximized).height-fit-content.scroll-content & {
-    max-height: calc(100vh - $outer-v-padding * 2);
-  }
+  //:host:not(.maximized).height-fit-content.scroll-content & {
+  //  max-height: calc(100vh - $outer-v-padding * 2);
+  //}
 }
 
 .fm-modal--content-wrapper {
@@ -169,7 +173,7 @@ $outer-h-padding: 30px;
   flex-grow: 1;
   position: relative;
   border-radius: inherit;
-  height: 100%;
+  height: calc(100% - var(--fm-header-height));
 }
 
 .fm-modal--content {

@@ -16,7 +16,7 @@ export const appConfig: ApplicationConfig = {
         position: 'top',
         closable: true,
         maximizable: true,
-        scroll: 'modal',
+        scroll: 'content',
         animation: 'zoom-out',
       }),
       // withStyling({
@@ -83,7 +83,7 @@ export const appConfig: ApplicationConfig = {
             headerFontSize: '1.17em',
             headerFontWeight: 'bold',
             headerActionsWithBg: false,
-            spinnerType: 'round-dotted',
+            spinnerType: 'round-dashed',
           }
         },
       ])

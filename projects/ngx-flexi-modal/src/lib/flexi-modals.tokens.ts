@@ -8,7 +8,7 @@ import {
 } from './services/theme/flexi-modals-theme.definitions';
 
 export const FLEXI_MODAL_EXTENSION = new InjectionToken<Array<IFmExtension<any>>>(
-  'Provider token to register modals which will be accessible using "show" method of ModalsService',
+  'Flexi modals extension',
 );
 
 export const FLEXI_MODAL_DEFAULT_OPTIONS = new InjectionToken<IFmModalOptions<any>>(

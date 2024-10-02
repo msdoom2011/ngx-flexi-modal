@@ -83,6 +83,7 @@ export const getMaximizeAnimation = (animationName: string) => {
               minHeight: 0,
               minWidth: 0,
               maxWidth: '100%',
+              maxHeight: '100%',
               paddingTop: 0,
               paddingBottom: 0,
               paddingLeft: 0,
@@ -132,8 +133,8 @@ export const fmModalOpeningAnimations: Record<TFmModalOpeningAnimation, IFmModal
     fallback: 'fade-in',
     validate: () => true,
     transition: () => ([
-      style({ marginTop: -30 }),
-      animate('250ms ease-out', style({ marginTop: 0 })),
+      style({ position: 'relative', top: -30 }),
+      animate('250ms ease-out', style({ top: 0 })),
     ]),
   },
 

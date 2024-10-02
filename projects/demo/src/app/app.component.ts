@@ -4,9 +4,9 @@ import {
   FmModalHeaderTplDirective,
   FmModalSpinnerTplDirective,
   FmModalsOutletComponent
-} from "ngx-flexi-modal";
+} from 'ngx-flexi-modal';
 
-import {ShowcaseComponent} from "./components/showcase/showcase.component";
+import {ShowcaseComponent} from './components/showcase/showcase.component';
 
 @Component({
   selector: 'fm-app-root',

@@ -18,6 +18,7 @@ export const fmDefaultColorScheme: IFmModalColorScheme = {
   actionPrimaryText: '#fff',
   actionPrimaryBg: '#6da6ad',
   actionFocusOutline: 'rgba(109, 166, 173, 0.4)',
+  spinner: '#c0c0c0',
 }
 
 export const fmDefaultStyling: IFmModalStylingConfig = {
@@ -50,6 +51,7 @@ export const fmColorSchemeCssVars: (
   actionPrimaryText: '--fm-color-action-primary-text',
   actionPrimaryBg: '--fm-color-action-primary-bg',
   actionFocusOutline: '--fm-color-action-focus-outline',
+  spinner: '--fm-color-spinner',
 };
 
 export const fmStylingCssVars: (

@@ -2,7 +2,6 @@
 
 .spinner {
   display: flex;
-  opacity: 0.5;
   position: relative;
   height: 6px;
 }
@@ -11,7 +10,7 @@
   display: block;
   width: 8px;
   height: 5px;
-  background: var(--fm-color-body-text);
+  background: var(--fm-color-spinner);
   margin-right: 5px;
   border-radius: 2px;
 }
