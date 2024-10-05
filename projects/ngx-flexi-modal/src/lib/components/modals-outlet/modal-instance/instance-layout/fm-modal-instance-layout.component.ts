@@ -4,6 +4,8 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  contentChild,
+  effect,
   ElementRef,
   inject,
   Injector,
@@ -12,12 +14,11 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
+import { animate, AnimationBuilder, style } from '@angular/animations';
 import { NgComponentOutlet, NgTemplateOutlet } from '@angular/common';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { filter, skip, Subject, takeUntil } from 'rxjs';
-import { AnimationBuilder } from '@angular/animations';
 
-import { fmModalOpeningAnimations, getMaximizeAnimation } from './fm-modal-instance-layout.animations';
 import { TFmModalOpeningAnimation } from '../../../../services/modals/flexi-modals.definitions';
 import { FmModalInstanceFooterComponent } from './footer/fm-modal-instance-footer.component';
 import { FmModalInstanceHeaderComponent } from './header/fm-modal-instance-header.component';
@@ -31,6 +32,11 @@ import {
   IFmModalMaximizeAnimationParams,
   IFmModalMinimizeAnimationParams,
 } from './fm-modal-instance-layout.definitions';
+import {
+  fmModalOpeningAnimations,
+  getLoaderAnimation,
+  getMaximizeAnimation,
+} from './fm-modal-instance-layout.animations';
 
 @Component({
   selector: 'fm-modal-instance-layout',
@@ -55,9 +61,11 @@ import {
       value: modal().maximized() ? "maximized" : "minimized",
       params: getMaximizeAnimationParams(),
     }`,
+    '(@maximizeInOut.done)': 'onMaximizeAnimationDone()'
   },
   animations: [
     getMaximizeAnimation('maximizeInOut'),
+    getLoaderAnimation('fadeInOutLoader'),
   ],
 })
 export class FmModalInstanceLayoutComponent implements OnInit, OnDestroy {
@@ -71,9 +79,13 @@ export class FmModalInstanceLayoutComponent implements OnInit, OnDestroy {
   // Queries
   private readonly _bodyRef = viewChild.required<ElementRef<HTMLDivElement>>('body');
   private readonly _bodyWrapperRef = viewChild.required<ElementRef<HTMLDivElement>>('bodyWrapper');
+  private readonly _headerWrapperRef = viewChild.required<ElementRef<HTMLDivElement>>('headerWrapper');
+  private readonly _headerActionsRef = viewChild.required<string, ElementRef<HTMLElement>>('headerActions', { read: ElementRef });
+  private readonly _headerContentRef = contentChild(FmModalInstanceHeaderComponent);
 
   // Signals
   public readonly modal = this._instance.modal;
+  private readonly _loaderVisible = signal<boolean>(false);
   private readonly _maximizedChanged = signal<boolean>(false);
 
   // Private
@@ -90,6 +102,17 @@ export class FmModalInstanceLayoutComponent implements OnInit, OnDestroy {
       && modal.service.modals().length > 0
       && modal.index() > 0
     );
+  });
+
+  public readonly headerVisible = computed<boolean>(() => {
+    return !(
+      !this._headerContentRef()
+      && this.modal().theme().styling.headerActions === 'outside'
+    );
+  });
+
+  public readonly loaderVisible = computed<boolean>(() => {
+    return this._loaderVisible();
   });
 
   public readonly hostClasses = computed<Array<string>>(() => {
@@ -147,6 +170,17 @@ export class FmModalInstanceLayoutComponent implements OnInit, OnDestroy {
   });
 
 
+  // Effects
+
+  private readonly _loadingEffect = effect(() => {
+    if (this.modal().loading()) {
+      this._loaderVisible.set(true);
+    }
+  }, {
+    allowSignalWrites: true,
+  });
+
+
   // Lifecycle hooks
 
   public ngOnInit(): void {
@@ -179,6 +213,19 @@ export class FmModalInstanceLayoutComponent implements OnInit, OnDestroy {
   }});
 
 
+  // Callbacks
+
+  public onMaximizeAnimationDone(): void {
+    this._runHeaderActionsAnimation();
+  }
+
+  public onLoadingAnimationDone(): void {
+    if (!this.modal().loading()) {
+      this._loaderVisible.set(false);
+    }
+  }
+
+
   // Public methods
 
   public getMaximizeAnimationParams(): IFmModalMaximizeAnimationParams | IFmModalMinimizeAnimationParams {
@@ -192,7 +239,10 @@ export class FmModalInstanceLayoutComponent implements OnInit, OnDestroy {
     const bodyWrapperStyles = window.getComputedStyle(bodyWrapperElement);
 
     if (!this.modal().maximized()) {
+      const headerWrapperBox = this._headerWrapperRef().nativeElement.getBoundingClientRect();
+
       return {
+        headerHeight: headerWrapperBox.height + 'px',
         alignItems: (
           bodyBox.height
           + parseInt(bodyWrapperStyles.paddingTop)
@@ -232,6 +282,27 @@ export class FmModalInstanceLayoutComponent implements OnInit, OnDestroy {
 
     const factory = this._animationBuilder.build(animationConfig.transition());
     const player = factory.create(bodyElement);
+
+    player.play();
+    player.onDone(() => {
+      player.destroy();
+    });
+  }
+
+  private _runHeaderActionsAnimation(): void {
+    if (
+      !this._maximizedChanged()
+      || this.modal().maximized()
+      || this.modal().theme().styling.headerActions !== 'outside'
+    ) {
+      return;
+    }
+
+    const factory = this._animationBuilder.build([
+      style({ opacity: 0, display: 'flex' }),
+      animate('400ms ease-in-out', style({ opacity: 1 })),
+    ]);
+    const player = factory.create(this._headerActionsRef().nativeElement);
 
     player.play();
     player.onDone(() => {

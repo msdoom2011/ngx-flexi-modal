@@ -18,17 +18,22 @@
       [class.no-shadow]="!theme.styling.frameShadow"
       #body
     >
-      <div class="fm-modal--header-wrapper">
+      <div class="fm-modal--header-wrapper" [class.hidden]="!headerVisible()" #headerWrapper>
         <div class="fm-modal--header-content">
           <ng-content select="fm-modal-instance-header" />
         </div>
 
-        <fm-header-actions />
+        <fm-header-actions #headerActions />
       </div>
 
       <div class="fm-modal--content-wrapper">
-        <fm-modal-instance-loader />
-
+        @if (loaderVisible()) {
+          <fm-modal-instance-loader
+            [@fadeInOutLoader]="modal().loading()"
+            (@fadeInOutLoader.done)="onLoadingAnimationDone()"
+            [@.disabled]="!modal().loadingInfo().animation"
+          />
+        }
         <div class="fm-modal--content" [class.scrollable]="config.scroll === 'content'">
           <ng-content />
         </div>

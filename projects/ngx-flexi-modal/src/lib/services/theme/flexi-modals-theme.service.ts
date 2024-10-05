@@ -54,7 +54,7 @@ export class FlexiModalsThemeService {
     if (themeConfigs?.length) {
       this._initializeWithThemes(themeConfigs);
 
-    } else if (defaultColorScheme) {
+    } else if (defaultColorScheme || defaultStylingOptions) {
       this._initializeWithOptions(defaultColorScheme, defaultStylingOptions);
 
     } else {

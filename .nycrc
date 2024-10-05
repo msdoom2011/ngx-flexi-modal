@@ -1,0 +1,6 @@
+{
+  "report-dir": "coverage",
+  "exclude": [
+    "**/*.cy.ts"
+  ]
+}

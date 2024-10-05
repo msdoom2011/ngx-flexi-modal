@@ -1,33 +1,24 @@
-@if (visible()) {
-  <div
-    class="fm-modal--loader"
-    [@fadeInOutLoader]="modal().loading()"
-    (@fadeInOutLoader.done)="onLoadingAnimationDone()"
-    [@.disabled]="!modal().loadingInfo().animation"
-  >
-    <div class="fm-modal--loading-spinner">
-      @if (spinnerTpl()) {
-        <ng-container *ngTemplateOutlet="spinnerTpl() || null; context: {
-          $type: theme().styling.spinnerType,
-          $theme: modal().config().theme || globalThemeName(),
-        }" />
+<div class="fm-modal--loading-spinner">
+  @if (spinnerTpl()) {
+    <ng-container *ngTemplateOutlet="spinnerTpl() || null; context: {
+      $type: modal().theme().styling.spinnerType,
+      $theme: modal().config().theme || globalThemeName(),
+    }" />
 
-      } @else {
-        @switch (theme().styling.spinnerType) {
-          @case ('round-dotted') {
-            <fm-round-dotted-spinner />
-          }
-          @case ('round-dashed') {
-            <fm-round-dashed-spinner />
-          }
-          @case ('linear-dotted') {
-            <fm-linear-dotted-spinner />
-          }
-          @case ('linear-dashed') {
-            <fm-linear-dashed-spinner />
-          }
-        }
+  } @else {
+    @switch (modal().theme().styling.spinnerType) {
+      @case ('round-dotted') {
+        <fm-round-dotted-spinner />
       }
-    </div>
-  </div>
-}
+      @case ('round-dashed') {
+        <fm-round-dashed-spinner />
+      }
+      @case ('linear-dotted') {
+        <fm-linear-dotted-spinner />
+      }
+      @case ('linear-dashed') {
+        <fm-linear-dashed-spinner />
+      }
+    }
+  }
+</div>

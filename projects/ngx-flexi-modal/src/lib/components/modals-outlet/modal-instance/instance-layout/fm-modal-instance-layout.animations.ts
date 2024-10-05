@@ -1,4 +1,4 @@
-import {animate, animateChild, group, query, sequence, style, transition, trigger} from '@angular/animations';
+import {animate, group, query, sequence, style, transition, trigger} from '@angular/animations';
 
 import {TFmModalOpeningAnimation} from '../../../../services/modals/flexi-modals.definitions';
 import {IFmModalAnimationConfig} from './fm-modal-instance-layout.definitions';
@@ -7,7 +7,7 @@ import {
   FM_MODAL_BODY_WRAPPER_CLASS,
   FM_MODAL_CONTAINER_CLASS,
   FM_MODAL_HEADER_ACTIONS_OUTSIDE_SELECTOR,
-  FM_MODAL_HEADER_WRAPPER_CLASS
+  FM_MODAL_HEADER_WRAPPER_HIDDEN_SELECTOR,
 } from './fm-modal-instance-layout.constants';
 
 export const getMaximizeAnimation = (animationName: string) => {
@@ -48,13 +48,21 @@ export const getMaximizeAnimation = (animationName: string) => {
           }),
           animate(`${duration}ms ease-in-out`, style({
             borderRadius: '*',
-          }))
+          })),
         ]),
-        query(`.${FM_MODAL_HEADER_WRAPPER_CLASS} @*`, [
-          animateChild()
+        query(FM_MODAL_HEADER_WRAPPER_HIDDEN_SELECTOR, [
+          style({
+            overflow: 'hidden',
+            height: 0,
+            opacity: 0,
+          }),
+          animate(`${duration}ms ease-in-out`, style({
+            height: '*',
+            opacity: 1,
+          })),
         ], {
           optional: true,
-        })
+        }),
       ]),
     ], {
       params: {
@@ -67,62 +75,99 @@ export const getMaximizeAnimation = (animationName: string) => {
       }
     }),
     transition('maximized => minimized', [
-      sequence([
-        group([
-          query(`.${FM_MODAL_CONTAINER_CLASS}`, [
-            style({
-              height: '100vh',
-              overflow: 'hidden',
-              alignItems: '{{ alignItems }}',
-            })
-          ]),
-          query(`.${FM_MODAL_BODY_WRAPPER_CLASS}`, [
-            style({
-              width: '100%',
-              height: '100%',
-              minHeight: 0,
-              minWidth: 0,
-              maxWidth: '100%',
-              maxHeight: '100%',
-              paddingTop: 0,
-              paddingBottom: 0,
-              paddingLeft: 0,
-              paddingRight: 0,
-              overflow: 'hidden',
-              margin: '0 auto',
-            }),
-            animate(`${duration}ms ease-in-out`, style({
-              width: '*',
-              height: '*',
-              paddingTop: '*',
-              paddingBottom: '*',
-              paddingLeft: '*',
-              paddingRight: '*',
-              borderRadius: '*',
-            })),
-          ]),
-          query(`.${FM_MODAL_BODY_CLASS}`, [
-            style({
-              width: '100%',
-              minHeight: '100%',
-              borderRadius: 0,
-            }),
-            animate(`${duration}ms ease-in-out`, style({
-              borderRadius: '*',
-            }))
-          ]),
+      group([
+        query(`.${FM_MODAL_CONTAINER_CLASS}`, [
+          style({
+            height: '100vh',
+            overflow: 'hidden',
+            alignItems: '{{ alignItems }}',
+          })
         ]),
-        query(`.${FM_MODAL_HEADER_WRAPPER_CLASS} @*`, [
-          animateChild({ duration: 300 })
+
+        query(`.${FM_MODAL_BODY_WRAPPER_CLASS}`, [
+          style({
+            width: '100%',
+            height: '100%',
+            minHeight: 0,
+            minWidth: 0,
+            maxWidth: '100%',
+            maxHeight: '100%',
+            paddingTop: 0,
+            paddingBottom: 0,
+            paddingLeft: 0,
+            paddingRight: 0,
+            overflow: 'hidden',
+            margin: '0 auto',
+          }),
+          animate(`${duration}ms ease-in-out`, style({
+            width: '*',
+            height: '*',
+            paddingTop: '*',
+            paddingBottom: '*',
+            paddingLeft: '*',
+            paddingRight: '*',
+            borderRadius: '*',
+          })),
+        ]),
+
+        query(`.${FM_MODAL_BODY_CLASS}`, [
+          style({
+            width: '100%',
+            minHeight: '100%',
+            borderRadius: 0,
+          }),
+          animate(`${duration}ms ease-in-out`, style({
+            borderRadius: '*',
+          }))
+        ]),
+
+        query(FM_MODAL_HEADER_WRAPPER_HIDDEN_SELECTOR, [
+          style({
+            overflow: 'hidden',
+            height: '{{ headerHeight }}',
+            borderWidth: 1,
+            opacity: 1,
+          }),
+          animate(`${duration}ms ease-in-out`, style({
+            height: 0,
+            opacity: 0,
+            borderWidth: 0,
+          })),
         ], {
           optional: true,
         }),
+
+        query(FM_MODAL_HEADER_ACTIONS_OUTSIDE_SELECTOR, [
+          style({ opacity: 0 }),
+        ], { optional: true }),
       ]),
     ], {
       params: {
         alignItems: 'flex-start',
+        headerHeight: '40px',
       }
     }),
+  ]);
+};
+
+export const getLoaderAnimation = (animationName: string) => {
+  return trigger(animationName, [
+    transition('* => true', [
+      style({ opacity: 0 }),
+      animate('{{ duration }}ms ease-in-out', style({ opacity: 1 })),
+    ], {
+      params: {
+        duration: 400,
+      },
+    }),
+    transition('* => false', [
+      style({ opacity: 1 }),
+      animate('{{ duration }}ms ease-in-out', style({ opacity: 0 })),
+    ], {
+      params: {
+        duration: 400,
+      },
+    })
   ]);
 };
 

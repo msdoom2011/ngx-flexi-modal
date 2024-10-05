@@ -20,4 +20,5 @@ export interface IFmModalMaximizeAnimationParams {
 
 export interface IFmModalMinimizeAnimationParams {
   alignItems: string;
+  headerHeight: string;
 }

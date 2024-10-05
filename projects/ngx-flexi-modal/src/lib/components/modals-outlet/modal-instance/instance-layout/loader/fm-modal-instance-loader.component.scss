@@ -1,14 +1,4 @@
 :host {
-  pointer-events: none;
-  margin: 0;
-  padding: 0;
-
-  &.visible {
-    pointer-events: all;
-  }
-}
-
-.fm-modal--loader {
   display: flex;
   align-items: center;
   justify-content: center;
