@@ -1,7 +1,10 @@
 <div class="fm-modal-footer--actions">
   @for (actionConfig of modal().actions.configs(); track actionConfig.id) {
     @if (!!actionButtonTpl()) {
-      <div [class]="['fm-modal-action-container', actionConfig.position]">
+      <div
+        data-cy="modal-action-container"
+        [class]="['fm-modal-action-container', actionConfig.position]"
+      >
         <ng-container *ngTemplateOutlet="
           actionButtonTpl() || null;
           context: {
@@ -19,6 +22,7 @@
 
     } @else {
       <button
+        data-cy="modal-action-button"
         class="fm-modal-action-button"
         [id]="actionConfig.id"
         [disabled]="actionConfig.disabled"
@@ -26,11 +30,14 @@
         (click)="onActionClick(actionConfig, $event)"
       >
         @if (actionConfig.icon) {
-          <span [class]="['icon', actionConfig.icon]"></span>
+          <span
+            data-cy="modal-action-button-icon"
+            [class]="['icon', actionConfig.icon]"
+          ></span>
         }
-        <span class="label">
-        {{ actionConfig.label }}
-      </span>
+        <span data-cy="modal-action-button-label" class="label">
+          {{ actionConfig.label }}
+        </span>
       </button>
     }
   }

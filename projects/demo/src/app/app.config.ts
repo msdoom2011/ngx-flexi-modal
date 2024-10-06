@@ -15,7 +15,7 @@ export const appConfig: ApplicationConfig = {
       withDefaultOptions({
         position: 'top',
         closable: true,
-        maximizable: false,
+        maximizable: true,
         scroll: 'content',
         animation: 'zoom-out',
       }),

@@ -1,7 +1,7 @@
 <fm-modal-instance-layout #viewport>
   @if (modal().config().title) {
     <fm-modal-instance-header>
-      <fm-modal-with-component-header class="fm-modal--header" />
+      <fm-modal-with-component-header data-cy="modal-header" class="fm-modal--header" />
     </fm-modal-instance-header>
   }
 
@@ -9,7 +9,7 @@
 
   @if (modal().actions.length()) {
     <fm-modal-instance-footer>
-      <fm-modal-with-component-footer class="fm-modal--footer" />
+      <fm-modal-with-component-footer data-cy="modal-footer" class="fm-modal--footer" />
     </fm-modal-instance-footer>
   }
 </fm-modal-instance-layout>

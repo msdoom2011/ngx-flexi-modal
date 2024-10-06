@@ -1,0 +1,109 @@
+:host {
+  position: relative;
+  cursor: pointer;
+  width: 24px;
+  height: 24px;
+  opacity: 0.5;
+  transition:
+    background 300ms ease,
+    box-shadow 300ms ease,
+    opacity 300ms ease;
+
+  &:hover {
+    opacity: 1;
+  }
+
+  &:focus {
+    outline: none;
+    z-index: 10;
+  }
+}
+
+.icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+:host.position-outside {
+  margin-left: 8px;
+  border-radius: 100%;
+  background-color: var(--fm-color-body-bg);
+
+  &:focus {
+    box-shadow: 0 0 0 4px rgb(from var(--fm-color-body-bg) r g b / 0.6);
+  }
+
+  &.no-background {
+    background-color: transparent;
+    opacity: 1;
+
+    .icon {
+      transform: scale(1.2);
+    }
+
+    &:focus {
+      background-color: rgb(from var(--fm-color-body-bg) r g b / 0.4);
+      box-shadow: 0 0 0 4px rgb(from var(--fm-color-body-bg) r g b / 0.2);
+    }
+
+    &:hover {
+      background-color: rgb(from var(--fm-color-body-bg) r g b / 0.6);
+    }
+  }
+}
+
+:host.position-inside {
+  background-color: var(--fm-color-header-bg);
+  min-width: var(--fm-header-height);
+  width: var(--fm-header-height);
+  height: 100%;
+  opacity: 1;
+  margin: 0;
+  transition:
+    box-shadow 300ms ease,
+    filter 300ms ease;
+
+  .icon {
+    opacity: 0.5;
+    transition: opacity 300ms ease;
+  }
+
+  &::before {
+    content: '';
+    display: block;
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    border: 0 solid transparent;
+    background: transparent;
+    transition:
+      opacity 300ms ease,
+      border 300ms ease;
+  }
+
+  &:hover {
+    filter: brightness(0.9);
+
+    .icon {
+      opacity: 1;
+    }
+  }
+
+  &:focus {
+    &::before {
+      border: 4px solid var(--fm-color-action-focus-outline);
+      opacity: 1;
+    }
+  }
+
+  &:first-child {
+    border-radius: 0 var(--fm-frame-border-radius) 0 0;
+
+    :host.maximized & {
+      border-radius: 0;
+    }
+  }
+}

@@ -3,38 +3,54 @@
 
 <div class="fm-modal--container">
   @if (backdropVisible()) {
-    <div class="fm-modals--backdrop"></div>
+    <div data-cy="modal-backdrop" class="fm-modals--backdrop"></div>
   }
 
   @if (config.closable) {
     <!-- eslint-disable-next-line -->
-    <div class="fm-modal--closing-layer" (click)="modal().close()"></div>
+    <div data-cy="closing-layer" class="fm-modal--closing-layer" (click)="modal().close()"></div>
   }
 
-  <div class="fm-modal--body-wrapper" [style]="bodyStyles()" #bodyWrapper>
+  <div
+    data-cy="modal-body-wrapper"
+    class="fm-modal--body-wrapper"
+    [style]="bodyStyles()"
+    #bodyWrapper
+  >
     <div
+      data-cy="modal-body"
       class="fm-modal--body"
       [class.no-border]="!theme.styling.frameBorder"
       [class.no-shadow]="!theme.styling.frameShadow"
       #body
     >
-      <div class="fm-modal--header-wrapper" [class.hidden]="!headerVisible()" #headerWrapper>
-        <div class="fm-modal--header-content">
+      <div
+        data-cy="modal-header-wrapper"
+        class="fm-modal--header-wrapper"
+        [class.hidden]="!headerVisible()"
+        #headerWrapper
+      >
+        <div data-cy="modal-header-content" class="fm-modal--header-content">
           <ng-content select="fm-modal-instance-header" />
         </div>
 
-        <fm-header-actions #headerActions />
+        <fm-header-actions data-cy="modal-header-actions" #headerActions />
       </div>
 
       <div class="fm-modal--content-wrapper">
         @if (loaderVisible()) {
           <fm-modal-instance-loader
+            data-cy="modal-loader"
             [@fadeInOutLoader]="modal().loading()"
             (@fadeInOutLoader.done)="onLoadingAnimationDone()"
             [@.disabled]="!modal().loadingInfo().animation"
           />
         }
-        <div class="fm-modal--content" [class.scrollable]="config.scroll === 'content'">
+        <div
+          data-cy="modal-content"
+          class="fm-modal--content"
+          [class.scrollable]="config.scroll === 'content'"
+        >
           <ng-content />
         </div>
 

@@ -191,11 +191,3 @@ $outer-h-padding: 30px;
     height: 100%;
   }
 }
-
-.fm-modal--loader {
-  opacity: 0;
-
-  &.visible {
-    opacity: 1;
-  }
-}

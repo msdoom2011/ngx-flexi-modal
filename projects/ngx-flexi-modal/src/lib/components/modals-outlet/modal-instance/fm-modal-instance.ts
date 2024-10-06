@@ -44,7 +44,7 @@ export abstract class FmModalInstance<ModalT extends FmModal> implements OnInit,
 
   /**
    * Specifying the explicit type of the 'modal' property is necessary due to issue
-   * of not recognizing the proper type in the child component templates
+   * of not recognizing correctly the specified modal type in the child component templates
    */
   public readonly modal: InputSignal<ModalT> = input.required<ModalT>();
 

@@ -1,5 +1,6 @@
 @if (modals().length) {
   <div
+    data-cy="modals-backdrop"
     class="fm-modals--backdrop"
     [@fadeInOutBackdrop]="{ value: true, params: { delay: backdropAnimationDelay() }}"
     (@fadeInOutBackdrop.done)="onBackdropAnimationDone()"
@@ -10,6 +11,7 @@
     @switch (modal.type) {
       @case ('COMPONENT') {
         <fm-modal-with-component-instance
+          data-cy="modal"
           [modal]="$any(modal)"
           @fadeInOutInstance
           #modals
@@ -17,6 +19,7 @@
       }
       @case ('TEMPLATE') {
         <fm-modal-with-template-instance
+          data-cy="modal"
           [modal]="$any(modal)"
           @fadeInOutInstance
           #modals

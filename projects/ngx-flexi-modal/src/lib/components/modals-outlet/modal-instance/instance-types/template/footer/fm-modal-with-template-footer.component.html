@@ -10,6 +10,7 @@
       @if (actionDirective.options().visible) {
         <!-- eslint-disable-next-line -->
         <div
+          data-cy="modal-action-container"
           class="fm-modal-action-container"
           [class]="actionDirective.options().position"
           (click)="onActionContainerClick(actionDirective.options().closeOnClick)"

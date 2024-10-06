@@ -1,7 +1,8 @@
 import { Component, computed, inject } from '@angular/core';
 
 import { TFmModalHeaderActionsPosition } from '../../../../../../services/theme/flexi-modals-theme.definitions';
-import { FM_MODAL_HEADER_ACTION_CLASS } from '../../fm-modal-instance-layout.constants';
+import { FmHeaderActionMaximizeComponent } from './action-maximize/fm-header-action-maximize.component';
+import { FmHeaderActionCloseComponent } from './action-close/fm-header-action-close.component';
 import { getHeaderActionAnimation } from './fm-header-actions.animations';
 import { FM_MODAL_INSTANCE } from '../../../fm-modal-instance.providers';
 import { FmModalInstance } from '../../../fm-modal-instance';
@@ -10,13 +11,15 @@ import { FmModal } from '../../../../../../models/fm-modal';
 @Component({
   selector: 'fm-header-actions',
   standalone: true,
-  imports: [],
   templateUrl: './fm-header-actions.component.html',
   styleUrl: './fm-header-actions.component.scss',
+  imports: [
+    FmHeaderActionCloseComponent,
+    FmHeaderActionMaximizeComponent,
+  ],
   host: {
     'class': 'fm-modal--header-actions',
     '[class]': '"position-" + position()',
-    '[class.maximized]': 'modal().maximized()',
     '[class.outside-corner]': '!modal().config().maximizable && modal().config().closable',
   },
   animations: [
@@ -38,12 +41,5 @@ export class FmHeaderActionsComponent {
     return !this.modal().maximized()
       ? <TFmModalHeaderActionsPosition>this.modal().theme().styling.headerActions
       : 'inside';
-  });
-
-  public readonly headerActionClasses = computed<Array<string>>(() => {
-    return [
-      FM_MODAL_HEADER_ACTION_CLASS,
-      ...(!this.modal().theme().styling.headerActionsWithBg ? ['no-background'] : []),
-    ];
   });
 }
