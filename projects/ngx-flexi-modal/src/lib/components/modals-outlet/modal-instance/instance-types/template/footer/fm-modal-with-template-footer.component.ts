@@ -10,6 +10,9 @@ import { FmModalWithTemplateInstanceComponent } from '../fm-modal-with-template-
   templateUrl: './fm-modal-with-template-footer.component.html',
   styleUrl: './fm-modal-with-template-footer.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    'data-cy': 'modal-footer',
+  }
 })
 export class FmModalWithTemplateFooterComponent {
 

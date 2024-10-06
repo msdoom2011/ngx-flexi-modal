@@ -3,6 +3,7 @@ import {IFmModalStylingConfig, IFmModalColorScheme} from './flexi-modals-theme.d
 export const FM_DEFAULT_THEME = 'default';
 
 export const fmDefaultColorScheme: IFmModalColorScheme = {
+  spinner: '#c0c0c0',
   border: '#ccc',
   backdrop: 'rgba(4, 67, 81, 0.5)',
   headerText: '#333',
@@ -18,11 +19,10 @@ export const fmDefaultColorScheme: IFmModalColorScheme = {
   actionPrimaryText: '#fff',
   actionPrimaryBg: '#6da6ad',
   actionFocusOutline: 'rgba(109, 166, 173, 0.4)',
-  spinner: '#c0c0c0',
 }
 
 export const fmDefaultStyling: IFmModalStylingConfig = {
-  frameShadow: '0 5px 20px rgba(0, 0, 0, 0.3)',
+  frameShadow: '0 5px 20px 0 rgba(0, 0, 0, 0.3)',
   frameBorder: false,
   frameRounding: 4,
   headerActions: 'inside',
@@ -36,6 +36,7 @@ export const fmDefaultStyling: IFmModalStylingConfig = {
 export const fmColorSchemeCssVars: (
   Record<keyof IFmModalColorScheme, string>
 )= {
+  spinner: '--fm-color-spinner',
   border: '--fm-color-border',
   backdrop: '--fm-color-backdrop',
   headerText: '--fm-color-header-text',
@@ -51,7 +52,6 @@ export const fmColorSchemeCssVars: (
   actionPrimaryText: '--fm-color-action-primary-text',
   actionPrimaryBg: '--fm-color-action-primary-bg',
   actionFocusOutline: '--fm-color-action-focus-outline',
-  spinner: '--fm-color-spinner',
 };
 
 export const fmStylingCssVars: (

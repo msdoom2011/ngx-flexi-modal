@@ -127,18 +127,18 @@ export class ShowcaseComponent {
     this.modals.show('confirm', {
       title: 'You have unsaved changes. Are you really sure want to proceed and quit?',
       message: 'You have unsaved changes. Are you really sure want to proceed and quit?',
-      onOpen: (($event) => {
-        $event.modal.startLoading(false);
-
-        setTimeout(() => {
-          $event.modal.update({ closable: true });
-
-          setTimeout(() => {
-            $event.modal.update({ closable: false });
-            $event.modal.stopLoading();
-          }, 4000);
-        }, 2000);
-      }),
+      // onOpen: (($event) => {
+      //   $event.modal.startLoading(false);
+      //
+      //   setTimeout(() => {
+      //     $event.modal.update({ closable: true });
+      //
+      //     setTimeout(() => {
+      //       $event.modal.update({ closable: false });
+      //       $event.modal.stopLoading();
+      //     }, 4000);
+      //   }, 2000);
+      // }),
     });
   }
 

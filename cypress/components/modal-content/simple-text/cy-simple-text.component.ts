@@ -6,4 +6,9 @@ import { Component } from '@angular/core';
   styleUrl: './cy-simple-text.component.scss',
   standalone: true,
 })
-export class CySimpleTextComponent {}
+export class CySimpleTextComponent {
+
+  static content = 'The simple text component works!';
+
+  public content = CySimpleTextComponent.content;
+}

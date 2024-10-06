@@ -5,7 +5,7 @@
   <ng-container *ngTemplateOutlet="footerTpl" />
 
 } @else if (actionsTpl) {
-  <div class="fm-modal-footer--actions">
+  <div data-cy="modal-footer-actions" class="fm-modal-footer--actions">
     @for (actionDirective of actionsTpl; track actionDirective.id) {
       @if (actionDirective.options().visible) {
         <!-- eslint-disable-next-line -->

@@ -1,4 +1,8 @@
-<div data-cy="modal-loader-spinner" class="fm-modal--loading-spinner">
+<div
+  data-cy="modal-loader-spinner"
+  class="fm-modal--loading-spinner"
+  [class]="'spinner-type-' + modal().theme().styling.spinnerType"
+>
   @if (spinnerTpl()) {
     <ng-container *ngTemplateOutlet="spinnerTpl() || null; context: {
       $type: modal().theme().styling.spinnerType,

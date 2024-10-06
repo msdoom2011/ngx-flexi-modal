@@ -12,6 +12,9 @@ import { FmModalsOutletComponent } from '../../../../fm-modals-outlet.component'
   templateUrl: './fm-modal-with-template-header.component.html',
   styleUrl: './fm-modal-with-template-header.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    'data-cy': 'modal-header'
+  }
 })
 export class FmModalWithTemplateHeaderComponent {
 

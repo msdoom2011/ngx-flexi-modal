@@ -1,4 +1,10 @@
 /// <reference types="cypress" />
+
+import Chainable = Cypress.Chainable;
+import { mount } from 'cypress/angular';
+import { Type } from '@angular/core';
+import { TestBed } from '@angular/core/testing';
+
 // ***********************************************
 // This example commands.ts shows you how to
 // create various custom commands and overwrite
@@ -35,3 +41,29 @@
 //     }
 //   }
 // }
+
+declare global {
+  namespace Cypress {
+    interface Chainable {
+      mount: typeof mount;
+      inject<T>(injectionToken: Type<T>): Chainable<T>;
+      getCy<E extends Node = HTMLElement>(selector: string): Chainable<JQuery<E>>
+    }
+  }
+}
+
+Cypress.Commands.add('mount', mount)
+
+Cypress.Commands.add('inject', (injectionToken: Type<any>): Chainable<any> => {
+  return cy.wrap(TestBed.inject(injectionToken));
+});
+
+Cypress.Commands.add('getCy', (selector: string): Chainable<JQuery<Node>> => {
+  const parts = selector.split(/\s+/);
+
+  return cy.get(
+    parts
+      .map(part => `[data-cy="${part}"]`)
+      .join(' ')
+  );
+});

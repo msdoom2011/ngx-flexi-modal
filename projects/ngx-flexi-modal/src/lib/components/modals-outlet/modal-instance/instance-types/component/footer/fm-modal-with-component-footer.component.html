@@ -1,4 +1,4 @@
-<div class="fm-modal-footer--actions">
+<div data-cy="modal-footer-actions" class="fm-modal-footer--actions">
   @for (actionConfig of modal().actions.configs(); track actionConfig.id) {
     @if (!!actionButtonTpl()) {
       <div

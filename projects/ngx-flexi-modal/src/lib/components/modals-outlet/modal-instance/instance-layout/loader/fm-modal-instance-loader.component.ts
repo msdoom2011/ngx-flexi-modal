@@ -24,6 +24,9 @@ import { FmModal } from '../../../../../models/fm-modal';
   templateUrl: './fm-modal-instance-loader.component.html',
   styleUrl: './fm-modal-instance-loader.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    'data-cy': 'modal-loader',
+  }
 })
 export class FmModalInstanceLoaderComponent {
 

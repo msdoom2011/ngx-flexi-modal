@@ -14,6 +14,9 @@ import { FmModalAction } from '../../../../../../models/actions/fm-modal-action'
   templateUrl: './fm-modal-with-component-footer.component.html',
   styleUrl: './fm-modal-with-component-footer.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    'data-cy': 'modal-footer',
+  }
 })
 export class FmModalWithComponentFooterComponent {
 
