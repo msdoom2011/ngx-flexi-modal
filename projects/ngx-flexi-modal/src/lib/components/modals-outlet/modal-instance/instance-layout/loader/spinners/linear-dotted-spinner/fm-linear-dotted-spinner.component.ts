@@ -7,5 +7,8 @@ import {ChangeDetectionStrategy, Component} from '@angular/core';
   templateUrl: './fm-linear-dotted-spinner.component.html',
   styleUrl: './fm-linear-dotted-spinner.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    'data-cy': 'linear-dotted-spinner',
+  }
 })
 export class FmLinearDottedSpinnerComponent {}

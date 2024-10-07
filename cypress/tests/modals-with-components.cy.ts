@@ -1,4 +1,4 @@
-import { CySimpleTextComponent } from '../components/modal-content/simple-text/cy-simple-text.component';
+import { SimpleTextComponent } from '../components/modal-content/simple-text/simple-text.component';
 import { initializeServiceModals, showComponent } from '../support/helpers/helpers';
 import {
   fmDefaultColorScheme,
@@ -18,7 +18,7 @@ describe('FmModalsOutletComponent', () => {
     const minBodyWidth = 300;
 
     initializeServiceModals();
-    showComponent(CySimpleTextComponent);
+    showComponent(SimpleTextComponent);
 
     cy.getCy('modals-backdrop').should('be.visible').invoke('outerWidth').should('eq', windowWidth);
     cy.getCy('modals-backdrop').invoke('outerHeight').should('eq', windowHeight);
@@ -27,7 +27,7 @@ describe('FmModalsOutletComponent', () => {
     cy.getCy('modal-backdrop').should('not.exist');
     cy.getCy('modal-closing-layer').invoke('outerWidth').should('eq', windowWidth);
     cy.getCy('modal-closing-layer').invoke('outerHeight').should('eq', windowHeight);
-    cy.getCy('modal-body-wrapper').should('be.visible').should('contain.text', CySimpleTextComponent.content);
+    cy.getCy('modal-body-wrapper').should('be.visible').should('contain.text', SimpleTextComponent.content);
     cy.getCy('modal-body-wrapper').invoke('css', 'paddingTop').should('eq', '50px');
     cy.getCy('modal-body-wrapper').invoke('css', 'paddingBottom').should('eq', '50px');
     cy.getCy('modal-body-wrapper').invoke('css', 'paddingLeft').should('eq', '30px');
@@ -71,7 +71,7 @@ describe('FmModalsOutletComponent', () => {
     const contentHeight = 100;
 
     initializeServiceModals();
-    showComponent(CySimpleTextComponent, {
+    showComponent(SimpleTextComponent, {
       title: title,
       actions: [ { label: buttonLabel } ],
     });
@@ -113,8 +113,7 @@ describe('FmModalsOutletComponent', () => {
       .should('be.visible')
       .invoke('outerHeight')
         .then((height) => {
-          cy.getCy('modal-footer')
-            .parent()
+          cy.getCy('modal-footer-wrapper')
             .invoke('outerHeight')
               .as('footerHeight')
               .then((footerHeight: any) => {

@@ -4,6 +4,7 @@ import Chainable = Cypress.Chainable;
 import { mount } from 'cypress/angular';
 import { Type } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
+import { cySelector } from './helpers/helpers';
 
 // ***********************************************
 // This example commands.ts shows you how to
@@ -58,12 +59,6 @@ Cypress.Commands.add('inject', (injectionToken: Type<any>): Chainable<any> => {
   return cy.wrap(TestBed.inject(injectionToken));
 });
 
-Cypress.Commands.add('getCy', (selector: string): Chainable<JQuery<Node>> => {
-  const parts = selector.split(/\s+/);
-
-  return cy.get(
-    parts
-      .map(part => `[data-cy="${part}"]`)
-      .join(' ')
-  );
+Cypress.Commands.add('getCy', (cyIds: string): Chainable<JQuery<Node>> => {
+  return cy.get(cySelector(cyIds));
 });

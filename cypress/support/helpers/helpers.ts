@@ -1,6 +1,7 @@
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { MountResponse } from 'cypress/angular';
 import { Provider, Type } from '@angular/core';
+import { Observable } from 'rxjs';
 import Chainable = Cypress.Chainable;
 
 import { provideFlexiModals } from '../../../projects/ngx-flexi-modal/src/lib/flexi-modals.providers';
@@ -8,11 +9,12 @@ import { FlexiModalsService } from '../../../projects/ngx-flexi-modal/src/lib/se
 import {
   FmModalsOutletComponent
 } from '../../../projects/ngx-flexi-modal/src/lib/components/modals-outlet/fm-modals-outlet.component';
-import { FmModalWithComponent } from '../../../projects/ngx-flexi-modal/src/lib/models/fm-modal-with-component';
 import {
   IFmModalWithComponentOptions
 } from '../../../projects/ngx-flexi-modal/src/lib/services/modals/flexi-modals.definitions';
-import { Observable } from 'rxjs';
+import { ModalWithTemplateRootComponent } from '../../components/modals/modal-with-template-root.component';
+import { ModalWithTemplate } from '../../components/modals/modal-with-template';
+import { FmModalWithComponent } from '../../../projects/ngx-flexi-modal/src/lib/models/fm-modal-with-component';
 
 export function initializeServiceModals(
   ...providers: Array<Provider | Array<Provider>>
@@ -29,13 +31,58 @@ export function initializeServiceModals(
   });
 }
 
+export function initializeTemplateModals<C extends ModalWithTemplate>(
+  modalComponent: Type<C>,
+  componentProperties: Partial<{ inputs: object, outputs: object }> = {},
+  ...providers: Array<Provider | Array<Provider>>
+): Chainable<MountResponse<ModalWithTemplateRootComponent<C>>> {
+
+  return cy.mount<ModalWithTemplateRootComponent<C>>(ModalWithTemplateRootComponent, {
+    componentProperties: {
+      component: modalComponent,
+      ...componentProperties,
+    },
+    imports: [
+      modalComponent
+    ],
+    providers: [
+      provideNoopAnimations(),
+      provideFlexiModals(...providers),
+    ],
+  }).then(mountResponse=> {
+    cy.wrap(mountResponse.fixture).as('fixture');
+    cy.wrap(mountResponse.component).as('component');
+    cy.wrap(mountResponse.component.modal).as('modal');
+
+    return cy.wrap(mountResponse);
+  });
+}
+
 export function showComponent<T extends object>(
   component: Type<T>,
   options?: Observable<any> | IFmModalWithComponentOptions<T>
-): void {
+): Chainable<FmModalWithComponent | null> {
 
-  cy.inject(FlexiModalsService)
+  return cy.inject(FlexiModalsService)
     .then(service => {
-      cy.wrap(service.showComponent(component, <any>options)).as('modal');
+      return cy.wrap(service.showComponent(component, <any>options));
     });
+}
+
+export function cySelector(cyIds: string): string {
+  return cyIds.split(/\s+/)
+    .map(part => `[data-cy="${part}"]`)
+    .join(' ');
+}
+
+export function colorToRgb(hex: string): string {
+  if (hex.indexOf('rgb') >= 0 || typeof hex !== 'string') {
+    return hex;
+  }
+
+  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+
+  return result
+    ? `rgb(${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)})`
+    : hex;
 }

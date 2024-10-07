@@ -16,21 +16,21 @@ import {
   output,
   signal,
   SimpleChanges,
-  TemplateRef
+  TemplateRef,
 } from '@angular/core';
-import {filter, Subject, takeUntil} from 'rxjs';
+import { filter, Subject, takeUntil } from 'rxjs';
 
-import {FmModalBeforeCloseEvent} from '../../services/modals/events/fm-modal-before-close.event';
-import {FlexiModalsThemeService} from '../../services/theme/flexi-modals-theme.service';
-import {FmModalUpdateEvent} from '../../services/modals/events/fm-modal-update.event';
-import {FmModalCloseEvent} from '../../services/modals/events/fm-modal-close.event';
-import {FmModalOpenEvent} from '../../services/modals/events/fm-modal-open.event';
-import {FmModalActionDirective} from './directives/fm-modal-action.directive';
-import {FmModalHeaderDirective} from './directives/fm-modal-header.directive';
-import {FmModalFooterDirective} from './directives/fm-modal-footer.directive';
-import {FlexiModalsService} from '../../services/modals/flexi-modals.service';
-import {FmModalBodyDirective} from './directives/fm-modal-body.directive';
-import {FmModalWithTemplate} from '../../models/fm-modal-with-template';
+import { FmModalBeforeCloseEvent } from '../../services/modals/events/fm-modal-before-close.event';
+import { FlexiModalsThemeService } from '../../services/theme/flexi-modals-theme.service';
+import { FmModalUpdateEvent } from '../../services/modals/events/fm-modal-update.event';
+import { FmModalCloseEvent } from '../../services/modals/events/fm-modal-close.event';
+import { FmModalOpenEvent } from '../../services/modals/events/fm-modal-open.event';
+import { FmModalActionDirective } from './directives/fm-modal-action.directive';
+import { FmModalHeaderDirective } from './directives/fm-modal-header.directive';
+import { FmModalFooterDirective } from './directives/fm-modal-footer.directive';
+import { FlexiModalsService } from '../../services/modals/flexi-modals.service';
+import { FmModalBodyDirective } from './directives/fm-modal-body.directive';
+import { FmModalWithTemplate } from '../../models/fm-modal-with-template';
 import {
   IFmModalWithTemplateConfig,
   IFmModalWithTemplateOptions,
@@ -38,7 +38,7 @@ import {
   TFmModalOpeningAnimation,
   TFmModalPosition,
   TFmModalScroll,
-  TFmModalWidth
+  TFmModalWidth,
 } from '../../services/modals/flexi-modals.definitions';
 
 @Component({
@@ -54,7 +54,7 @@ export class FmModalComponent implements DoCheck, OnChanges, AfterContentInit, O
   // Dependencies
   public readonly service = inject(FlexiModalsService);
   public readonly themes = inject(FlexiModalsThemeService);
-  public readonly elementRef = inject(ElementRef);
+  private readonly _elementRef = inject(ElementRef);
 
   // Inputs
   public readonly _id = input<string | undefined>(undefined, { alias: 'id' });
@@ -72,10 +72,10 @@ export class FmModalComponent implements DoCheck, OnChanges, AfterContentInit, O
   public readonly _data = input<any>(undefined, { alias: 'data' });
 
   // Outputs
-  public readonly changeEvent = output<FmModalUpdateEvent>({ alias: 'change' });
-  public readonly openEvent = output<FmModalOpenEvent>({ alias: 'open' });
-  public readonly closeEvent = output<FmModalCloseEvent>({ alias: 'close' });
-  public readonly beforeCloseEvent = output<FmModalBeforeCloseEvent>({ alias: 'beforeClose' });
+  public readonly _changeEvent = output<FmModalUpdateEvent>({ alias: 'change' });
+  public readonly _openEvent = output<FmModalOpenEvent>({ alias: 'open' });
+  public readonly _closeEvent = output<FmModalCloseEvent>({ alias: 'close' });
+  public readonly _beforeCloseEvent = output<FmModalBeforeCloseEvent>({ alias: 'beforeClose' });
 
   // Signals
   public readonly modal = signal<FmModalWithTemplate | null>(null);
@@ -143,19 +143,19 @@ export class FmModalComponent implements DoCheck, OnChanges, AfterContentInit, O
       )
       .subscribe($event => {
         if ($event instanceof FmModalOpenEvent) {
-          this.openEvent.emit($event);
+          this._openEvent.emit($event);
 
         } else if ($event instanceof FmModalBeforeCloseEvent) {
-          this.beforeCloseEvent.emit($event);
+          this._beforeCloseEvent.emit($event);
 
         } else if ($event instanceof FmModalCloseEvent) {
           this._opened.set(false);
           this.modal.set(null);
 
-          this.closeEvent.emit($event);
+          this._closeEvent.emit($event);
 
         } else if ($event instanceof FmModalUpdateEvent) {
-          this.changeEvent.emit(<FmModalUpdateEvent>$event);
+          this._changeEvent.emit(<FmModalUpdateEvent>$event);
         }
       });
 
@@ -181,7 +181,7 @@ export class FmModalComponent implements DoCheck, OnChanges, AfterContentInit, O
   // Lifecycle Hooks
 
   public ngDoCheck(): void {
-    const classesStrNew = this.elementRef.nativeElement.className.replace(/\s+/g, ' ');
+    const classesStrNew = this._elementRef.nativeElement.className.replace(/\s+/g, ' ');
     const classesStrOld = (this._classes() || []).join(' ');
     const classes = classesStrNew.split(' ');
 
@@ -192,7 +192,7 @@ export class FmModalComponent implements DoCheck, OnChanges, AfterContentInit, O
 
     // Clean up the id attribute of the host element to prevent
     // it duplication in addition to appropriate rendered modal component instance
-    this.elementRef.nativeElement.removeAttribute('id');
+    this._elementRef.nativeElement.removeAttribute('id');
   }
 
   public ngOnChanges(changes: SimpleChanges): void {

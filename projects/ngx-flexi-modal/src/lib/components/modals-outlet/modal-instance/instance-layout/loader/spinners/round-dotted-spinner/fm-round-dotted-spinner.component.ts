@@ -7,5 +7,8 @@ import {ChangeDetectionStrategy, Component} from '@angular/core';
   templateUrl: './fm-round-dotted-spinner.component.html',
   styleUrl: './fm-round-dotted-spinner.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    'data-cy': 'round-dotted-spinner',
+  }
 })
 export class FmRoundDottedSpinnerComponent {}

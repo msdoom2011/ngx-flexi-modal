@@ -7,5 +7,8 @@ import {ChangeDetectionStrategy, Component} from '@angular/core';
   templateUrl: './fm-modal-instance-footer.component.html',
   styleUrl: './fm-modal-instance-footer.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    'data-cy': 'modal-footer-wrapper',
+  },
 })
 export class FmModalInstanceFooterComponent {}

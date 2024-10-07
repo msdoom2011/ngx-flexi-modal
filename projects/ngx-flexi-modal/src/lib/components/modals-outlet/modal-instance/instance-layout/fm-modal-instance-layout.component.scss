@@ -67,6 +67,7 @@ $outer-h-padding: 30px;
 .fm-modal--header-wrapper {
   display: flex;
   height: var(--fm-header-height);
+  color: var(--fm-color-header-text);
   background-color: var(--fm-color-header-bg);
   border-bottom: 1px solid var(--fm-color-border);
   border-radius: var(--fm-frame-border-radius) var(--fm-frame-border-radius) 0 0;

@@ -29,22 +29,6 @@ module.exports = tseslint.config(
           default: 'generic',
         }
       ],
-      '@angular-eslint/directive-selector': [
-        'error',
-        {
-          type: 'attribute',
-          prefix: 'fm',
-          style: 'camelCase',
-        },
-      ],
-      '@angular-eslint/component-selector': [
-        'error',
-        {
-          type: 'element',
-          prefix: 'fm',
-          style: 'kebab-case',
-        },
-      ],
       '@typescript-eslint/consistent-type-assertions': [
         'error',
         {

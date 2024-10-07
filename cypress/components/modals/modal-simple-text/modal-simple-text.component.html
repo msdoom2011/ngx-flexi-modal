@@ -1,0 +1,17 @@
+<fm-modal [maximizable]="true" #modal>
+  <h3 *fmModalHeader>Modal Title</h3>
+
+  <cy-simple-text *fmModalBody />
+
+  <button
+    class="fm-modal-action-button primary"
+    *fmModalAction
+    (click)="modal.close()"
+  >Confirm</button>
+
+  <button
+    class="fm-modal-action-button"
+    *fmModalAction
+    (click)="modal.close()"
+  >Cancel</button>
+</fm-modal>
