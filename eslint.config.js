@@ -23,6 +23,12 @@ module.exports = tseslint.config(
         { blankLine: 'always', prev: '*', next: 'block' },
         { blankLine: 'always', prev: 'block', next: '*' },
       ],
+      '@typescript-eslint/no-unused-expressions': [
+        "error",
+        {
+          "allowTernary": true
+        }
+      ],
       '@typescript-eslint/array-type': [
         'error',
         {

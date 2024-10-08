@@ -5,29 +5,31 @@ import {
   computed,
   contentChild,
   effect,
-  ElementRef,
   inject,
+  OnDestroy,
   OnInit,
   signal,
-  TemplateRef
+  TemplateRef,
 } from '@angular/core';
-import {NgComponentOutlet, NgForOf, NgTemplateOutlet} from '@angular/common';
-import {Subject, takeUntil} from 'rxjs';
+import { NgComponentOutlet, NgForOf, NgTemplateOutlet } from '@angular/common';
+import { Subject, takeUntil } from 'rxjs';
 
-import {FmModalBeforeCloseEvent} from '../../services/modals/events/fm-modal-before-close.event';
-import {FmModalBeforeOpenEvent} from '../../services/modals/events/fm-modal-before-open.event';
-import {getBackdropAnimation, getInstanceAnimation} from './fm-modals-outlet.animations';
-import {FlexiModalsThemeService} from '../../services/theme/flexi-modals-theme.service';
-import {FmModalSpinnerTplDirective} from './directives/fm-modal-spinner-tpl.directive';
-import {FmModalActionTplDirective} from './directives/fm-modal-action-tpl.directive';
-import {FmModalHeaderTplDirective} from './directives/fm-modal-header-tpl.directive';
-import {FlexiModalsService} from '../../services/modals/flexi-modals.service';
+import { FmModalBeforeCloseEvent } from '../../services/modals/events/fm-modal-before-close.event';
+import { FmModalBeforeOpenEvent } from '../../services/modals/events/fm-modal-before-open.event';
+import { getBackdropAnimation, getInstanceAnimation } from './fm-modals-outlet.animations';
+import { FlexiModalsThemeService } from '../../services/theme/flexi-modals-theme.service';
+import { FmModalSpinnerTplDirective } from './directives/fm-modal-spinner-tpl.directive';
+import { FmModalActionTplDirective } from './directives/fm-modal-action-tpl.directive';
+import { FmModalHeaderTplDirective } from './directives/fm-modal-header-tpl.directive';
+import { FlexiModalsService } from '../../services/modals/flexi-modals.service';
 import {
-  FmModalWithComponentInstanceComponent
+  FmModalWithComponentInstanceComponent,
 } from './modal-instance/instance-types/component/fm-modal-with-component-instance.component';
 import {
-  FmModalWithTemplateInstanceComponent
+  FmModalWithTemplateInstanceComponent,
 } from './modal-instance/instance-types/template/fm-modal-with-template-instance.component';
+
+const MODAL_OPENED_CLASS = 'fm-modal-opened';
 
 @Component({
   selector: 'fm-modals-outlet',
@@ -42,22 +44,24 @@ import {
     FmModalWithTemplateInstanceComponent,
     NgForOf,
   ],
+  host: {
+    '[class]': 'hostClasses()'
+  },
   animations: [
     getBackdropAnimation('fadeInOutBackdrop'),
     getInstanceAnimation('fadeInOutInstance'),
   ],
 })
-export class FmModalsOutletComponent implements OnInit {
+export class FmModalsOutletComponent implements OnInit, OnDestroy {
 
   // Dependencies
   private readonly _service = inject(FlexiModalsService);
   private readonly _themes = inject(FlexiModalsThemeService);
-  private readonly _elementRef = inject(ElementRef<HTMLElement>);
   private readonly _changeDetector = inject(ChangeDetectorRef);
 
   // Signals
   public readonly modals = this._service.modals;
-  public readonly theme = this._themes.theme;
+  public readonly themeClass = this._themes.themeClass;
   public readonly backdropAnimationDisabled = signal<boolean>(false);
   public readonly backdropAnimationDelay = signal<number>(0);
 
@@ -68,10 +72,14 @@ export class FmModalsOutletComponent implements OnInit {
 
   // Private props
   private readonly _destroy$ = new Subject<void>();
-  private _bodyStyleElement: HTMLStyleElement | null = null;
+  private _stylesElement: HTMLStyleElement | null = null;
 
 
   // Computed props
+
+  public readonly hostClasses = computed<Array<string>>(() => {
+    return [ this.themeClass() ];
+  });
 
   public readonly modalActionTpl = computed<TemplateRef<any> | undefined>(() => {
     return this._modalActionTplRef()?.templateRef;
@@ -88,30 +96,19 @@ export class FmModalsOutletComponent implements OnInit {
 
   // Effects
 
-  private readonly _themeEffect = effect(() => {
-    this._themes.applyThemeStyles(this._elementRef.nativeElement);
-  });
-
-  private readonly _modalsEffect = effect(() => {
-    if (this.modals().length > 0 && !this._bodyStyleElement) {
-      this._bodyStyleElement = document.createElement('style');
-
-      this._bodyStyleElement.id = 'fm-modals-styles';
-      this._bodyStyleElement.type = 'text/css';
-      this._bodyStyleElement.innerHTML = 'body { overflow: hidden }';
-
-      document.getElementsByTagName('head')[0].appendChild(this._bodyStyleElement);
-
-    } else if (!this.modals().length && this._bodyStyleElement) {
-      this._bodyStyleElement.remove();
-      this._bodyStyleElement = null;
-    }
+  private readonly _modalOpenedEffect = effect(() => {
+    this.modals().length > 0
+      ? document.body.classList.add(MODAL_OPENED_CLASS)
+      : document.body.classList.remove(MODAL_OPENED_CLASS);
   });
 
 
   // Lifecycle hooks
 
   public ngOnInit(): void {
+    this._themes.attachThemeStyles();
+    this._attachStyles();
+
     this._service.events$
       .pipe(takeUntil(this._destroy$))
       .subscribe(($event) => {
@@ -128,9 +125,16 @@ export class FmModalsOutletComponent implements OnInit {
           && $event.modal.maximized()
         ) {
           this.backdropAnimationDisabled.set(true);
+
+          // Required to get updated backdropAnimationDisabled binding in time
           this._changeDetector.detectChanges();
         }
       });
+  }
+
+  public ngOnDestroy(): void {
+    this._themes.detachThemeStyles();
+    this._detachStyles();
   }
 
 
@@ -139,5 +143,27 @@ export class FmModalsOutletComponent implements OnInit {
   public onBackdropAnimationDone(): void {
     this.backdropAnimationDisabled.set(false);
     this.backdropAnimationDelay.set(0);
+  }
+
+
+  // Internal implementation
+
+  private _attachStyles(): void {
+    this._stylesElement = document.createElement('style');
+
+    this._stylesElement.id = 'fm-modals-styles';
+    this._stylesElement.type = 'text/css';
+    this._stylesElement.innerHTML = `.${MODAL_OPENED_CLASS} { overflow: hidden }`;
+
+    document.getElementsByTagName('head')[0].appendChild(this._stylesElement);
+  }
+
+  private _detachStyles(): void {
+    if (!this._stylesElement) {
+      return;
+    }
+
+    this._stylesElement.remove();
+    this._stylesElement = null;
   }
 }

@@ -1,21 +1,21 @@
-import {computed, Inject, Injectable, Optional, signal} from '@angular/core';
+import { computed, Inject, Injectable, Optional, signal } from '@angular/core';
 
-import {FLEXI_MODAL_STYLING_OPTIONS, FLEXI_MODAL_COLOR_SCHEME, FLEXI_MODAL_THEME} from '../../flexi-modals.tokens';
-import {normalizeOptions} from '../../tools/utils';
+import { FLEXI_MODAL_COLOR_SCHEME, FLEXI_MODAL_STYLING_OPTIONS, FLEXI_MODAL_THEME } from '../../flexi-modals.tokens';
+import { generateRandomId, normalizeOptions } from '../../tools/utils';
 import {
-  fmStylingCssValueGetters,
-  fmDefaultStyling,
-  fmStylingCssVars,
+  FM_DEFAULT_THEME,
   fmColorSchemeCssVars,
   fmDefaultColorScheme,
-  FM_DEFAULT_THEME
+  fmDefaultStyling,
+  fmStylingCssValueGetters,
+  fmStylingCssVars,
 } from './flexi-modals-theme.constants';
 import {
-  IFmModalStylingOptions,
   IFmModalColorScheme,
+  IFmModalStylingOptions,
   IFmModalTheme,
   IFmModalThemeOptions,
-  IFmModalThemes
+  IFmModalThemes,
 } from './flexi-modals-theme.definitions';
 
 @Injectable({
@@ -27,12 +27,20 @@ export class FlexiModalsThemeService {
 
   private readonly _themeName = signal<string>('');
 
+  private readonly _instanceId = generateRandomId();
+
+  private _stylesElement: HTMLStyleElement | null = null;
+
   public readonly theme = computed<IFmModalTheme>(() => {
     return this._themes()[this._themeName()];
   });
 
   public readonly themeName = computed<string>(() => {
     return this._themeName();
+  });
+
+  public readonly themeClass = computed<string>(() => {
+    return this.getThemeClass(this.themeName());
   });
 
   public readonly themes = computed<IFmModalThemes>(() => {
@@ -46,8 +54,8 @@ export class FlexiModalsThemeService {
   ) {
     if (themeConfigs?.length && (defaultColorScheme || defaultStylingOptions)) {
       console.warn(
-        'Specified both providers "FLEXI_MODAL_COLOR_SCHEME" or "FLEXI_MODAL_STYLING_OPTIONS" ' +
-        'and "FLEXI_MODAL_THEME". The "FLEXI_MODAL_COLOR_SCHEME" provider was ignored.'
+        'Specified both providers "FM_MODAL_COLOR_SCHEME" or "FM_MODAL_STYLING_OPTIONS" ' +
+        'and "FM_MODAL_THEME". The "FM_MODAL_COLOR_SCHEME" provider was ignored.'
       );
     }
 
@@ -94,29 +102,31 @@ export class FlexiModalsThemeService {
     this._themeName.set(themeName);
   }
 
-  public applyThemeStyles(targetElement: HTMLElement, themeName?: string): void {
-    if (
-      !targetElement
-      || (themeName && !this.isThemeExist(themeName))
-    ) {
+  public getThemeClass(themeName: string): string {
+    return `fm-modal-theme--${themeName}-${this._instanceId}`;
+  }
+
+  public attachThemeStyles(): void {
+    const classDefinitions = this._generateThemeStyles();
+
+    this._stylesElement = document.createElement('style');
+    this._stylesElement.type = 'text/css';
+    this._stylesElement.innerHTML = classDefinitions.join('\n');
+
+    document.getElementsByTagName('head')[0].appendChild(this._stylesElement);
+  }
+
+  public detachThemeStyles(): void {
+    if (!this._stylesElement) {
       return;
     }
 
-    const theme = themeName ? this._themes()[themeName] : this.theme();
-
-    this._applyThemeStyles(
-      targetElement,
-      theme.colors,
-      fmColorSchemeCssVars
-    );
-
-    this._applyThemeStyles(
-      targetElement,
-      theme.styling,
-      fmStylingCssVars,
-      fmStylingCssValueGetters
-    );
+    this._stylesElement.remove();
+    this._stylesElement = null;
   }
+
+
+  // Private methods
 
   private _initializeWithDefaults(): void {
     this._themeName.set(FM_DEFAULT_THEME);
@@ -127,9 +137,6 @@ export class FlexiModalsThemeService {
       }
     });
   }
-
-
-  // Private methods
 
   private _initializeWithOptions(
     colorsScheme: IFmModalColorScheme,
@@ -172,30 +179,64 @@ export class FlexiModalsThemeService {
     return true;
   }
 
-  private _applyThemeStyles<SchemeT extends Record<string, any>>(
-    targetElement: HTMLElement,
+  private _generateThemeStyles(): Array<string> {
+    const themes = this._themes();
+    const classDefinitions: Array<string> = [];
+
+    for (const themeName in themes) {
+      if (!Object.prototype.hasOwnProperty.call(themes, themeName)) {
+        continue;
+      }
+
+      const theme = themes[themeName];
+      const themeClassName = this.getThemeClass(themeName);
+      const themeClassProps = [
+        ...this._generateThemeClassProperties(theme.colors, fmColorSchemeCssVars),
+        ...this._generateThemeClassProperties(theme.styling, fmStylingCssVars, fmStylingCssValueGetters),
+      ];
+
+      classDefinitions.push((
+        `.${themeClassName} {\n`
+        + themeClassProps
+          .map(propStr => `  ${propStr}\n`)
+          .join('')
+        + '}'
+      ));
+    }
+
+    return classDefinitions;
+  }
+
+  private _generateThemeClassProperties<SchemeT extends Record<string, any>>(
     scheme: SchemeT,
     schemeMap: Record<keyof SchemeT, string>,
     schemeValuesMap?: Record<keyof SchemeT, ((value: any) => string) | undefined>,
-  ): void {
+  ): Array<string> {
 
-    for (const propName in scheme) {
-      const colorPropName = <keyof SchemeT>propName;
+    const properties: Array<string> = [];
+
+    for (const schemePropNameRaw in scheme) {
+      const schemePropName = <keyof SchemeT>schemePropNameRaw;
 
       if (
-        !scheme[colorPropName]
-        || !Object.prototype.hasOwnProperty.call(scheme, propName)
+        !schemeMap[schemePropName]
+        || scheme[schemePropName] === false
+        || scheme[schemePropName] === null
+        || scheme[schemePropName] === undefined
+        || !Object.prototype.hasOwnProperty.call(scheme, schemePropName)
       ) {
         continue;
       }
 
-      targetElement.style.setProperty(
-        schemeMap[colorPropName],
-        schemeValuesMap?.[colorPropName]
-          ? schemeValuesMap[colorPropName](scheme[colorPropName])
-          : scheme[colorPropName]
-      );
+      const propName = schemeMap[schemePropName];
+      const propValue = schemeValuesMap?.[schemePropName]
+        ? schemeValuesMap[schemePropName](scheme[schemePropName])
+        : scheme[schemePropName];
+
+      properties.push(`${propName}: ${propValue};`);
     }
+
+    return properties;
   }
 
   private _composeThemeConfig(

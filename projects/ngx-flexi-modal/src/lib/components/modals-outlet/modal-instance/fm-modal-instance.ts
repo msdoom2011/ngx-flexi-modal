@@ -28,7 +28,7 @@ import {FmModal} from '../../../models/fm-modal';
   standalone: true,
   host: {
     '[id]': 'id()',
-    '[class]': 'classes()',
+    '[class]': 'hostClasses()',
   },
 })
 export abstract class FmModalInstance<ModalT extends FmModal> implements OnInit, OnDestroy {
@@ -59,7 +59,6 @@ export abstract class FmModalInstance<ModalT extends FmModal> implements OnInit,
   // Private props
   private readonly _destroy$ = new Subject<void>();
   private _destroySubscription: Subscription | null = null;
-  private _themeOld = this._themes.themeName();
 
 
   // Computed
@@ -72,10 +71,14 @@ export abstract class FmModalInstance<ModalT extends FmModal> implements OnInit,
     return this._service.modals().findIndex(modal => modal.id() === this.id());
   });
 
-  public readonly classes = computed<Array<string>>(() => {
+  public readonly hostClasses = computed<Array<string>>(() => {
     return [
       'fm-modal-instance',
-      ...(this.modal().config().classes || [])
+      ...(this.modal().config().classes || []),
+      ...(this.modal().config().theme
+        ? [ this._themes.getThemeClass(this.modal().config().theme || '') ]
+        : []
+      ),
     ];
   });
 
@@ -133,14 +136,6 @@ export abstract class FmModalInstance<ModalT extends FmModal> implements OnInit,
 
     } else if (!focusableElements.length) {
       (<any>document.activeElement).blur();
-    }
-  });
-
-  private readonly _themeEffect = effect(() => {
-    const themeName = this.modal().config().theme;
-
-    if (themeName && themeName !== this._themeOld) {
-      this._themes.applyThemeStyles(this._elementRef.nativeElement, themeName);
     }
   });
 

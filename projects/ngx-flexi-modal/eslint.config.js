@@ -23,6 +23,12 @@ module.exports = tseslint.config(
           style: "kebab-case",
         },
       ],
+      '@typescript-eslint/no-unused-expressions': [
+        "error",
+        {
+          "allowTernary": true
+        }
+      ],
     },
   },
   {

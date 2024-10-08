@@ -76,22 +76,22 @@ export class ColorsHelper {
 
   public static checkDefaultValue(
     config: IColorTestsConfig,
-    colorProp: string,
-    checkColor: (color: string, templated: boolean) => void
+    optionName: string,
+    checkOption: (color: string, templated: boolean) => void
   ): void {
 
     const { label, initialize, templated } = config;
 
     it(label('check default value'), () => {
       initialize(withStyling({ frameBorder: true }));
-      checkColor(fmDefaultColorScheme[<keyof IFmModalColorScheme>colorProp], templated);
+      checkOption(fmDefaultColorScheme[<keyof IFmModalColorScheme>optionName], templated);
     });
   }
 
   public static checkColorSchemeValue(
     config: IColorTestsConfig,
-    colorProp: string,
-    checkColor: (color: string, templated: boolean) => void
+    optionName: string,
+    checkOption: (color: string, templated: boolean) => void
   ): void {
 
     const { label, initialize, templated } = config;
@@ -100,17 +100,17 @@ export class ColorsHelper {
       const color = 'rgb(255, 0, 0)';
 
       initialize(
-        withColorScheme({ [colorProp]: color }),
+        withColorScheme({ [optionName]: color }),
         withStyling({ frameBorder: true }),
       );
-      checkColor(color, templated);
+      checkOption(color, templated);
     });
   }
 
   public static checkThemeValues(
     config: IColorTestsConfig,
-    colorProp: string,
-    checkColor: (color: string, templated: boolean) => void
+    optionName: string,
+    checkOption: (color: string, templated: boolean) => void
   ): void {
 
     const { label, initialize, templated } = config;
@@ -123,31 +123,31 @@ export class ColorsHelper {
       const themes: Array<IFmModalThemeOptions> = [
         {
           name: 'theme1',
-          colors: { [colorProp]: colors.theme1 },
+          colors: { [optionName]: colors.theme1 },
           styling: { frameBorder: true },
         },
         {
           name: 'theme2',
           default: true,
-          colors: { [colorProp]: colors.theme2 },
+          colors: { [optionName]: colors.theme2 },
           styling: { frameBorder: true },
         },
       ];
 
       initialize(withThemes(themes));
-      checkColor(colors.theme2, templated);
+      checkOption(colors.theme2, templated);
 
       cy.get('@modal').then((modal: any) => {
         modal.themes.setTheme('theme1');
       });
 
-      checkColor(colors.theme1, templated);
+      checkOption(colors.theme1, templated);
 
       cy.get('@modal').then((modal: any) => {
         modal.themes.setTheme('theme2');
       });
 
-      checkColor(colors.theme2, templated);
+      checkOption(colors.theme2, templated);
     });
   }
 }
