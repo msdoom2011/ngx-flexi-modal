@@ -4,7 +4,7 @@ import Chainable = Cypress.Chainable;
 import { mount } from 'cypress/angular';
 import { Type } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { cySelector } from './helpers/helpers';
+import { cySelector } from './helpers/common-helpers';
 
 // ***********************************************
 // This example commands.ts shows you how to

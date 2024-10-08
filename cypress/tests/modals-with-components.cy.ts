@@ -1,5 +1,5 @@
 import { SimpleTextComponent } from '../components/modal-content/simple-text/simple-text.component';
-import { initializeServiceModals, showComponent } from '../support/helpers/helpers';
+import { initializeServiceModals, showComponent } from '../support/helpers/common-helpers';
 import {
   fmDefaultColorScheme,
   fmDefaultStyling,
@@ -74,7 +74,8 @@ describe('FmModalsOutletComponent', () => {
     showComponent(SimpleTextComponent, {
       title: title,
       actions: [ { label: buttonLabel } ],
-    });
+    })
+      .then(modal => cy.wrap(modal).as('modal'));
 
     cy.get('body')
       .invoke('css', 'font-size')

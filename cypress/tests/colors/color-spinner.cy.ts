@@ -1,6 +1,6 @@
 import { Provider } from '@angular/core';
 
-import { colorToRgb, cySelector } from '../../support/helpers/helpers';
+import { colorToRgb, cySelector } from '../../support/helpers/common-helpers';
 import { ColorsHelper, IColorTestsConfig } from '../../support/helpers/colors-helper';
 
 const propName = 'spinner';

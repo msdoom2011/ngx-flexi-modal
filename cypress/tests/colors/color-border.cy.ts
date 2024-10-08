@@ -1,4 +1,4 @@
-import { colorToRgb } from '../../support/helpers/helpers';
+import { colorToRgb } from '../../support/helpers/common-helpers';
 import { ColorsHelper } from '../../support/helpers/colors-helper';
 
 const propName = 'border'

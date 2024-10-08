@@ -2,7 +2,7 @@ import { Provider } from '@angular/core';
 
 import { SimpleTextComponent } from '../../components/modal-content/simple-text/simple-text.component';
 import { ColorsHelper, IColorTestsConfig } from '../../support/helpers/colors-helper';
-import { colorToRgb, showComponent } from '../../support/helpers/helpers';
+import { colorToRgb, showComponent } from '../../support/helpers/common-helpers';
 
 const propName = 'backdrop';
 
