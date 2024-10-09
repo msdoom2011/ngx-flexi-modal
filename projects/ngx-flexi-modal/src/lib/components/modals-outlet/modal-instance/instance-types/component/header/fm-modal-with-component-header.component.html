@@ -5,11 +5,14 @@
     modalHeaderTpl() || null;
     context: {
       $title: config.title,
-      $theme: config.theme || themeNameGlobal()
+      $theme: config.theme || themeNameGlobal(),
+      $data: config.data
     }
   " />
 
 } @else {
-  <h3 data-cy="modal-title">{{ config.title }}</h3>
+  <h3 data-cy="modal-title" class="fm-modal-header">
+    {{ config.title }}
+  </h3>
 }
 

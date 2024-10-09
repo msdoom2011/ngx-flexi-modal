@@ -244,7 +244,7 @@ export class FlexiModalsThemeService {
     stylingOptions: IFmModalStylingOptions | undefined
   ): IFmModalTheme {
 
-    return {
+    const options =  {
       colors: {
         ...fmDefaultColorScheme,
         ...(colorsScheme || {}),
@@ -256,6 +256,10 @@ export class FlexiModalsThemeService {
           : {}
         )
       },
-    }
+    };
+
+    console.log(options);
+
+    return options;
   }
 }

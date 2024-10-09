@@ -1,23 +1,18 @@
-@let footerTpl = modal().config().footerTpl;
-@let actionsTpl = modal().config().actionsTpl;
+@let config = modal().config();
 
-@if (footerTpl) {
-  <ng-container *ngTemplateOutlet="footerTpl" />
+@if (config.footerTpl || modalFooterTpl()) {
+  <ng-container *ngTemplateOutlet="config.footerTpl || modalFooterTpl() || null; context: {
+    $actionsTpl: footerActionsTpl,
+    $theme: config.theme || themeNameGlobal(),
+    $data: config.data
+  }" />
 
-} @else if (actionsTpl) {
-  <div data-cy="modal-footer-actions" class="fm-modal-footer--actions">
-    @for (actionDirective of actionsTpl; track actionDirective.id) {
-      @if (actionDirective.options().visible) {
-        <!-- eslint-disable-next-line -->
-        <div
-          data-cy="modal-action-container"
-          class="fm-modal-action-container"
-          [class]="actionDirective.options().position"
-          (click)="onActionContainerClick(actionDirective.options().closeOnClick)"
-        >
-          <ng-container *ngTemplateOutlet="actionDirective.templateRef || null" />
-        </div>
-      }
-    }
+} @else if (config.actionsTpl) {
+  <div class="fm-modal-footer">
+    <ng-container *ngTemplateOutlet="footerActionsTpl" />
   </div>
 }
+
+<ng-template #footerActionsTpl>
+  <fm-modal-with-template-footer-actions />
+</ng-template>

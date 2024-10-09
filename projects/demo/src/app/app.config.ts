@@ -1,6 +1,7 @@
 import {ApplicationConfig, provideExperimentalZonelessChangeDetection} from '@angular/core';
-import {provideAnimationsAsync} from "@angular/platform-browser/animations/async";
-import {provideFlexiModals, withDefaultOptions, withThemes, withExtensions} from "ngx-flexi-modal";
+
+import {provideAnimationsAsync} from '@angular/platform-browser/animations/async';
+import {provideFlexiModals, withDefaultOptions, withThemes, withExtensions} from 'ngx-flexi-modal';
 
 // import {modalBasicCustomExtension} from "./modal/basic-custom/modal-basic-custom.extension";
 
@@ -18,6 +19,7 @@ export const appConfig: ApplicationConfig = {
         maximizable: true,
         scroll: 'content',
         animation: 'zoom-out',
+        spinner: 'round-dotted',
       }),
       // withStyling({
         // frameShadow: '20px 20px 20px 0 rgba(255, 0, 0, 0.3)',
@@ -66,7 +68,6 @@ export const appConfig: ApplicationConfig = {
             frameShadow: false,
             frameBorder: false,
             frameRounding: 20,
-            headerActions: 'outside',
           }
         },
         {
@@ -80,10 +81,7 @@ export const appConfig: ApplicationConfig = {
           styling: {
             headerHeight: 40,
             headerActions: 'outside',
-            headerFontSize: '1.17em',
-            headerFontWeight: 'bold',
             headerActionsWithBg: false,
-            spinnerType: 'round-dotted',
           }
         },
       ])

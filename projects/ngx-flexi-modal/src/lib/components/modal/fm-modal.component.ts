@@ -69,7 +69,7 @@ export class FmModalComponent implements DoCheck, OnChanges, AfterContentInit, O
   public readonly _rounding = input<number | boolean | undefined>(undefined, { alias: 'rounding' });
   public readonly _closable = input<boolean | undefined>(undefined, { alias: 'closable' });
   public readonly _maximizable = input<boolean | undefined>(undefined, { alias: 'maximizable' });
-  public readonly _data = input<any>(undefined, { alias: 'data' });
+  public readonly _data = input<Record<string, unknown> | undefined>(undefined, { alias: 'data' });
 
   // Outputs
   public readonly _changeEvent = output<FmModalUpdateEvent>({ alias: 'change' });
@@ -275,7 +275,7 @@ export class FmModalComponent implements DoCheck, OnChanges, AfterContentInit, O
       aliveUntil: this._destroy$,
       headerTpl: this._headerTpl(),
       footerTpl: this._footerTpl(),
-      actionsTpl: !this._footerTpl() ? this._actionsTpl() : undefined,
+      actionsTpl: this._actionsTpl(),
       classes: this._classes(),
       data: this._data(),
     });
@@ -325,15 +325,6 @@ export class FmModalComponent implements DoCheck, OnChanges, AfterContentInit, O
         'at the same time for the displaying modal. ' +
         'The "*fmModalHeader" directive content takes precedence over the "title" property, ' +
         'so the "title" bound value was ignored.'
-      );
-    }
-
-    if (this._footerTpl() && this._actionsTpl()?.length) {
-      console.warn(
-        'Specified both "*fmModalFooter" and "*fmModalAction" directives ' +
-        'at the same time for the displaying modal. ' +
-        'The "*fmModalFooter" directive content takes precedence over actions specified ' +
-        'via the "*fmModalAction" directive, so the last one was ignored.'
       );
     }
   }

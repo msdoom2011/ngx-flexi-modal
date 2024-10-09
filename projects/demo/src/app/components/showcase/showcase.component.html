@@ -40,7 +40,31 @@
   (open)="onTemplateModalOpened($event)"
   #modal
 >
+  <h3
+    class="fm-modal-header"
+    [class]="'custom-header-theme--' + theme"
+    *fmModalHeader="let title = $title; let theme = $theme"
+  >
+    <span style="color: red">!!! {{ title }}</span>
+  </h3>
+
   <fm-app-template-aware *fmModalBody [modal]="modal" />
+
+  <div
+    class="fm-modal-footer"
+    [class]="'custom-footer-theme--' + theme"
+    *fmModalFooter="let actionsTpl = $actionsTpl; let theme = $theme"
+  >
+    <div class="pagination">
+      <a class="arrow" href="#">&#x21FD;</a>
+      <span class="step">step <b>2</b> from <b>5</b></span>
+      <a class="arrow" href="#">&#x21FE;</a>
+    </div>
+
+    <div class="footer-actions">
+      <ng-container *ngTemplateOutlet="actionsTpl" />
+    </div>
+  </div>
 
   <button
     class="fm-modal-action-button primary"

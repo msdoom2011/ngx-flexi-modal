@@ -30,7 +30,6 @@ export const fmDefaultStyling: IFmModalStylingConfig = {
   headerHeight: 40,
   headerFontSize: '1.17em',
   headerFontWeight: '600',
-  spinnerType: 'round-dotted',
 };
 
 export const fmColorSchemeCssVars: (
@@ -65,19 +64,25 @@ export const fmStylingCssVars: (
   headerActions: '',
   headerActionsWithBg: '',
   frameBorder: '',
-  spinnerType: '',
 };
 
 export const fmStylingCssValueGetters: (
   Record<keyof IFmModalStylingConfig, ((value: any) => string) | undefined>
 ) = {
-  frameRounding: (rounding: number | undefined) => typeof rounding === 'number' ? rounding + 'px' : '0',
-  headerHeight: (height: number) => height >= 30 ? `${height}px` : '30px',
+  frameRounding: (rounding: number | boolean) => {
+    return typeof rounding === 'number'
+      ? rounding + 'px'
+      : rounding
+        ? fmDefaultStyling.frameRounding + 'px'
+        : '0';
+  },
+  headerHeight: (height: number) => {
+    return height >= 30 ? `${height}px` : '30px';
+  },
   frameShadow: undefined,
   frameBorder: undefined,
   headerActions: undefined,
   headerActionsWithBg: undefined,
   headerFontSize: undefined,
   headerFontWeight: undefined,
-  spinnerType: undefined,
 }

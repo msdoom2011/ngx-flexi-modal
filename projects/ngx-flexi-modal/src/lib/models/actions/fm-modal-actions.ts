@@ -7,7 +7,7 @@ import {FlexiModalsService} from '../../services/modals/flexi-modals.service';
 import {FmModalAction} from './fm-modal-action';
 import {FmModal} from '../fm-modal';
 
-export class FmModalActions<ModalT extends FmModal<any, any>> {
+export class FmModalActions<ModalT extends FmModal> {
 
   constructor(
     private _service: FlexiModalsService,

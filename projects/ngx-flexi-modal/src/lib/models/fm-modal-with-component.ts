@@ -6,7 +6,7 @@ import {FmModal} from './fm-modal';
 
 export class FmModalWithComponent<
   ComponentT = any,
-  InputsT extends object = Record<string, any>
+  InputsT extends { [inputName: string]: unknown } = Record<string, any>
 >
 extends FmModal<
   IFmModalWithComponentConfig<ComponentT, InputsT>,

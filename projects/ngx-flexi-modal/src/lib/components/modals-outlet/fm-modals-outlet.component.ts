@@ -21,6 +21,7 @@ import { FlexiModalsThemeService } from '../../services/theme/flexi-modals-theme
 import { FmModalSpinnerTplDirective } from './directives/fm-modal-spinner-tpl.directive';
 import { FmModalActionTplDirective } from './directives/fm-modal-action-tpl.directive';
 import { FmModalHeaderTplDirective } from './directives/fm-modal-header-tpl.directive';
+import { FmModalFooterTplDirective } from './directives/fm-modal-footer-tpl.directive';
 import { FlexiModalsService } from '../../services/modals/flexi-modals.service';
 import {
   FmModalWithComponentInstanceComponent,
@@ -68,11 +69,11 @@ export class FmModalsOutletComponent implements OnInit, OnDestroy {
   // Queries
   private readonly _modalActionTplRef = contentChild(FmModalActionTplDirective);
   private readonly _modalHeaderTplRef = contentChild(FmModalHeaderTplDirective);
+  private readonly _modalFooterTplRef = contentChild(FmModalFooterTplDirective);
   private readonly _modalSpinnerTplRef = contentChild(FmModalSpinnerTplDirective);
 
   // Private props
   private readonly _destroy$ = new Subject<void>();
-  private _stylesElement: HTMLStyleElement | null = null;
 
 
   // Computed props
@@ -87,6 +88,10 @@ export class FmModalsOutletComponent implements OnInit, OnDestroy {
 
   public readonly modalHeaderTpl = computed<TemplateRef<any> | undefined>(() => {
     return this._modalHeaderTplRef()?.templateRef;
+  });
+
+  public readonly modalFooterTpl = computed<TemplateRef<any> | undefined>(() => {
+    return this._modalFooterTplRef()?.templateRef;
   });
 
   public readonly modalSpinnerTpl = computed<TemplateRef<any> | undefined>(() => {
@@ -107,7 +112,6 @@ export class FmModalsOutletComponent implements OnInit, OnDestroy {
 
   public ngOnInit(): void {
     this._themes.attachThemeStyles();
-    this._attachStyles();
 
     this._service.events$
       .pipe(takeUntil(this._destroy$))
@@ -134,7 +138,6 @@ export class FmModalsOutletComponent implements OnInit, OnDestroy {
 
   public ngOnDestroy(): void {
     this._themes.detachThemeStyles();
-    this._detachStyles();
   }
 
 
@@ -143,27 +146,5 @@ export class FmModalsOutletComponent implements OnInit, OnDestroy {
   public onBackdropAnimationDone(): void {
     this.backdropAnimationDisabled.set(false);
     this.backdropAnimationDelay.set(0);
-  }
-
-
-  // Internal implementation
-
-  private _attachStyles(): void {
-    this._stylesElement = document.createElement('style');
-
-    this._stylesElement.id = 'fm-modals-styles';
-    this._stylesElement.type = 'text/css';
-    this._stylesElement.innerHTML = `.${MODAL_OPENED_CLASS} { overflow: hidden }`;
-
-    document.getElementsByTagName('head')[0].appendChild(this._stylesElement);
-  }
-
-  private _detachStyles(): void {
-    if (!this._stylesElement) {
-      return;
-    }
-
-    this._stylesElement.remove();
-    this._stylesElement = null;
   }
 }

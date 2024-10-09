@@ -1,10 +1,11 @@
 import {Directive, inject, TemplateRef} from '@angular/core';
 
-import {TFmModalSpinnerType} from '../../../services/theme/flexi-modals-theme.definitions';
+import { TFmModalSpinnerType } from '../../../services/modals/flexi-modals.definitions';
 
 interface IFmModalSpinnerTplDirectiveContext {
   $type: TFmModalSpinnerType;
   $theme: string;
+  $data: Record<string, unknown>;
 }
 
 @Directive({

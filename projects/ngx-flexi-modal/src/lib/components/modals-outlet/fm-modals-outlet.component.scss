@@ -15,8 +15,34 @@
 }
 
 ::ng-deep {
+  .fm-modal-opened {
+    overflow: hidden;
+  }
+}
+
+:host::ng-deep {
   * {
     box-sizing: border-box;
+  }
+
+  .fm-modal-header {
+    font-size: var(--fm-header-font-size);
+    font-weight: var(--fm-header-font-weight);
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .fm-modal-footer {
+    display: flex;
+    align-items: center;
+    min-height: 64px;
+    padding: 14px 18px;
+    border-radius: inherit;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    border-top: 1px solid var(--fm-color-border);
+    background-color: var(--fm-color-footer-bg);
+    color: var(--fm-color-footer-text);
   }
 
   .fm-modal-action-button {

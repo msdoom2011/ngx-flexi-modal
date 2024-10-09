@@ -1,6 +1,8 @@
 :host {
   &.maximized {
-    transform: rotate(180deg);
+    .icon {
+      transform: rotate(180deg);
+    }
   }
 }
 

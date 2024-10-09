@@ -9,6 +9,8 @@ describe(`Testing '${propName}' styling`, () => {
   for (const config of StylingHelper.makeConfigs()) {
     StylingHelper.checkDefaultValue(config, propName, checkFrameShadow);
     StylingHelper.checkStylingValue(config, propName, true, checkFrameShadow);
+    StylingHelper.checkStylingValue(config, propName, false, checkFrameShadow);
+    StylingHelper.checkStylingValue(config, propName, '10px 10px 20px 0 rgba(255, 0, 0, 0.5)', checkFrameShadow);
     StylingHelper.checkThemeValues(config, propName, {
       theme1: true,
       theme2: false,

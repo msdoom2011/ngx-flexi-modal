@@ -6,9 +6,10 @@ interface IFmModalActionTplDirectiveContext {
   $icon: string | undefined;
   $disabled: boolean;
   $primary: boolean;
-  $theme: string;
   $classes: string;
   $onClick: ($event: MouseEvent) => void;
+  $theme: string;
+  $data: Record<string, unknown>;
 }
 
 @Directive({

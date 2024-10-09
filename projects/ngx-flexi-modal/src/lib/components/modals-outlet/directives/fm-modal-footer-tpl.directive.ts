@@ -1,23 +1,23 @@
 import {Directive, inject, TemplateRef} from '@angular/core';
 
-interface IFmModalHeaderTplDirectiveContext {
-  $title: string;
+interface IFmModalFooterTplDirectiveContext {
+  $actionsTpl: TemplateRef<void>;
   $theme: string;
   $data: Record<string, unknown>;
 }
 
 @Directive({
-  selector: '[fmModalHeaderTpl]',
+  selector: '[fmModalFooterTpl]',
   standalone: true,
 })
-export class FmModalHeaderTplDirective {
+export class FmModalFooterTplDirective {
 
   public readonly templateRef = inject(TemplateRef);
 
   static ngTemplateContextGuard(
-    dir: FmModalHeaderTplDirective,
+    dir: FmModalFooterTplDirective,
     ctx: any
-  ): ctx is IFmModalHeaderTplDirectiveContext {
+  ): ctx is IFmModalFooterTplDirectiveContext {
     return true;
   }
 }

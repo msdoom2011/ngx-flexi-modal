@@ -14,8 +14,8 @@ export function isPlainObject(obj: unknown): obj is object  {
   );
 }
 
-export function findFocusableElements(element: Element): Array<Element & { focus: () => any }> {
-  return <Array<Element & { focus: () => any }>>Array.from(
+export function findFocusableElements(element: Element): Array<Element & { focus: () => void }> {
+  return <Array<Element & { focus: () => void }>>Array.from(
     element.querySelectorAll([
       'a[href]',
       'button',
@@ -36,9 +36,9 @@ export function findFocusableElements(element: Element): Array<Element & { focus
 }
 
 export function normalizeOptions(
-  optionsObj: Record<string, any>,
+  optionsObj: Record<string, unknown>,
   switchableProps: Array<string> = []
-): Partial<Record<string, any>> {
+): Partial<Record<string, unknown>> {
 
   const options = { ...optionsObj };
 
@@ -63,7 +63,7 @@ export function normalizeOptions(
   return options;
 }
 
-export function extendModalWithComponentOptions<ComponentT, InputsT extends object>(
+export function extendModalWithComponentOptions<ComponentT, InputsT extends { [inputName: string]: unknown }>(
   basicOptions: IFmModalWithComponentOptions<ComponentT, Partial<InputsT>>,
   userOptions: IFmModalOptions<FmModalWithComponent<ComponentT, InputsT>> & Partial<InputsT>,
   inputNames: Array<keyof InputsT>,

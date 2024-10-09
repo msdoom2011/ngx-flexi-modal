@@ -1,6 +1,5 @@
 export type IFmModalThemes = Record<string, IFmModalTheme>;
 export type TFmModalHeaderActionsPosition = 'outside' | 'inside';
-export type TFmModalSpinnerType = 'round-dotted' | 'round-dashed' | 'linear-dotted' | 'linear-dashed';
 
 export interface IFmModalTheme {
   colors: IFmModalColorScheme;
@@ -39,7 +38,6 @@ export interface IFmModalStylingConfig {
   frameBorder: boolean;
   frameShadow: string | boolean;
   frameRounding: number | boolean;
-  spinnerType: TFmModalSpinnerType;
   headerActions: TFmModalHeaderActionsPosition | boolean;
   headerActionsWithBg: boolean;
   headerHeight: number;

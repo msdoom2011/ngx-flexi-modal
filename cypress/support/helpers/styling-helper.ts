@@ -135,8 +135,6 @@ export class StylingHelper {
 
       initialize(withThemes(themes));
 
-      console.log(themes);
-
       for (let i = 0; i < themes.length; i++) {
         const theme = themes[i];
 
@@ -150,20 +148,6 @@ export class StylingHelper {
           modal.themes.setTheme(themes[i + 1].name);
         });
       }
-
-      // checkOption(valuesByThemes.theme2, templated);
-      //
-      // cy.get('@modal').then((modal: any) => {
-      //   modal.themes.setTheme('theme1');
-      // });
-      //
-      // checkOption(valuesByThemes.theme1, templated);
-      //
-      // cy.get('@modal').then((modal: any) => {
-      //   modal.themes.setTheme('theme2');
-      // });
-      //
-      // checkOption(valuesByThemes.theme2, templated);
     });
   }
 }

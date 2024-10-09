@@ -25,8 +25,8 @@ import {FmModal} from '../../models/fm-modal';
 import {
   IFmModalWithComponentOptions,
   IFmExtension,
-  IFmExtensionOptionsByTypes,
-  IFmExtensionTypeConfig,
+  IFmExtensionOptionsByModalTypes,
+  IFmExtensionModalTypeConfig,
   IFmModalOptions,
   IFmModalWithTemplateOptions,
   TFmModalEvent
@@ -36,16 +36,16 @@ import {
   providedIn: 'root'
 })
 export class FlexiModalsService<
-  ExtensionOptionsByTypesT extends IFmExtensionOptionsByTypes = IFmExtensionOptionsByTypes
+  ExtensionOptionsByTypesT extends IFmExtensionOptionsByModalTypes = IFmExtensionOptionsByModalTypes
 > {
 
   private readonly _themes = inject(FlexiModalsThemeService);
 
   private readonly _extensionsArr = inject<Array<IFmExtension<ExtensionOptionsByTypesT>>>(FLEXI_MODAL_EXTENSION);
 
-  private readonly _defaultOptions = inject<IFmModalOptions<any> | undefined>(FLEXI_MODAL_DEFAULT_OPTIONS, { optional: true });
+  private readonly _defaultOptions = inject<IFmModalOptions<FmModal> | undefined>(FLEXI_MODAL_DEFAULT_OPTIONS, { optional: true });
 
-  private readonly _extensions: Record<keyof ExtensionOptionsByTypesT, IFmExtensionTypeConfig> = <any>{};
+  private readonly _extensions = <Record<keyof ExtensionOptionsByTypesT, IFmExtensionModalTypeConfig>>{};
 
   private readonly _events$ = new Subject<TFmModalEvent>();
 
@@ -60,7 +60,7 @@ export class FlexiModalsService<
   }
 
   constructor() {
-    this._extensions = <Record<keyof ExtensionOptionsByTypesT, IFmExtensionTypeConfig>>(
+    this._extensions = <Record<keyof ExtensionOptionsByTypesT, IFmExtensionModalTypeConfig>>(
       this._extensionsArr.reduce((result, extension) => ({...result, ...extension}), {})
     );
 
@@ -105,21 +105,21 @@ export class FlexiModalsService<
     return this._showModal(modal);
   }
 
-  public showTemplate<ContextT extends object = {}>(
+  public showTemplate<ContextT extends Record<string, unknown> = {}>(
     template: TemplateRef<ContextT>,
   ): FmModalWithTemplate<ContextT> | null;
 
-  public showTemplate<ContextT extends object = {}>(
+  public showTemplate<ContextT extends Record<string, unknown> = {}>(
     template: TemplateRef<ContextT>,
     takeUntil$: Observable<unknown>,
   ): FmModalWithTemplate<ContextT> | null;
 
-  public showTemplate<ContextT extends object = {}>(
+  public showTemplate<ContextT extends Record<string, unknown> = {}>(
     template: TemplateRef<ContextT>,
     options: IFmModalWithTemplateOptions<ContextT>,
   ): FmModalWithTemplate<ContextT> | null;
 
-  public showTemplate<ContextT extends object = {}>(
+  public showTemplate<ContextT extends Record<string, unknown> = {}>(
     template: TemplateRef<ContextT>,
     takeUntilOrOptions?: Observable<any> | IFmModalWithTemplateOptions<ContextT>,
   ): FmModalWithTemplate<ContextT> | null {
@@ -229,7 +229,7 @@ export class FlexiModalsService<
       ...fmModalOptionsDefault,
       ...(this._defaultOptions || {}),
       ...(isPlainObject(takeUntilOrOptions)
-        ? (normalizeOptions(takeUntilOrOptions) || {})
+        ? (normalizeOptions(<ModalOptionsT>takeUntilOrOptions) || {})
         : { aliveUntil: takeUntilOrOptions }
       )
     };

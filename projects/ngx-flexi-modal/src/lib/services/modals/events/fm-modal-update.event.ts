@@ -5,7 +5,7 @@ import {FmModal} from '../../../models/fm-modal';
 
 export class FmModalUpdateEvent<
   ModalT extends FmModal = FmModal,
-  OptionsT extends IFmModalOptions<any> = IFmModalOptions<any>
+  OptionsT extends IFmModalOptions<ModalT> = IFmModalOptions<ModalT>
 >
 extends FmModalEvent<ModalT> {
 

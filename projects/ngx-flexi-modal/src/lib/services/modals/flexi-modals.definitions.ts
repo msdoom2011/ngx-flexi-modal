@@ -2,7 +2,7 @@ import {InputSignal, TemplateRef, Type} from '@angular/core';
 import {Observable} from 'rxjs';
 
 import {FmModalActionDirective} from '../../components/modal/directives/fm-modal-action.directive';
-import {IFmModalBasicExtensionOptionsByTypes} from '../../extensions/basic/fm-modal-basic.definitions';
+import {IFmModalBasicExtensionOptionsByModalTypes} from '../../extensions/basic/fm-modal-basic.definitions';
 import {FmModalBeforeCloseEvent} from './events/fm-modal-before-close.event';
 import {FmModalBeforeOpenEvent} from './events/fm-modal-before-open.event';
 import {FmModalWithComponent} from '../../models/fm-modal-with-component';
@@ -20,6 +20,7 @@ export type TFmModalScroll = 'modal' | 'content';
 export type TFmModalButtonPosition = 'left' | 'center' | 'right';
 export type TFmModalPosition = 'top' | 'center';
 export type TFmModalOpeningAnimation = 'fade-in' | 'zoom-in' | 'zoom-out' | 'slide' | 'appear' | 'fall-down' | 'roll-out';
+export type TFmModalSpinnerType = 'round-dotted' | 'round-dashed' | 'linear-dotted' | 'linear-dashed';
 export type TFmModalEvent = (
   FmModalBeforeOpenEvent
   | FmModalOpenEvent
@@ -43,16 +44,19 @@ export interface IFlexiModalAware {
 
 // Extensions
 
-export interface IFmExtensionOptionsByTypes extends IFmModalBasicExtensionOptionsByTypes {
+/**
+ * An interface that is used for inheritance in case of creating your own extension
+ */
+export interface IFmExtensionOptionsByModalTypes extends IFmModalBasicExtensionOptionsByModalTypes {
   // Must be empty here
 }
 
-export type IFmExtension<ModalTypeT extends IFmExtensionOptionsByTypes> = {
-  [K in keyof ModalTypeT]: IFmExtensionTypeConfig;
+export type IFmExtension<ModalTypeT extends IFmExtensionOptionsByModalTypes> = {
+  [K in keyof ModalTypeT]: IFmExtensionModalTypeConfig;
 }
 
-export interface IFmExtensionTypeConfig<
-  ShortcutModalOptionsT extends object = any,
+export interface IFmExtensionModalTypeConfig<
+  ShortcutModalOptionsT extends Record<string, unknown> = any,
   ComponentT = any
 > {
   component: Type<ComponentT>;
@@ -63,7 +67,7 @@ export interface IFmExtensionTypeConfig<
 
 // Modal config
 
-export interface IFmModalConfig<ModalT extends FmModal> {
+export interface IFmModalConfig<ModalT extends FmModal = FmModal> {
   id: string;
   title: string | undefined;
   aliveUntil: Observable<unknown> | undefined;
@@ -72,6 +76,7 @@ export interface IFmModalConfig<ModalT extends FmModal> {
   onClose: (($event: FmModalBeforeCloseEvent<ModalT>) => void) | undefined;
   animation: TFmModalOpeningAnimation;
   position: TFmModalPosition;
+  spinner: TFmModalSpinnerType;
   scroll: TFmModalScroll;
   height: TFmModalHeight;
   width: TFmModalWidth;
@@ -84,7 +89,7 @@ export interface IFmModalConfig<ModalT extends FmModal> {
    * Random data that can be used to read for example in event listeners.
    * This object doesn't go to any renderable modal content
    */
-  data: {};
+  data: Record<string, unknown>;
 }
 
 type TModalOptions<ConfigT extends IFmModalConfig<any>> = (
@@ -97,18 +102,25 @@ export type IFmModalOptions<ModalT extends FmModal> = TModalOptions<IFmModalConf
 
 // Component Modals
 
-export interface IFmModalWithComponentConfig<ComponentT, InputsT extends object = Record<string, any>>
+export interface IFmModalWithComponentConfig<
+  ComponentT,
+  InputsT extends Record<string, unknown> = Record<string, unknown>
+>
 extends IFmModalConfig<FmModalWithComponent<ComponentT>> {
   inputs: InputsT;
 }
 
-export type IFmModalWithComponentOptions<ComponentT, InputsT extends object = Record<string, any>
+export type IFmModalWithComponentOptions<
+  ComponentT,
+  InputsT extends Record<string, unknown> = Record<string, unknown>
 > = TModalOptions<IFmModalWithComponentConfig<ComponentT, InputsT>>;
 
 
 // Template Modals
 
-export interface IFmModalWithTemplateConfig<ContextT extends object>
+export interface IFmModalWithTemplateConfig<
+  ContextT extends Record<string, unknown>
+>
 extends IFmModalConfig<FmModalWithTemplate<ContextT>> {
   context: ContextT | null,
   headerTpl: TemplateRef<unknown> | undefined;
@@ -117,7 +129,7 @@ extends IFmModalConfig<FmModalWithTemplate<ContextT>> {
 }
 
 export type IFmModalWithTemplateOptions<
-  ContextT extends object
+  ContextT extends Record<string, unknown>
 > = TModalOptions<IFmModalWithTemplateConfig<ContextT>>;
 
 

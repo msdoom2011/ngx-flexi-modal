@@ -121,8 +121,6 @@ describe('FmModalsOutletComponent', () => {
                 expect(height).to.equal(footerHeight + contentHeight);
               });
         });
-    cy.getCy('modal-loader-spinner')
-      .should('have.class', 'spinner-type-' + options.spinnerType);
 
     cy.getCy('modal-body').invoke('outerHeight').then((bodyHeight) => {
       cy.get('@footerHeight').then((footerHeight: any) => {

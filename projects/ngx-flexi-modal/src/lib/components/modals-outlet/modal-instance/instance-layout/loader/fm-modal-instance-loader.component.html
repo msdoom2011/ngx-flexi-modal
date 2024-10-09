@@ -1,16 +1,19 @@
+@let config = modal().config();
+
 <div
   data-cy="modal-loader-spinner"
   class="fm-modal--loading-spinner"
-  [class]="'spinner-type-' + modal().theme().styling.spinnerType"
+  [class]="'spinner-type-' + config.spinner"
 >
   @if (spinnerTpl()) {
     <ng-container *ngTemplateOutlet="spinnerTpl() || null; context: {
-      $type: modal().theme().styling.spinnerType,
-      $theme: modal().config().theme || globalThemeName(),
+      $type: config.spinner,
+      $theme: config.theme || globalThemeName(),
+      $data: config.data
     }" />
 
   } @else {
-    @switch (modal().theme().styling.spinnerType) {
+    @switch (config.spinner) {
       @case ('round-dotted') {
         <fm-round-dotted-spinner />
       }

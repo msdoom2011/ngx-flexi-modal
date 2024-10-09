@@ -21,7 +21,7 @@ export const fmModalWidthPresets = {
   tiny: '300px',
 }
 
-export const fmModalOptionsDefault: IFmModalConfig<any> = {
+export const fmModalOptionsDefault: IFmModalConfig = {
   id: '',
   title: undefined,
   actions: undefined,
@@ -32,6 +32,7 @@ export const fmModalOptionsDefault: IFmModalConfig<any> = {
   width: 'fit-content',
   height: 'fit-content',
   scroll: 'content',
+  spinner: 'round-dotted',
   maximized: false,
   closable: true,
   maximizable: false,

@@ -2,10 +2,10 @@ import {IFmModalOptions} from '../../services/modals/flexi-modals.definitions';
 import {FmModalWithComponent} from '../../models/fm-modal-with-component';
 import {FmModalAction} from '../../models/actions/fm-modal-action';
 
-export type TFmModalBasicIcon = keyof IFmModalBasicExtensionOptionsByTypes | null;
+export type TFmModalBasicIcon = keyof IFmModalBasicExtensionOptionsByModalTypes | null;
 export type TFmModalBasicAlign = 'left' | 'center' | 'right';
 
-export interface IFmModalBasicExtensionOptionsByTypes {
+export interface IFmModalBasicExtensionOptionsByModalTypes {
   error: IFmModalBasicOptions;
   warning: IFmModalBasicOptions;
   success: IFmModalBasicOptions;
@@ -28,7 +28,7 @@ export interface IFmModalConfirmOptions extends IFmModalBasicOptions {
   onNo?: ($event: MouseEvent, action: FmModalAction) => void,
 }
 
-export interface IFmModalBasicInputs {
+export interface IFmModalBasicInputs extends Record<string, unknown> {
   message: string | Array<string>;
   messageAlign?: TFmModalBasicAlign;
   icon?: TFmModalBasicIcon;

@@ -98,12 +98,4 @@
       opacity: 1;
     }
   }
-
-  &:first-child {
-    border-radius: 0 var(--fm-frame-border-radius) 0 0;
-
-    :host.maximized & {
-      border-radius: 0;
-    }
-  }
 }

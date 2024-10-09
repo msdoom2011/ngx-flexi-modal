@@ -22,6 +22,7 @@ export * from './lib/components/modals-outlet/modal-instance/instance-types/comp
 export * from './lib/components/modals-outlet/modal-instance/instance-types/template/fm-modal-with-template-instance.component';
 export * from './lib/components/modals-outlet/directives/fm-modal-action-tpl.directive';
 export * from './lib/components/modals-outlet/directives/fm-modal-header-tpl.directive';
+export * from './lib/components/modals-outlet/directives/fm-modal-footer-tpl.directive';
 export * from './lib/components/modals-outlet/directives/fm-modal-spinner-tpl.directive';
 export * from './lib/components/modal/fm-modal.component';
 export * from './lib/components/modal/directives/fm-modal-action.directive';

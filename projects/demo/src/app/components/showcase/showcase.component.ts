@@ -12,6 +12,7 @@ import {
 
 import {TemplateAwareComponent} from "../modal-content/template-aware/template-aware.component";
 import {ModalAwareComponent} from "../modal-content/modal-aware/modal-aware.component";
+import { NgTemplateOutlet } from '@angular/common';
 
 @Component({
   selector: 'fm-app-showcase',
@@ -25,6 +26,7 @@ import {ModalAwareComponent} from "../modal-content/modal-aware/modal-aware.comp
     FmModalActionDirective,
     ModalAwareComponent,
     TemplateAwareComponent,
+    NgTemplateOutlet,
   ],
   templateUrl: './showcase.component.html',
   styleUrl: './showcase.component.scss'

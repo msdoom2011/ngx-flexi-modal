@@ -28,7 +28,7 @@ import { FmModalInstance } from '../../fm-modal-instance';
     { provide: FM_MODAL_INSTANCE, useExisting: FmModalWithTemplateInstanceComponent },
   ],
 })
-export class FmModalWithTemplateInstanceComponent<ContentT extends object>
+export class FmModalWithTemplateInstanceComponent<ContentT extends Record<string, unknown>>
 extends FmModalInstance<FmModalWithTemplate<ContentT>>
 implements AfterViewInit {
 
