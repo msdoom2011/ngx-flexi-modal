@@ -1,1 +1,17 @@
-<ng-content />
+@let config = modal().config();
+
+@if (config.title && (config.headerTpl || modalHeaderTpl())) {
+  <ng-container *ngTemplateOutlet="
+    config.headerTpl || modalHeaderTpl() || null;
+    context: {
+      $title: config.title,
+      $theme: config.theme || themeNameGlobal(),
+      $data: config.data
+    }
+  " />
+
+} @else if (config.title) {
+  <h3 data-cy="modal-title" class="fm-modal-header">
+    {{ config.title }}
+  </h3>
+}

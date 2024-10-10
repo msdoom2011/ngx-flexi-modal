@@ -1,0 +1,60 @@
+@if (modal().config().actionsTpl) {
+  @for (actionDirective of modal().config().actionsTpl; track actionDirective.id) {
+    @if (actionDirective.options().visible) {
+      <!-- eslint-disable-next-line -->
+      <div
+        data-cy="modal-action-container"
+        class="fm-modal-action-container"
+        [class]="actionDirective.options().position"
+        (click)="onActionContainerClick(actionDirective.options().closeOnClick)"
+      >
+        <ng-container *ngTemplateOutlet="actionDirective.templateRef || null" />
+      </div>
+    }
+  }
+} @else {
+  @for (actionConfig of modal().actions.configs(); track actionConfig.id) {
+    @if (!!actionButtonTpl()) {
+      <div
+        data-cy="modal-action-container"
+        class="fm-modal-action-container"
+        [class]="actionConfig.position"
+      >
+        <ng-container *ngTemplateOutlet="
+          actionButtonTpl() || null;
+          context: {
+            $id: actionConfig.id,
+            $label: actionConfig.label,
+            $disabled: actionConfig.disabled,
+            $primary: actionConfig.primary,
+            $icon: actionConfig.icon,
+            $classes: getButtonClasses(actionConfig),
+            $onClick: onActionClick.bind(this, actionConfig),
+            $theme: modal().config().theme || themeNameGlobal(),
+            $data: modal().config().data,
+          }
+        " />
+      </div>
+
+    } @else {
+      <button
+        data-cy="modal-action-button"
+        class="fm-modal-action-button"
+        [id]="actionConfig.id"
+        [disabled]="actionConfig.disabled"
+        [class]="getButtonClasses(actionConfig)"
+        (click)="onActionClick(actionConfig, $event)"
+      >
+        @if (actionConfig.icon) {
+          <span
+            data-cy="modal-action-button-icon"
+            [class]="['icon', actionConfig.icon]"
+          ></span>
+        }
+        <span data-cy="modal-action-button-label" class="label">
+          {{ actionConfig.label }}
+        </span>
+      </button>
+    }
+  }
+}

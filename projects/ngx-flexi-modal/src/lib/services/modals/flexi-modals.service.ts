@@ -12,15 +12,15 @@ import {BehaviorSubject, filter, Observable, Subject} from 'rxjs';
 
 import {FLEXI_MODAL_DEFAULT_OPTIONS, FLEXI_MODAL_EXTENSION} from '../../flexi-modals.tokens';
 import {FmModalBeforeCloseEvent} from './events/fm-modal-before-close.event';
+import {FlexiModalsThemeService} from '../theme/flexi-modals-theme.service';
 import {FmModalBeforeOpenEvent} from './events/fm-modal-before-open.event';
 import {FmModalWithComponent} from '../../models/fm-modal-with-component';
 import {FmModalWithTemplate} from '../../models/fm-modal-with-template';
-import {FlexiModalsThemeService} from '../theme/flexi-modals-theme.service';
+import {isPlainObject, normalizeOptions} from '../../tools/utils';
 import {FmModalUpdateEvent} from './events/fm-modal-update.event';
 import {FmModalCloseEvent} from './events/fm-modal-close.event';
-import {FmModalOpenEvent} from './events/fm-modal-open.event';
 import {fmModalOptionsDefault} from './flexi-modals.constants';
-import {isPlainObject, normalizeOptions} from '../../tools/utils';
+import {FmModalOpenEvent} from './events/fm-modal-open.event';
 import {FmModal} from '../../models/fm-modal';
 import {
   IFmModalWithComponentOptions,
@@ -43,7 +43,7 @@ export class FlexiModalsService<
 
   private readonly _extensionsArr = inject<Array<IFmExtension<ExtensionOptionsByTypesT>>>(FLEXI_MODAL_EXTENSION);
 
-  private readonly _defaultOptions = inject<IFmModalOptions<FmModal> | undefined>(FLEXI_MODAL_DEFAULT_OPTIONS, { optional: true });
+  private readonly _defaultOptions = inject<IFmModalOptions | undefined>(FLEXI_MODAL_DEFAULT_OPTIONS, { optional: true });
 
   private readonly _extensions = <Record<keyof ExtensionOptionsByTypesT, IFmExtensionModalTypeConfig>>{};
 

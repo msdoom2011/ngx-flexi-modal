@@ -1,16 +1,18 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 
-import { FmModalWithComponentInstanceComponent } from '../../fm-modal-with-component-instance.component';
-import { FlexiModalsThemeService } from '../../../../../../../services/theme/flexi-modals-theme.service';
-import { IFmModalActionConfig } from '../../../../../../../services/modals/flexi-modals.definitions';
-import { FmModalsOutletComponent } from '../../../../../fm-modals-outlet.component';
-import { FmModalAction } from '../../../../../../../models/actions/fm-modal-action';
+import { FlexiModalsThemeService } from '../../../../../../services/theme/flexi-modals-theme.service';
+import { IFmModalActionConfig } from '../../../../../../services/modals/flexi-modals.definitions';
+import { FmModalsOutletComponent } from '../../../../fm-modals-outlet.component';
+import { FmModalAction } from '../../../../../../models/actions/fm-modal-action';
+import { FM_MODAL_INSTANCE } from '../../../fm-modal-instance.providers';
+import { FmModalInstance } from '../../../fm-modal-instance';
+import { FmModal } from '../../../../../../models/fm-modal';
 
 @Component({
-  selector: 'fm-modal-with-component-footer-actions',
-  templateUrl: './fm-modal-with-component-footer-actions.component.html',
-  styleUrl: './fm-modal-with-component-footer-actions.component.scss',
+  selector: 'fm-modal-instance-footer-actions',
+  templateUrl: './fm-modal-instance-footer-actions.component.html',
+  styleUrl: './fm-modal-instance-footer-actions.component.scss',
   standalone: true,
   imports: [ NgTemplateOutlet ],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -19,10 +21,10 @@ import { FmModalAction } from '../../../../../../../models/actions/fm-modal-acti
     'data-cy': 'modal-footer-actions',
   }
 })
-export class FmModalWithComponentFooterActionsComponent {
+export class FmModalInstanceFooterActionsComponent {
 
   // Dependencies
-  private readonly _instance = inject(FmModalWithComponentInstanceComponent);
+  private readonly _instance = inject<FmModalInstance<FmModal>>(FM_MODAL_INSTANCE);
   private readonly _outlet = inject(FmModalsOutletComponent);
   private readonly _themes = inject(FlexiModalsThemeService);
 
@@ -41,6 +43,12 @@ export class FmModalWithComponentFooterActionsComponent {
 
     if (actionConfig.closeOnClick) {
       modal.close();
+    }
+  }
+
+  public onActionContainerClick(closeOnClick: any): void {
+    if (closeOnClick) {
+      this.modal().close();
     }
   }
 

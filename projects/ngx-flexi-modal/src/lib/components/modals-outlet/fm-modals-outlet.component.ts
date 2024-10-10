@@ -24,11 +24,11 @@ import { FmModalHeaderTplDirective } from './directives/fm-modal-header-tpl.dire
 import { FmModalFooterTplDirective } from './directives/fm-modal-footer-tpl.directive';
 import { FlexiModalsService } from '../../services/modals/flexi-modals.service';
 import {
-  FmModalWithComponentInstanceComponent,
-} from './modal-instance/instance-types/component/fm-modal-with-component-instance.component';
+  FmModalWithComponentInstanceComponent
+} from './modal-instance/instance-types/fm-modal-with-component-instance.component';
 import {
-  FmModalWithTemplateInstanceComponent,
-} from './modal-instance/instance-types/template/fm-modal-with-template-instance.component';
+  FmModalWithTemplateInstanceComponent
+} from './modal-instance/instance-types/fm-modal-with-template-instance.component';
 
 const MODAL_OPENED_CLASS = 'fm-modal-opened';
 

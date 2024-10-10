@@ -25,6 +25,10 @@ export const fmModalOptionsDefault: IFmModalConfig = {
   id: '',
   title: undefined,
   actions: undefined,
+  aliveUntil: undefined,
+  headerTpl: undefined,
+  footerTpl: undefined,
+  actionsTpl: undefined,
   onClose: undefined,
   onOpen: undefined,
   animation: 'slide',
@@ -37,7 +41,6 @@ export const fmModalOptionsDefault: IFmModalConfig = {
   closable: true,
   maximizable: false,
   classes: undefined,
-  aliveUntil: undefined,
   theme: undefined,
   data: {},
 };

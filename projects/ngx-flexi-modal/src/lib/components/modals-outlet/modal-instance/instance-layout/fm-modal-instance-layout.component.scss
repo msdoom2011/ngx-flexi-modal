@@ -64,8 +64,6 @@ $outer-h-padding: 30px;
   display: flex;
   height: var(--fm-header-height);
   color: var(--fm-color-header-text);
-  //font-size: var(--fm-header-font-size);
-  //font-weight: var(--fm-header-font-weight);
   background-color: var(--fm-color-header-bg);
   border-bottom: 1px solid var(--fm-color-border);
   border-radius: inherit;
@@ -178,6 +176,7 @@ $outer-h-padding: 30px;
 .fm-modal--content {
   position: relative;
   min-height: 80px;
+  height: 100%;
   flex-grow: 1;
 
   &.scrollable {

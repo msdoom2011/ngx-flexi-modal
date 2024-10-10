@@ -1,1 +1,18 @@
-<ng-content />
+@let config = modal().config();
+
+@if (config.footerTpl || modalFooterTpl()) {
+  <ng-container *ngTemplateOutlet="config.footerTpl || modalFooterTpl() || null; context: {
+    $actionsTpl: actionsTpl,
+    $theme: config.theme || themeNameGlobal(),
+    $data: config.data,
+  }" />
+
+} @else {
+  <div class="fm-modal-footer">
+    <ng-container *ngTemplateOutlet="actionsTpl" />
+  </div>
+}
+
+<ng-template #actionsTpl>
+  <fm-modal-instance-footer-actions />
+</ng-template>

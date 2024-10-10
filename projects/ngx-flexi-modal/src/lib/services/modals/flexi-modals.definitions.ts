@@ -70,8 +70,11 @@ export interface IFmExtensionModalTypeConfig<
 export interface IFmModalConfig<ModalT extends FmModal = FmModal> {
   id: string;
   title: string | undefined;
-  aliveUntil: Observable<unknown> | undefined;
   actions: Array<IFmModalActionConfig> | undefined;
+  aliveUntil: Observable<unknown> | undefined;
+  headerTpl: TemplateRef<unknown> | undefined;
+  footerTpl: TemplateRef<unknown> | undefined;
+  actionsTpl: Array<FmModalActionDirective> | undefined;
   onOpen: (($event: FmModalOpenEvent<ModalT>) => void) | undefined;
   onClose: (($event: FmModalBeforeCloseEvent<ModalT>) => void) | undefined;
   animation: TFmModalOpeningAnimation;
@@ -97,7 +100,7 @@ type TModalOptions<ConfigT extends IFmModalConfig<any>> = (
   & { actions?: Array<IFmModalActionOptions> }
 );
 
-export type IFmModalOptions<ModalT extends FmModal> = TModalOptions<IFmModalConfig<ModalT>>;
+export type IFmModalOptions<ModalT extends FmModal = FmModal> = TModalOptions<IFmModalConfig<ModalT>>;
 
 
 // Component Modals
@@ -123,9 +126,6 @@ export interface IFmModalWithTemplateConfig<
 >
 extends IFmModalConfig<FmModalWithTemplate<ContextT>> {
   context: ContextT | null,
-  headerTpl: TemplateRef<unknown> | undefined;
-  footerTpl: TemplateRef<unknown> | undefined;
-  actionsTpl: Array<FmModalActionDirective>;
 }
 
 export type IFmModalWithTemplateOptions<
