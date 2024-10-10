@@ -259,8 +259,6 @@ export class FmModalComponent implements DoCheck, OnChanges, AfterContentInit, O
       return;
     }
 
-    this._validateInputs();
-
     const modal = this.service.showTemplate(bodyTpl, {
       id: this._id(),
       title: this._title(),
@@ -313,19 +311,5 @@ export class FmModalComponent implements DoCheck, OnChanges, AfterContentInit, O
 
   public stopLoading(animation: boolean = true): void {
     this.modal()?.stopLoading(animation);
-  }
-
-
-  // Internal implementation
-
-  private _validateInputs(): void {
-    if (this._title() && this._headerTpl()) {
-      console.warn(
-        'Specified both "*fmModalHeader" directive and the "title" property value ' +
-        'at the same time for the displaying modal. ' +
-        'The "*fmModalHeader" directive content takes precedence over the "title" property, ' +
-        'so the "title" bound value was ignored.'
-      );
-    }
   }
 }

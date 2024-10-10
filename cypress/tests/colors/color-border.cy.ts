@@ -24,7 +24,9 @@ function checkBorder(color: string): void {
     .invoke('css', 'border-left-color')
       .should('eq', colorToRgb(color));
 
-  cy.getCy('modal-footer-wrapper')
+  cy.getCy('modal-footer')
+    .children()
+    .first()
     .invoke('css', 'border-top-color')
       .should('eq', colorToRgb(color));
 }

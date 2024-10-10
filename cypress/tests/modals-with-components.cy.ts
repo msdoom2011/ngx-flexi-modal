@@ -114,7 +114,7 @@ describe('FmModalsOutletComponent', () => {
       .should('be.visible')
       .invoke('outerHeight')
         .then((height) => {
-          cy.getCy('modal-footer-wrapper')
+          cy.getCy('modal-footer')
             .invoke('outerHeight')
               .as('footerHeight')
               .then((footerHeight: any) => {

@@ -12,7 +12,9 @@ describe(`Testing color "${propName}"`, () => {
 });
 
 function checkFooterText(color: string): void {
-  cy.getCy('modal-footer-wrapper')
+  cy.getCy('modal-footer')
+    .children()
+    .first()
     .invoke('css', 'color')
-    .should('eq', colorToRgb(color));
+      .should('eq', colorToRgb(color));
 }

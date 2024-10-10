@@ -16,10 +16,9 @@ function checkHeaderText(color: string): void {
     .invoke('css', 'color')
       .should('eq', colorToRgb(color));
 
-  cy.getCy('modal-header-wrapper')
-    .find('h3')
-      .invoke('css', 'color')
-        .should('eq', colorToRgb(color));
+  cy.getCy('modal-title')
+    .invoke('css', 'color')
+      .should('eq', colorToRgb(color));
 
   cy.getCy('modal-close-btn')
     .find('.line')

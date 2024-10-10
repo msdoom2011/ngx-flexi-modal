@@ -1,10 +1,10 @@
 @let config = modal().config();
 
-@if (config.title && (config.headerTpl || modalHeaderTpl())) {
+@if (config.headerTpl || (config.title && modalHeaderTpl())) {
   <ng-container *ngTemplateOutlet="
     config.headerTpl || modalHeaderTpl() || null;
     context: {
-      $title: config.title,
+      $title: config.title || '',
       $theme: config.theme || themeNameGlobal(),
       $data: config.data
     }

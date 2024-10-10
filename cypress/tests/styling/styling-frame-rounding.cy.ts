@@ -34,7 +34,9 @@ function checkFrameRounding(value: number | boolean): void {
           ? cssPropertyValue
           : `${cssPropertyValue} ${cssPropertyValue} 0px 0px`);
 
-    cy.getCy('modal-footer-wrapper')
+    cy.getCy('modal-footer')
+      .children()
+      .first()
       .invoke('css', 'border-radius')
         .should('eq', cssPropertyValue === '0px'
           ? cssPropertyValue
