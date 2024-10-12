@@ -12,11 +12,11 @@ import {
 } from '@angular/core';
 import { NgComponentOutlet } from '@angular/common';
 
+import { FmModalComponent } from '../../../projects/ngx-flexi-modal/src/lib/components/modal/fm-modal.component';
+import { ModalWithTemplate } from './modal-with-template';
 import {
   FmModalsOutletComponent,
 } from '../../../projects/ngx-flexi-modal/src/lib/components/modals-outlet/fm-modals-outlet.component';
-import { FmModalComponent } from '../../../projects/ngx-flexi-modal/src/lib/components/modal/fm-modal.component';
-import { ModalWithTemplate } from './modal-with-template';
 
 @Component({
   selector: 'cy-modal-with-template-root',
@@ -86,6 +86,13 @@ export class ModalWithTemplateRootComponent<C extends ModalWithTemplate> impleme
     this._componentRef.changeDetectorRef.detectChanges();
 
     this.modal = this._componentRef.instance.modal();
+  }
+
+
+  // Public methods
+
+  public destroyModal(): void {
+    this._componentRef.destroy();
   }
 
 

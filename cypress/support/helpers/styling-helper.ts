@@ -74,13 +74,14 @@ export class StylingHelper {
   public static checkDefaultValue(
     config: IStylingTestsConfig,
     optionName: string,
-    checkOption: (optionValue: any, templated: boolean) => void
+    checkOption: (optionValue: any, templated: boolean) => void,
+    defaultStyling: IFmModalStylingOptions = {},
   ): void {
 
     const { label, initialize, templated } = config;
 
     it(label('check default value'), () => {
-      initialize();
+      initialize(withStyling(defaultStyling));
       checkOption(fmDefaultStyling[<keyof IFmModalStylingConfig>optionName], templated);
     });
   }

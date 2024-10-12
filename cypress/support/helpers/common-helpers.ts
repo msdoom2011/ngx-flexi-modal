@@ -52,7 +52,8 @@ export function initializeTemplateModals<C extends ModalWithTemplate>(
   }).then(mountResponse=> {
     cy.wrap(mountResponse.fixture).as('fixture');
     cy.wrap(mountResponse.component).as('component');
-    cy.wrap(mountResponse.component.modal).as('modal');
+    cy.wrap(mountResponse.component.modal).as('modalComponent');
+    cy.wrap(mountResponse.component.modal.modal()).as('modal');
 
     return cy.wrap(mountResponse);
   });

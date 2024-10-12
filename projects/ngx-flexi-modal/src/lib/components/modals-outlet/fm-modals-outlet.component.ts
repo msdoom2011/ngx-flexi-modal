@@ -46,6 +46,7 @@ const MODAL_OPENED_CLASS = 'fm-modal-opened';
     NgForOf,
   ],
   host: {
+    'data-cy': 'modals-outlet',
     '[class]': 'hostClasses()'
   },
   animations: [

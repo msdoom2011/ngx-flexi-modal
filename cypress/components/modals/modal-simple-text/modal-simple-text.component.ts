@@ -1,3 +1,4 @@
+import { NgTemplateOutlet } from '@angular/common';
 import { Component } from '@angular/core';
 
 import { FmModalComponent } from '../../../../projects/ngx-flexi-modal/src/lib/components/modal/fm-modal.component';
@@ -9,7 +10,6 @@ import {
 import {
   FmModalActionDirective
 } from '../../../../projects/ngx-flexi-modal/src/lib/components/modal/directives/fm-modal-action.directive';
-import { NgTemplateOutlet } from '@angular/common';
 import {
   FmModalHeaderDirective
 } from '../../../../projects/ngx-flexi-modal/src/lib/components/modal/directives/fm-modal-header.directive';
