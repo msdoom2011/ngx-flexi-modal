@@ -86,7 +86,7 @@ export abstract class FmModalInstance<ModalT extends FmModal> implements OnInit,
   // Effects
 
   private readonly _activeUntilEffect = effect(() => {
-    const modalDestroy$ = this.modal().config().aliveUntil;
+    const modalDestroy$ = this.modal().config().openUntil;
 
     if (!modalDestroy$) {
       return;

@@ -230,7 +230,7 @@ export class FlexiModalsService<
       ...(this._defaultOptions || {}),
       ...(isPlainObject(takeUntilOrOptions)
         ? (normalizeOptions(<ModalOptionsT>takeUntilOrOptions) || {})
-        : { aliveUntil: takeUntilOrOptions }
+        : { openUntil: takeUntilOrOptions }
       )
     };
   }

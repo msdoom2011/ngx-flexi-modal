@@ -4,11 +4,11 @@ import { cySelector, initializeTemplateModals, showComponent } from '../../suppo
 import { ModalSimpleTextComponent } from '../../components/modals/modal-simple-text/modal-simple-text.component';
 import { SimpleTextComponent } from '../../components/modal-content/simple-text/simple-text.component';
 
-describe('Option "aliveUntil"', () => {
+describe('Option "openUntil"', () => {
 
   it(
     'should close the template-defined modal when its parent component destroys ' +
-    'and a service-created modal when aliveUntil observable emits a value',
+    'and a service-created modal when "openUntil" observable emits a value',
     () => {
     const destroy$ = new Subject<void>();
 
@@ -22,7 +22,7 @@ describe('Option "aliveUntil"', () => {
     cy.getCy('modal').should('be.visible').as('templatedModal');
 
     showComponent(SimpleTextComponent, {
-      aliveUntil: destroy$,
+      openUntil: destroy$,
     }).then((modal) => {
       cy.get(cySelector('modal') + '#' + modal?.id()).as('serviceModal');
     });

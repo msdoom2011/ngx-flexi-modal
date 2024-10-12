@@ -25,7 +25,7 @@ export const fmModalOptionsDefault: IFmModalConfig = {
   id: '',
   title: undefined,
   actions: undefined,
-  aliveUntil: undefined,
+  openUntil: undefined,
   headerTpl: undefined,
   footerTpl: undefined,
   actionsTpl: undefined,

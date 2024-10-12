@@ -270,7 +270,7 @@ export class FmModalComponent implements DoCheck, OnChanges, AfterContentInit, O
       maximized: this._maximized(),
       closable: this._closable(),
       maximizable: this._maximizable(),
-      aliveUntil: this._destroy$,
+      openUntil: this._destroy$,
       headerTpl: this._headerTpl(),
       footerTpl: this._footerTpl(),
       actionsTpl: this._actionsTpl(),

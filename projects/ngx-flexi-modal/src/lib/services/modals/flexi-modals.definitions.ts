@@ -71,7 +71,7 @@ export interface IFmModalConfig<ModalT extends FmModal = FmModal> {
   id: string;
   title: string | undefined;
   actions: Array<IFmModalActionConfig> | undefined;
-  aliveUntil: Observable<unknown> | undefined;
+  openUntil: Observable<unknown> | undefined;
   headerTpl: TemplateRef<unknown> | undefined;
   footerTpl: TemplateRef<unknown> | undefined;
   actionsTpl: Array<FmModalActionDirective> | undefined;
