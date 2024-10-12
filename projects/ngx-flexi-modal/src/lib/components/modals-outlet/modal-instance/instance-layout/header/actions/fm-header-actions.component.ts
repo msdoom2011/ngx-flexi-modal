@@ -39,7 +39,7 @@ export class FmHeaderActionsComponent {
 
   public readonly position = computed<TFmModalHeaderActionsPosition>(() => {
     return !this.modal().maximized()
-      ? <TFmModalHeaderActionsPosition>this.modal().theme().styling.headerActions
+      ? <TFmModalHeaderActionsPosition>this.modal().theme().styling.headerActionsPosition
       : 'inside';
   });
 }

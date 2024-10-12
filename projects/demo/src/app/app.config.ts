@@ -80,7 +80,7 @@ export const appConfig: ApplicationConfig = {
           },
           styling: {
             headerHeight: 40,
-            headerActions: 'outside',
+            headerActionsPosition: 'outside',
             headerActionsWithBg: false,
           }
         },

@@ -252,7 +252,7 @@ export class FlexiModalsThemeService {
       styling: {
         ...fmDefaultStyling,
         ...(stylingOptions
-          ? normalizeOptions(stylingOptions, ['headerActions', 'frameShadow'])
+          ? normalizeOptions(stylingOptions, ['headerActionsPosition', 'frameShadow'])
           : {}
         ),
       },

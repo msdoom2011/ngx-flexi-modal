@@ -10,7 +10,7 @@ import {
 const propName = 'headerActionsWithBg';
 
 describe(`Testing '${propName}' styling`, () => {
-  const defaultStyling: IFmModalStylingOptions = { headerActions: 'outside' };
+  const defaultStyling: IFmModalStylingOptions = { headerActionsPosition: 'outside' };
 
   for (const config of StylingHelper.makeConfigs()) {
     StylingHelper.checkDefaultValue(config, propName, checkHeaderActionsWithBg, defaultStyling);

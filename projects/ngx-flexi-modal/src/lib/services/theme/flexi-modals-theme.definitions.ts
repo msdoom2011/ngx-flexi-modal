@@ -38,7 +38,7 @@ export interface IFmModalStylingConfig {
   frameBorder: boolean;
   frameShadow: string | boolean;
   frameRounding: number | boolean;
-  headerActions: TFmModalHeaderActionsPosition | boolean;
+  headerActionsPosition: TFmModalHeaderActionsPosition | boolean;
   headerActionsWithBg: boolean;
   headerHeight: number;
   headerFontSize: string;

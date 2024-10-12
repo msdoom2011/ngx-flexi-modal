@@ -88,7 +88,7 @@ describe('FmModalsOutletComponent', () => {
         .should('not.include', fmDefaultColorScheme.border);
     cy.getCy('modal-body').invoke('outerWidth').should('eq', 300);
     cy.getCy('modal-body').invoke('css', 'border-radius').should('eq', options.frameRounding + 'px');
-    cy.getCy('modal-header-actions').should('have.class', 'position-' + options.headerActions);
+    cy.getCy('modal-header-actions').should('have.class', 'position-' + options.headerActionsPosition);
 
     cy.getCy('modal-title')
       .invoke('css', 'font-size')

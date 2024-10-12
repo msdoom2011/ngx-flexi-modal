@@ -107,7 +107,7 @@ export class FmModalInstanceLayoutComponent implements OnInit, OnDestroy {
   public readonly headerVisible = computed<boolean>(() => {
     return !(
       !this._headerContentRef()
-      && this.modal().theme().styling.headerActions === 'outside'
+      && this.modal().theme().styling.headerActionsPosition === 'outside'
     );
   });
 
@@ -117,11 +117,11 @@ export class FmModalInstanceLayoutComponent implements OnInit, OnDestroy {
 
   public readonly hostClasses = computed<Array<string>>(() => {
     const { width, height, scroll, maximized, position } = this.modal().config();
-    const { headerActions } = this.modal().theme().styling;
+    const { headerActionsPosition } = this.modal().theme().styling;
 
     return [
       `scroll-${scroll}`,
-      `header-actions-${typeof headerActions === 'string' ? headerActions : 'hidden'}`,
+      `header-actions-${typeof headerActionsPosition === 'string' ? headerActionsPosition : 'hidden'}`,
       ...(!maximized ? [`position-${position}`] : []),
       ...(height && typeof height === 'string' ? [ `height-${height}` ] : []),
       ...(width && typeof width === 'string' ? [ `width-${height}` ] : []),
@@ -293,7 +293,7 @@ export class FmModalInstanceLayoutComponent implements OnInit, OnDestroy {
     if (
       !this._maximizedChanged()
       || this.modal().maximized()
-      || this.modal().theme().styling.headerActions !== 'outside'
+      || this.modal().theme().styling.headerActionsPosition !== 'outside'
     ) {
       return;
     }

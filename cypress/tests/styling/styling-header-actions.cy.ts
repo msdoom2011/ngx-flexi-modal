@@ -3,7 +3,7 @@ import {
   TFmModalHeaderActionsPosition
 } from '../../../projects/ngx-flexi-modal/src/lib/services/theme/flexi-modals-theme.definitions';
 
-const propName = 'headerActions';
+const propName = 'headerActionsPosition';
 
 describe(`Testing '${propName}' styling`, () => {
   for (const config of StylingHelper.makeConfigs()) {
