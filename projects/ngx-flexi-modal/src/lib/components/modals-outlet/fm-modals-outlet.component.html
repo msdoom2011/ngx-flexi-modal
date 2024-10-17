@@ -10,20 +10,10 @@
   @for(modal of modals(); track modal.id()) {
     @switch (modal.type) {
       @case ('COMPONENT') {
-        <fm-modal-with-component-instance
-          data-cy="modal"
-          [modal]="$any(modal)"
-          @fadeInOutInstance
-          #modals
-        />
+        <fm-modal-instance-with-component [modal]="$any(modal)" @fadeInOutInstance #modals />
       }
       @case ('TEMPLATE') {
-        <fm-modal-with-template-instance
-          data-cy="modal"
-          [modal]="$any(modal)"
-          @fadeInOutInstance
-          #modals
-        />
+        <fm-modal-instance-with-template [modal]="$any(modal)" @fadeInOutInstance #modals />
       }
     }
   }

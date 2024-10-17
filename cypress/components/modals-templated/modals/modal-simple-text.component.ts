@@ -16,8 +16,34 @@ import {
 
 @Component({
   selector: 'cy-modal-simple-text',
-  templateUrl: './modal-simple-text.component.html',
-  styleUrl: './modal-simple-text.component.scss',
+  template: `
+    <fm-modal
+      [id]="id()"
+      [opened]="opened()"
+      [spinner]="spinner()"
+      [maximizable]="maximizable()"
+      [closable]="closable()"
+      #modal
+    >
+      <h3 *fmModalHeader class="fm-modal-header" data-cy="modal-title">
+        Modal Title
+      </h3>
+
+      <cy-simple-text *fmModalBody />
+
+      <button
+        class="fm-modal-action-button primary"
+        *fmModalAction
+        (click)="modal.close()"
+      >Confirm</button>
+
+      <button
+        class="fm-modal-action-button"
+        *fmModalAction
+        (click)="modal.close()"
+      >Cancel</button>
+    </fm-modal>
+  `,
   standalone: true,
   imports: [
     FmModalComponent,

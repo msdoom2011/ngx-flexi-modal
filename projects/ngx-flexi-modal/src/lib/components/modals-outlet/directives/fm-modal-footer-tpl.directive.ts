@@ -1,9 +1,11 @@
 import {Directive, inject, TemplateRef} from '@angular/core';
+import { FmModal } from '../../../models/fm-modal';
 
-interface IFmModalFooterTplDirectiveContext {
+interface IFmModalFooterTplDirectiveContext<ModalT extends FmModal = FmModal> {
   $actionsTpl: TemplateRef<void>;
   $theme: string;
   $data: Record<string, unknown>;
+  $modal: ModalT;
 }
 
 @Directive({

@@ -1,7 +1,7 @@
 import { Subject } from 'rxjs';
 
 import { cySelector, initializeTemplateModals, showComponent } from '../../support/helpers/common-helpers';
-import { ModalSimpleTextComponent } from '../../components/modals/modal-simple-text/modal-simple-text.component';
+import { ModalSimpleTextComponent } from '../../components/modals-templated/modals/modal-simple-text.component';
 import { SimpleTextComponent } from '../../components/modal-content/simple-text/simple-text.component';
 
 describe('Option "openUntil"', () => {

@@ -7,6 +7,7 @@ import {
   TFmModalOpeningAnimation,
   TFmModalPosition,
   TFmModalScroll,
+  TFmModalSpinnerType,
   TFmModalWidth,
 } from '../../../projects/ngx-flexi-modal/src/lib/services/modals/flexi-modals.definitions';
 import {
@@ -32,7 +33,7 @@ export abstract class ModalWithTemplate {
   public readonly width = input<TFmModalWidth | undefined>(undefined);
   public readonly height = input<TFmModalHeight | undefined>(undefined);
   public readonly scroll = input<TFmModalScroll | undefined>(undefined);
-  public readonly rounding = input<number | boolean | undefined>(undefined);
+  public readonly spinner = input<TFmModalSpinnerType | undefined>(undefined);
   public readonly closable = input<boolean | undefined>(undefined);
   public readonly maximizable = input<boolean | undefined>(undefined);
   public readonly data = input<any>(undefined);

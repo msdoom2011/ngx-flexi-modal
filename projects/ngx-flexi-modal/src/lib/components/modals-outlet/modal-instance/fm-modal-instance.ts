@@ -27,6 +27,7 @@ import {FmModal} from '../../../models/fm-modal';
 @Directive({
   standalone: true,
   host: {
+    'data-cy': 'modal',
     '[id]': 'id()',
     '[class]': 'hostClasses()',
   },

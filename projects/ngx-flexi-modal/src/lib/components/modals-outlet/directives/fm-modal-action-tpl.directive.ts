@@ -1,6 +1,7 @@
 import {Directive, inject, TemplateRef} from '@angular/core';
+import { FmModal } from '../../../models/fm-modal';
 
-interface IFmModalActionTplDirectiveContext {
+interface IFmModalActionTplDirectiveContext<ModalT extends FmModal = FmModal> {
   $id: string;
   $label: string;
   $icon: string | undefined;
@@ -10,6 +11,7 @@ interface IFmModalActionTplDirectiveContext {
   $onClick: ($event: MouseEvent) => void;
   $theme: string;
   $data: Record<string, unknown>;
+  $modal: ModalT;
 }
 
 @Directive({

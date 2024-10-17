@@ -9,7 +9,7 @@ import { FM_MODAL_INSTANCE } from '../fm-modal-instance.providers';
 import { FmModalInstance } from '../fm-modal-instance';
 
 @Component({
-  selector: 'fm-modal-with-template-instance',
+  selector: 'fm-modal-instance-with-template',
   templateUrl: '../fm-modal-instance.html',
   styleUrl: '../fm-modal-instance.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -21,10 +21,10 @@ import { FmModalInstance } from '../fm-modal-instance';
     NgTemplateOutlet,
   ],
   providers: [
-    { provide: FM_MODAL_INSTANCE, useExisting: FmModalWithTemplateInstanceComponent },
+    { provide: FM_MODAL_INSTANCE, useExisting: FmModalInstanceWithTemplateComponent },
   ],
 })
-export class FmModalWithTemplateInstanceComponent<ContentT extends Record<string, unknown>>
+export class FmModalInstanceWithTemplateComponent<ContentT extends Record<string, unknown>>
 extends FmModalInstance<FmModalWithTemplate<ContentT>>
 implements AfterViewInit {
 

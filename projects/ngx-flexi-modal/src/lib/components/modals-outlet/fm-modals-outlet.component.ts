@@ -24,11 +24,11 @@ import { FmModalHeaderTplDirective } from './directives/fm-modal-header-tpl.dire
 import { FmModalFooterTplDirective } from './directives/fm-modal-footer-tpl.directive';
 import { FlexiModalsService } from '../../services/modals/flexi-modals.service';
 import {
-  FmModalWithComponentInstanceComponent
-} from './modal-instance/instance-types/fm-modal-with-component-instance.component';
+  FmModalInstanceWithComponentComponent
+} from './modal-instance/instance-types/fm-modal-instance-with-component.component';
 import {
-  FmModalWithTemplateInstanceComponent
-} from './modal-instance/instance-types/fm-modal-with-template-instance.component';
+  FmModalInstanceWithTemplateComponent
+} from './modal-instance/instance-types/fm-modal-instance-with-template.component';
 
 const MODAL_OPENED_CLASS = 'fm-modal-opened';
 
@@ -41,8 +41,8 @@ const MODAL_OPENED_CLASS = 'fm-modal-opened';
   imports: [
     NgTemplateOutlet,
     NgComponentOutlet,
-    FmModalWithComponentInstanceComponent,
-    FmModalWithTemplateInstanceComponent,
+    FmModalInstanceWithComponentComponent,
+    FmModalInstanceWithTemplateComponent,
     NgForOf,
   ],
   host: {

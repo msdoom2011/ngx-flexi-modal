@@ -24,18 +24,22 @@
       [class.no-shadow]="!theme.styling.frameShadow"
       #body
     >
-      <div
-        data-cy="modal-header-wrapper"
-        class="fm-modal--header-wrapper"
-        [class.hidden]="!headerVisible()"
-        #headerWrapper
-      >
-        <div data-cy="modal-header-content" class="fm-modal--header-content">
-          <ng-content select="fm-modal-instance-header" />
-        </div>
+      @if (config.title || config.headerTpl || config.maximizable || config.closable) {
+        <div
+          data-cy="modal-header-wrapper"
+          class="fm-modal--header-wrapper"
+          [class.hidden]="!headerVisible()"
+          #headerWrapper
+        >
+          <div data-cy="modal-header-content" class="fm-modal--header-content">
+            <ng-content select="fm-modal-instance-header" />
+          </div>
 
-        <fm-header-actions data-cy="modal-header-actions" #headerActions />
-      </div>
+          @if (config.maximizable || config.closable) {
+            <fm-header-actions data-cy="modal-header-actions" #headerActions />
+          }
+        </div>
+      }
 
       <div class="fm-modal--content-wrapper">
         @if (loaderVisible()) {

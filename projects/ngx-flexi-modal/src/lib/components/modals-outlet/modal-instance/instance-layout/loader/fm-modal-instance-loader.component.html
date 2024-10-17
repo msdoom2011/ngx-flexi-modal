@@ -9,7 +9,8 @@
     <ng-container *ngTemplateOutlet="spinnerTpl() || null; context: {
       $type: config.spinner,
       $theme: config.theme || globalThemeName(),
-      $data: config.data
+      $data: config.data,
+      $modal: modal()
     }" />
 
   } @else {

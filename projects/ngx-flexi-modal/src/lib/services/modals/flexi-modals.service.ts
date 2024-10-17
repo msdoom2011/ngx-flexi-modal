@@ -83,7 +83,7 @@ export class FlexiModalsService<
 
   public showComponent<ComponentT extends object = any>(
     component: Type<ComponentT>,
-    takeUntil$: Observable<any>
+    openUntil$: Observable<any>
   ): FmModalWithComponent<ComponentT> | null;
 
   public showComponent<ComponentT extends object = any>(
@@ -93,13 +93,13 @@ export class FlexiModalsService<
 
   public showComponent<ComponentT extends object = any>(
     component: Type<ComponentT>,
-    takeUntilOrOptions?: Observable<any> | IFmModalWithComponentOptions<ComponentT>
+    openUntilOrOptions?: Observable<any> | IFmModalWithComponentOptions<ComponentT>
   ): FmModalWithComponent<ComponentT> | null {
 
     const content$ = new BehaviorSubject<ComponentRef<ComponentT> | null>(null);
     const modal = new FmModalWithComponent(
       this, this._themes, component, content$,
-      this._normalizeOptions(takeUntilOrOptions)
+      this._normalizeOptions(openUntilOrOptions)
     );
 
     return this._showModal(modal);
@@ -111,7 +111,7 @@ export class FlexiModalsService<
 
   public showTemplate<ContextT extends Record<string, unknown> = {}>(
     template: TemplateRef<ContextT>,
-    takeUntil$: Observable<unknown>,
+    openUntil$: Observable<unknown>,
   ): FmModalWithTemplate<ContextT> | null;
 
   public showTemplate<ContextT extends Record<string, unknown> = {}>(
@@ -121,13 +121,13 @@ export class FlexiModalsService<
 
   public showTemplate<ContextT extends Record<string, unknown> = {}>(
     template: TemplateRef<ContextT>,
-    takeUntilOrOptions?: Observable<any> | IFmModalWithTemplateOptions<ContextT>,
+    openUntilOrOptions?: Observable<any> | IFmModalWithTemplateOptions<ContextT>,
   ): FmModalWithTemplate<ContextT> | null {
 
     const content$ = new BehaviorSubject<EmbeddedViewRef<ContextT> | null>(null);
     const modal = new FmModalWithTemplate(
       this, this._themes, template, content$,
-      this._normalizeOptions(takeUntilOrOptions)
+      this._normalizeOptions(openUntilOrOptions)
     );
 
     return this._showModal(modal);
@@ -223,14 +223,14 @@ export class FlexiModalsService<
   // Private implementation
 
   private _normalizeOptions<ModalOptionsT extends Partial<IFmModalOptions<any>>>(
-    takeUntilOrOptions: ModalOptionsT | Observable<unknown> | undefined
+    openUntilOrOptions: ModalOptionsT | Observable<unknown> | undefined
   ): ModalOptionsT {
     return <ModalOptionsT>{
       ...fmModalOptionsDefault,
       ...(this._defaultOptions || {}),
-      ...(isPlainObject(takeUntilOrOptions)
-        ? (normalizeOptions(<ModalOptionsT>takeUntilOrOptions) || {})
-        : { openUntil: takeUntilOrOptions }
+      ...(isPlainObject(openUntilOrOptions)
+        ? (normalizeOptions(<ModalOptionsT>openUntilOrOptions) || {})
+        : { openUntil: openUntilOrOptions }
       )
     };
   }

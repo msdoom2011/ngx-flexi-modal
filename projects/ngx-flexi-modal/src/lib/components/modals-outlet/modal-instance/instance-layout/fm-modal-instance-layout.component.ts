@@ -79,8 +79,8 @@ export class FmModalInstanceLayoutComponent implements OnInit, OnDestroy {
   // Queries
   private readonly _bodyRef = viewChild.required<ElementRef<HTMLDivElement>>('body');
   private readonly _bodyWrapperRef = viewChild.required<ElementRef<HTMLDivElement>>('bodyWrapper');
-  private readonly _headerWrapperRef = viewChild.required<ElementRef<HTMLDivElement>>('headerWrapper');
-  private readonly _headerActionsRef = viewChild.required<string, ElementRef<HTMLElement>>('headerActions', { read: ElementRef });
+  private readonly _headerWrapperRef = viewChild<ElementRef<HTMLDivElement>>('headerWrapper');
+  private readonly _headerActionsRef = viewChild<string, ElementRef<HTMLElement>>('headerActions', { read: ElementRef });
   private readonly _headerContentRef = contentChild(FmModalInstanceHeaderComponent);
 
   // Signals
@@ -105,9 +105,18 @@ export class FmModalInstanceLayoutComponent implements OnInit, OnDestroy {
   });
 
   public readonly headerVisible = computed<boolean>(() => {
-    return !(
-      !this._headerContentRef()
-      && this.modal().theme().styling.headerActionsPosition === 'outside'
+    const config = this.modal().config();
+
+    return !!(
+      config.title
+      || config.headerTpl
+      || (
+        this.modal().theme().styling.headerActionsPosition !== 'outside'
+        && (
+          config.closable
+          || config.maximizable
+        )
+      )
     );
   });
 
@@ -239,10 +248,12 @@ export class FmModalInstanceLayoutComponent implements OnInit, OnDestroy {
     const bodyWrapperStyles = window.getComputedStyle(bodyWrapperElement);
 
     if (!this.modal().maximized()) {
-      const headerWrapperBox = this._headerWrapperRef().nativeElement.getBoundingClientRect();
+      const headerHeight = this._headerWrapperRef()
+        ? this._headerWrapperRef()?.nativeElement.getBoundingClientRect().height
+        : 0;
 
       return {
-        headerHeight: headerWrapperBox.height + 'px',
+        headerHeight: headerHeight + 'px',
         alignItems: (
           bodyBox.height
           + parseInt(bodyWrapperStyles.paddingTop)
@@ -291,7 +302,8 @@ export class FmModalInstanceLayoutComponent implements OnInit, OnDestroy {
 
   private _runHeaderActionsAnimation(): void {
     if (
-      !this._maximizedChanged()
+      !this._headerActionsRef()
+      || !this._maximizedChanged()
       || this.modal().maximized()
       || this.modal().theme().styling.headerActionsPosition !== 'outside'
     ) {
@@ -302,7 +314,7 @@ export class FmModalInstanceLayoutComponent implements OnInit, OnDestroy {
       style({ opacity: 0, display: 'flex' }),
       animate('400ms ease-in-out', style({ opacity: 1 })),
     ]);
-    const player = factory.create(this._headerActionsRef().nativeElement);
+    const player = factory.create(this._headerActionsRef()?.nativeElement);
 
     player.play();
     player.onDone(() => {

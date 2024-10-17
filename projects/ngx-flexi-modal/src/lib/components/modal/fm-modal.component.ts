@@ -38,6 +38,7 @@ import {
   TFmModalOpeningAnimation,
   TFmModalPosition,
   TFmModalScroll,
+  TFmModalSpinnerType,
   TFmModalWidth,
 } from '../../services/modals/flexi-modals.definitions';
 
@@ -66,7 +67,7 @@ export class FmModalComponent implements DoCheck, OnChanges, AfterContentInit, O
   public readonly _width = input<TFmModalWidth | undefined>(undefined, { alias: 'width' });
   public readonly _height = input<TFmModalHeight | undefined>(undefined, { alias: 'height' });
   public readonly _scroll = input<TFmModalScroll | undefined>(undefined, { alias: 'scroll' });
-  public readonly _rounding = input<number | boolean | undefined>(undefined, { alias: 'rounding' });
+  public readonly _spinner = input<TFmModalSpinnerType | undefined>(undefined, { alias: 'spinner' });
   public readonly _closable = input<boolean | undefined>(undefined, { alias: 'closable' });
   public readonly _maximizable = input<boolean | undefined>(undefined, { alias: 'maximizable' });
   public readonly _data = input<Record<string, unknown> | undefined>(undefined, { alias: 'data' });
@@ -198,7 +199,7 @@ export class FmModalComponent implements DoCheck, OnChanges, AfterContentInit, O
   public ngOnChanges(changes: SimpleChanges): void {
     const { _opened } = changes;
 
-    if (!_opened?.currentValue) {
+    if (_opened && !_opened.currentValue) {
       return;
 
     } else if (!this.modal()) {
@@ -219,6 +220,7 @@ export class FmModalComponent implements DoCheck, OnChanges, AfterContentInit, O
       { _width: 'width' },
       { _height: 'height' },
       { _scroll: 'scroll' },
+      { _spinner: 'spinner' },
       { _closable: 'closable' },
       { _maximizable: 'maximizable' },
       { _data: 'data' },
@@ -267,6 +269,7 @@ export class FmModalComponent implements DoCheck, OnChanges, AfterContentInit, O
       width: this._width(),
       height: this._height(),
       scroll: this._scroll(),
+      spinner: this._spinner(),
       maximized: this._maximized(),
       closable: this._closable(),
       maximizable: this._maximizable(),
