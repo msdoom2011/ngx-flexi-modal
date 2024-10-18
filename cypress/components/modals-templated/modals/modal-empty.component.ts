@@ -15,6 +15,7 @@ import {
       [closable]="closable()"
       [maximizable]="maximizable()"
       [title]="title()"
+      [data]="data()"
       #modal
     >
       <cy-simple-text *fmModalBody />
