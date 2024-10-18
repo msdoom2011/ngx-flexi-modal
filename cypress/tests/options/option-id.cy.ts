@@ -4,24 +4,24 @@ import { SimpleTextComponent } from '../../components/modal-content/simple-text/
 
 describe('Option "id"', () => {
 
-  it('should be set a random id if custom is not specified for service created modal', () => {
+  it('should be set a random id if custom is not specified (service)', () => {
     initializeServiceModals();
     showComponent(SimpleTextComponent).then(checkId.bind(undefined, undefined));
   });
 
-  it('should be set a random id if custom is not specified for template created modal', () => {
+  it('should be set a random id if custom is not specified (templated)', () => {
     initializeTemplateModals(ModalSimpleTextComponent, { inputs: { opened: true }});
     cy.get('@modal').then(checkId.bind(undefined, undefined));
   });
 
-  it('should be set to the modal instance element created by service', () => {
+  it('should be set to the modal instance element (service)', () => {
     const id = 'custom-modal-id';
 
     initializeServiceModals();
     showComponent(SimpleTextComponent, { id }).then(checkId.bind(undefined, id));
   });
 
-  it('should be set to the modal instance element defined in the template', () => {
+  it('should be set to the modal instance element (templated)', () => {
     const id = 'custom-modal-id';
 
     initializeTemplateModals(ModalSimpleTextComponent, { inputs: { id, opened: true }});

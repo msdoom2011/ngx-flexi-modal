@@ -76,7 +76,7 @@ export abstract class FmModalInstance<ModalT extends FmModal> implements OnInit,
     return [
       'fm-modal-instance',
       ...(this.modal().config().classes || []),
-      ...(this.modal().config().theme
+      ...(this._themes.isThemeExist(<string>this.modal().config().theme)
         ? [ this._themes.getThemeClass(this.modal().config().theme || '') ]
         : []
       ),
@@ -224,6 +224,15 @@ export abstract class FmModalInstance<ModalT extends FmModal> implements OnInit,
 
     if (indexToFocus < 0) {
       $event.preventDefault();
+
+      for (const element of elements) {
+        if (element.hasAttribute('autofocus')) {
+          element.focus();
+
+          return;
+        }
+      }
+
       elements[0].focus();
 
       return;

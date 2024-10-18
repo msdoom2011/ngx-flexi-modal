@@ -36,6 +36,7 @@ export abstract class ModalWithTemplate {
   public readonly spinner = input<TFmModalSpinnerType | undefined>(undefined);
   public readonly closable = input<boolean | undefined>(undefined);
   public readonly maximizable = input<boolean | undefined>(undefined);
+  public readonly theme = input<string | undefined>(undefined);
   public readonly data = input<any>(undefined);
 
   // Outputs

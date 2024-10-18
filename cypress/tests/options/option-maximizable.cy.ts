@@ -5,7 +5,7 @@ import { withDefaultOptions } from '../../../projects/ngx-flexi-modal/src/lib/fl
 
 describe('Option "maximizable"', () => {
 
-  it('should be empty by default in the service-created modal', () => {
+  it('should be empty by default (service)', () => {
     initializeServiceModals();
     showComponent(SimpleTextComponent).then((modal: any) => cy.wrap(modal).as('modal'));
     checkMaximizeBtn(false);
@@ -14,7 +14,7 @@ describe('Option "maximizable"', () => {
     checkMaximizeBtn(true);
   });
 
-  it('should be empty by default in the template-defined modal', () => {
+  it('should be empty by default (templated)', () => {
     initializeTemplateModals(ModalEmptyComponent, { inputs: { opened: true }});
     checkMaximizeBtn(false);
 
@@ -22,7 +22,7 @@ describe('Option "maximizable"', () => {
     checkMaximizeBtn(true);
   });
 
-  it('should be displayed according to the default options in service-created modal', () => {
+  it('should be displayed according to the default options (service)', () => {
     const maximizable = true;
 
     initializeServiceModals(withDefaultOptions({ maximizable }));
@@ -30,14 +30,14 @@ describe('Option "maximizable"', () => {
     checkMaximizeBtn(maximizable);
   });
 
-  it('should be displayed according to the default options in template-defined modal', () => {
+  it('should be displayed according to the default options (templated)', () => {
     const maximizable = true;
 
     initializeTemplateModals(ModalEmptyComponent, { inputs: { opened: true }}, withDefaultOptions({ maximizable }));
     checkMaximizeBtn(maximizable);
   });
 
-  it('should be configurable in runtime in service-created modal', () => {
+  it('should be configurable in runtime (service)', () => {
     const firstValue = true;
     const secondValue = false;
 
@@ -52,7 +52,7 @@ describe('Option "maximizable"', () => {
     checkMaximizeBtn(secondValue);
   });
 
-  it('should be configurable in runtime in template-defined modal', () => {
+  it('should be configurable in runtime (templated)', () => {
     const firstValue = true;
     const secondValue = false;
 

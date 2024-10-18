@@ -14,7 +14,7 @@ import {
   OnChanges,
   OnDestroy,
   output,
-  signal,
+  signal, SimpleChange,
   SimpleChanges,
   TemplateRef,
 } from '@angular/core';
@@ -70,6 +70,7 @@ export class FmModalComponent implements DoCheck, OnChanges, AfterContentInit, O
   public readonly _spinner = input<TFmModalSpinnerType | undefined>(undefined, { alias: 'spinner' });
   public readonly _closable = input<boolean | undefined>(undefined, { alias: 'closable' });
   public readonly _maximizable = input<boolean | undefined>(undefined, { alias: 'maximizable' });
+  public readonly _theme = input<string | undefined>(undefined, { alias: 'theme' });
   public readonly _data = input<Record<string, unknown> | undefined>(undefined, { alias: 'data' });
 
   // Outputs
@@ -199,45 +200,9 @@ export class FmModalComponent implements DoCheck, OnChanges, AfterContentInit, O
   public ngOnChanges(changes: SimpleChanges): void {
     const { _opened } = changes;
 
-    if (_opened && !_opened.currentValue) {
-      return;
-
-    } else if (!this.modal()) {
-      this.open();
-
-      return;
-    }
-
-    const options: IFmModalWithTemplateOptions<any> = {};
-    const optionNames: Array<
-      keyof IFmModalWithTemplateConfig<any>
-      | { [inputName: string]: keyof IFmModalWithTemplateConfig<any> }
-    > = [
-      { _maximized: 'maximized' },
-      { _title: 'title' },
-      { _animation: 'animation' },
-      { _position: 'position' },
-      { _width: 'width' },
-      { _height: 'height' },
-      { _scroll: 'scroll' },
-      { _spinner: 'spinner' },
-      { _closable: 'closable' },
-      { _maximizable: 'maximizable' },
-      { _data: 'data' },
-    ];
-
-    for (const item of optionNames) {
-      const inputName = typeof item === 'object' ? Object.keys(item)[0] : item;
-      const optionName = typeof item === 'object' ? item[inputName] : item;
-
-      if (changes[inputName]) {
-        options[optionName] = changes[inputName].currentValue;
-      }
-    }
-
-    if (Object.keys(options).length > 0) {
-      this.service.updateModal(this.id(), options);
-    }
+    _opened
+      ? this._handleOpenedChange(_opened)
+      : this._handleOptionsChange(changes);
   }
 
   public ngAfterContentInit(): void {
@@ -278,6 +243,7 @@ export class FmModalComponent implements DoCheck, OnChanges, AfterContentInit, O
       footerTpl: this._footerTpl(),
       actionsTpl: this._actionsTpl(),
       classes: this._classes(),
+      theme: this._theme(),
       data: this._data(),
     });
 
@@ -291,9 +257,7 @@ export class FmModalComponent implements DoCheck, OnChanges, AfterContentInit, O
   }
 
   public close(): void {
-    if (this._opened()) {
-      this.service.closeModal(this.id());
-    }
+    this.service.closeModal(this.id());
   }
 
   public maximize(): void {
@@ -314,5 +278,56 @@ export class FmModalComponent implements DoCheck, OnChanges, AfterContentInit, O
 
   public stopLoading(animation: boolean = true): void {
     this.modal()?.stopLoading(animation);
+  }
+
+
+  // Private methods
+
+  private _handleOpenedChange(opened: SimpleChange): void {
+    if (!opened) {
+      return;
+    }
+
+    if (!opened.currentValue) {
+      if (this.modal()) {
+        this.close();
+      }
+    } else if (!this.modal()) {
+      this.open();
+    }
+  }
+
+  private _handleOptionsChange(changes: SimpleChanges): void {
+    const options: IFmModalWithTemplateOptions = {};
+    const optionNames: Array<
+      keyof IFmModalWithTemplateConfig
+      | { [inputName: string]: keyof IFmModalWithTemplateConfig }
+    > = [
+      { _maximized: 'maximized' },
+      { _title: 'title' },
+      { _animation: 'animation' },
+      { _position: 'position' },
+      { _width: 'width' },
+      { _height: 'height' },
+      { _scroll: 'scroll' },
+      { _spinner: 'spinner' },
+      { _closable: 'closable' },
+      { _maximizable: 'maximizable' },
+      { _theme: 'theme' },
+      { _data: 'data' },
+    ];
+
+    for (const item of optionNames) {
+      const inputName = typeof item === 'object' ? Object.keys(item)[0] : item;
+      const optionName = typeof item === 'object' ? item[inputName] : item;
+
+      if (changes[inputName]) {
+        options[optionName] = changes[inputName].currentValue;
+      }
+    }
+
+    if (Object.keys(options).length > 0) {
+      this.service.updateModal(this.id(), options);
+    }
   }
 }

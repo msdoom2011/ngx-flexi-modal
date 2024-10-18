@@ -122,14 +122,14 @@ export type IFmModalWithComponentOptions<
 // Template Modals
 
 export interface IFmModalWithTemplateConfig<
-  ContextT extends Record<string, unknown>
+  ContextT extends Record<string, unknown> = Record<string, unknown>
 >
 extends IFmModalConfig<FmModalWithTemplate<ContextT>> {
   context: ContextT | null,
 }
 
 export type IFmModalWithTemplateOptions<
-  ContextT extends Record<string, unknown>
+  ContextT extends Record<string, unknown> = Record<string, unknown>
 > = TModalOptions<IFmModalWithTemplateConfig<ContextT>>;
 
 

@@ -5,7 +5,7 @@ import { withDefaultOptions } from '../../../projects/ngx-flexi-modal/src/lib/fl
 
 describe('Option "closable"', () => {
 
-  it('should be empty by default in the service-created modal', () => {
+  it('should be empty by default (service)', () => {
     initializeServiceModals();
     showComponent(SimpleTextComponent).then((modal: any) => cy.wrap(modal).as('modal'));
     checkCloseBtn(true);
@@ -16,7 +16,7 @@ describe('Option "closable"', () => {
     cy.getCy('modal-header-actions').should('not.exist');
   });
 
-  it('should be empty by default in the template-defined modal', () => {
+  it('should be empty by default (templated)', () => {
     initializeTemplateModals(ModalEmptyComponent, { inputs: { opened: true }});
     checkCloseBtn(true);
 
@@ -26,7 +26,7 @@ describe('Option "closable"', () => {
     cy.getCy('modal-header-actions').should('not.exist');
   });
 
-  it('should be displayed according to the default options in service-created modal', () => {
+  it('should be displayed according to the default options (service)', () => {
     const closable = false;
 
     initializeServiceModals(withDefaultOptions({ closable }));
@@ -34,14 +34,14 @@ describe('Option "closable"', () => {
     checkCloseBtn(closable);
   });
 
-  it('should be displayed according to the default options in template-defined modal', () => {
+  it('should be displayed according to the default options (templated)', () => {
     const closable = false;
 
     initializeTemplateModals(ModalEmptyComponent, { inputs: { opened: true }}, withDefaultOptions({ closable }));
     checkCloseBtn(closable);
   });
 
-  it('should be configurable in runtime in service-created modal', () => {
+  it('should be configurable in runtime (service)', () => {
     const firstValue = false;
     const secondValue = true;
 
@@ -61,7 +61,7 @@ describe('Option "closable"', () => {
     cy.getCy('modal').should('not.exist');
   });
 
-  it('should be configurable in runtime in template-defined modal', () => {
+  it('should be configurable in runtime (templated)', () => {
     const firstValue = false;
     const secondValue = true;
 

@@ -5,7 +5,7 @@ import { withDefaultOptions } from '../../../projects/ngx-flexi-modal/src/lib/fl
 
 describe('Option "data"', () => {
 
-  it('should be empty object by default for the service-created modal', () => {
+  it('should be empty object by default (service)', () => {
     const data = { test: true };
 
     initializeServiceModals();
@@ -22,7 +22,7 @@ describe('Option "data"', () => {
     });
   });
 
-  it('should be empty object by default for the template-defined modal', () => {
+  it('should be empty object by default (templated)', () => {
     const data = { test: true };
 
     initializeTemplateModals(ModalEmptyComponent, { inputs: { opened: true }});
@@ -41,7 +41,7 @@ describe('Option "data"', () => {
     });
   });
 
-  it('should have a specified default value for the service-created modal', () => {
+  it('should have a specified default value (service)', () => {
     const data = { test: true };
 
     initializeServiceModals(withDefaultOptions({ data }));
@@ -53,7 +53,7 @@ describe('Option "data"', () => {
     });
   });
 
-  it('should have a specified default value for the template-defined modal', () => {
+  it('should have a specified default value (templated)', () => {
     const data = { test: true };
 
     initializeTemplateModals(ModalEmptyComponent, { inputs: { opened: true }}, withDefaultOptions({ data }));

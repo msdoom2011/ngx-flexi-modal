@@ -14,22 +14,22 @@ import {
 describe('Option "spinner"', () => {
   const spinners = ['', 'round-dotted', 'round-dashed', 'linear-dotted', 'linear-dashed'];
 
-  it('should be customized via default options for service-created modal', () => {
+  it('should be customized via default options (service)', () => {
     checkServiceModal('linear-dotted', withDefaultOptions({ spinner: 'linear-dotted' }));
   });
 
-  it('should be customized via default options for template-defined modal', () => {
+  it('should be customized via default options (templated)', () => {
     checkTemplatedModal('linear-dotted', withDefaultOptions({ spinner: 'linear-dotted' }));
   });
 
   for(const spinner of spinners) {
     const spinnerType = !spinner ? fmModalOptionsDefault.spinner : spinner;
 
-    it(`should be set to the "${ spinner || 'default' }" for the service-created modal`, () => {
+    it(`should be set to the "${ spinner || 'default' }" (service)`, () => {
       checkServiceModal(<TFmModalSpinnerType>spinnerType);
     });
 
-    it(`should be set to the "${ spinner || 'default' }" for the template-defined modal`, () => {
+    it(`should be set to the "${ spinner || 'default' }" (templated)`, () => {
       checkTemplatedModal(<TFmModalSpinnerType>spinnerType);
     });
   }

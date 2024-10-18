@@ -87,7 +87,7 @@ export class FlexiModalsThemeService {
   }
 
   public isThemeExist(themeName: string): boolean {
-    return themeName in this._themes();
+    return !!themeName && (themeName in this._themes());
   }
 
   public getTheme(themeName: string): IFmModalTheme | undefined {

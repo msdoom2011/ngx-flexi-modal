@@ -14,8 +14,10 @@ import {
       [opened]="opened()"
       [closable]="closable()"
       [maximizable]="maximizable()"
+      [position]="position()"
       [title]="title()"
       [data]="data()"
+      [theme]="theme()"
       #modal
     >
       <cy-simple-text *fmModalBody />

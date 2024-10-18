@@ -5,18 +5,18 @@ import { withDefaultOptions } from '../../../projects/ngx-flexi-modal/src/lib/fl
 
 describe('Option "title"', () => {
 
-  it('should be empty by default in the service-created modal', () => {
+  it('should be empty by default (service)', () => {
     initializeServiceModals();
     showComponent(SimpleTextComponent).then((modal: any) => cy.wrap(modal).as('modal'));
     checkTitle(undefined);
   });
 
-  it('should be empty by default in the template-defined modal', () => {
+  it('should be empty by default (templated)', () => {
     initializeTemplateModals(ModalEmptyComponent, { inputs: { opened: true }});
     checkTitle(undefined);
   });
 
-  it('should be displayed according to the default options in service-created modal', () => {
+  it('should be displayed according to the default options (service)', () => {
     const title = 'Custom Title';
 
     initializeServiceModals(withDefaultOptions({ title }));
@@ -24,14 +24,14 @@ describe('Option "title"', () => {
     checkTitle(title);
   });
 
-  it('should be displayed according to the default options in template-defined modal', () => {
+  it('should be displayed according to the default options (templated)', () => {
     const title = 'Custom Title';
 
     initializeTemplateModals(ModalEmptyComponent, { inputs: { opened: true }}, withDefaultOptions({ title }));
     checkTitle(title);
   });
 
-  it('should be configurable in runtime in service-created modal', () => {
+  it('should be configurable in runtime (service)', () => {
     const firstValue = 'Modal Title';
     const secondValue = 'Updated Modal Title with a lot of unnecessary words just to exceed the available header space';
 
@@ -47,7 +47,7 @@ describe('Option "title"', () => {
       .then($title => expect($title.outerWidth()).to.lessThan(400));
   });
 
-  it('should be configurable in runtime in template-defined modal', () => {
+  it('should be configurable in runtime (templated)', () => {
     const firstValue = 'Modal Title';
     const secondValue = 'Updated Modal Title with a lot of unnecessary words just to exceed the available header space';
 

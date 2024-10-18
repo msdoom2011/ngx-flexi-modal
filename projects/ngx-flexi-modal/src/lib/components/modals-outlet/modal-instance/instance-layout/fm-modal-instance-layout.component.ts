@@ -53,6 +53,7 @@ import {
     FmHeaderActionsComponent,
   ],
   host: {
+    'data-cy': 'modal-layout',
     'class': 'fm-modal--viewport',
     '[class.scrollable]': 'modal().config().scroll === "modal"',
     '[class.maximized]': 'modal().maximized()',

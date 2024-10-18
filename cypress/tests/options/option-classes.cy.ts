@@ -19,7 +19,7 @@ import {
 
 describe('Option "classes"', () => {
 
-  it('should set classes to the service-created modal from default options', () => {
+  it('should set classes to the modal from default options (service)', () => {
     const classes1 = [ 'custom-class-1', 'custom-class-2' ];
     const classes2 =  [ 'custom-class-3' ];
 
@@ -28,7 +28,7 @@ describe('Option "classes"', () => {
     basicClassesCheck(classes1, classes2);
   });
 
-  it('should set classes to the template-defined modal from default options', () => {
+  it('should set classes to the modal from default options (templated)', () => {
     const classes1 = ['custom-class-1', 'custom-class-2'];
     const classes2 =  [ 'custom-class-3' ];
 
@@ -36,7 +36,7 @@ describe('Option "classes"', () => {
     basicClassesCheck(classes1, classes2);
   });
 
-  it.only('should transfer classes from template-defined modal to modal instance element', () => {
+  it('should transfer classes from template-defined modal to modal instance element', () => {
     cy.mount(ModalWithStaticClassesComponent, {
       imports: [ ModalWithStaticClassesComponent ],
       providers: [
