@@ -1,18 +1,18 @@
-import {EnvironmentProviders, makeEnvironmentProviders, Provider} from '@angular/core';
+import { EnvironmentProviders, makeEnvironmentProviders, Provider } from '@angular/core';
 
-import {IFmExtension, IFmModalOptions} from './services/modals/flexi-modals.definitions';
-import {fmModalBasicExtension} from './extensions/basic/fm-modal-basic.extension';
+import { IFmExtension, IFmModalOptions, TFmWidthPreset } from './services/modals/flexi-modals.definitions';
+import { fmModalBasicExtension } from './extensions/basic/fm-modal-basic.extension';
 import {
-  IFmModalStylingOptions,
   IFmModalColorScheme,
-  IFmModalThemeOptions
+  IFmModalStylingOptions,
+  IFmModalThemeOptions,
 } from './services/theme/flexi-modals-theme.definitions';
 import {
-  FLEXI_MODAL_STYLING_OPTIONS,
   FLEXI_MODAL_COLOR_SCHEME,
   FLEXI_MODAL_DEFAULT_OPTIONS,
   FLEXI_MODAL_EXTENSION,
-  FLEXI_MODAL_THEME
+  FLEXI_MODAL_STYLING_OPTIONS,
+  FLEXI_MODAL_THEME, FLEXI_MODAL_WIDTH_PRESETS,
 } from './flexi-modals.tokens';
 
 /**
@@ -57,6 +57,12 @@ export function withThemes(themes: Array<IFmModalThemeOptions>): Array<Provider>
     ...themes.map(themeConfig => (
       { provide: FLEXI_MODAL_THEME, useValue: themeConfig, multi: true }
     )),
+  ];
+}
+
+export function withWidthPresets(presets: Record<TFmWidthPreset, number>): Array<Provider> {
+  return [
+    { provide: FLEXI_MODAL_WIDTH_PRESETS, useValue: presets },
   ];
 }
 

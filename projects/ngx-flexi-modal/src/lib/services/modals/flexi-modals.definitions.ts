@@ -11,10 +11,10 @@ import {FmModalAction} from '../../models/actions/fm-modal-action';
 import {FmModalUpdateEvent} from './events/fm-modal-update.event';
 import {FmModalCloseEvent} from './events/fm-modal-close.event';
 import {FmModalOpenEvent} from './events/fm-modal-open.event';
-import {fmModalWidthPresets} from './flexi-modals.constants';
 import {FmModal} from '../../models/fm-modal';
 
-export type TFmModalWidth = 'fit-content' | 'fit-window' | (keyof typeof fmModalWidthPresets) | number;
+export type TFmWidthPreset = 'tiny' | 'small' | 'medium' | 'big' | 'large';
+export type TFmModalWidth = 'fit-content' | 'fit-window' | TFmWidthPreset | number;
 export type TFmModalHeight = 'fit-content' | number;
 export type TFmModalScroll = 'modal' | 'content';
 export type TFmModalButtonPosition = 'left' | 'center' | 'right';

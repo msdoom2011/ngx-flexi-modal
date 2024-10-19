@@ -18,7 +18,11 @@ import { NgComponentOutlet, NgTemplateOutlet } from '@angular/common';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { filter, skip, Subject, takeUntil } from 'rxjs';
 
-import { TFmModalOpeningAnimation } from '../../../../services/modals/flexi-modals.definitions';
+import {
+  TFmModalOpeningAnimation,
+  TFmModalWidth,
+  TFmWidthPreset,
+} from '../../../../services/modals/flexi-modals.definitions';
 import { FmModalInstanceFooterComponent } from './footer/fm-modal-instance-footer.component';
 import { FmModalInstanceHeaderComponent } from './header/fm-modal-instance-header.component';
 import { FmModalInstanceLoaderComponent } from './loader/fm-modal-instance-loader.component';
@@ -36,6 +40,7 @@ import {
   getLoaderAnimation,
   getMaximizeAnimation,
 } from './fm-modal-instance-layout.animations';
+import { FLEXI_MODAL_WIDTH_PRESETS } from '../../../../flexi-modals.tokens';
 
 @Component({
   selector: 'fm-modal-instance-layout',
@@ -75,6 +80,7 @@ export class FmModalInstanceLayoutComponent implements OnInit, OnDestroy {
   private readonly _elementRef = inject(ElementRef<HTMLElement>);
   private readonly _animationBuilder = inject(AnimationBuilder);
   private readonly _instance = inject<FmModalInstance<FmModal>>(FM_MODAL_INSTANCE);
+  private readonly _widthPresets = inject<Record<TFmWidthPreset, number> | undefined>(FLEXI_MODAL_WIDTH_PRESETS, { optional: true });
 
   // Queries
   private readonly _bodyRef = viewChild.required<ElementRef<HTMLDivElement>>('body');
@@ -151,11 +157,11 @@ export class FmModalInstanceLayoutComponent implements OnInit, OnDestroy {
     }
 
     const styles: Partial<CSSStyleDeclaration> = {
-      minWidth: fmModalWidthPresets['tiny'],
+      minWidth: `${this._getPresetWidth('tiny')}px`,
     };
 
-    if (widthOpt in fmModalWidthPresets) {
-      styles.maxWidth = `min(${fmModalWidthPresets[<keyof typeof fmModalWidthPresets>widthOpt]}, 100%)`;
+    if (this._isWidthPreset(widthOpt)) {
+      styles.maxWidth = `min(${this._getPresetWidth(<TFmWidthPreset>widthOpt)}px, 100%)`;
       styles.width = '100%';
 
     } else if (typeof widthOpt === 'number') {
@@ -276,6 +282,18 @@ export class FmModalInstanceLayoutComponent implements OnInit, OnDestroy {
 
 
   // Private methods
+
+  private _getWidthPresets(): Record<TFmWidthPreset, number> {
+    return this._widthPresets || fmModalWidthPresets;
+  }
+
+  private _isWidthPreset(preset: TFmModalWidth): boolean {
+    return typeof preset === 'string' && preset in this._getWidthPresets();
+  }
+
+  private _getPresetWidth(preset: TFmWidthPreset): number {
+    return this._getWidthPresets()[preset];
+  }
 
   private _runOpeningAnimation(animationName: TFmModalOpeningAnimation): void {
     const animationConfig = fmModalOpeningAnimations[animationName];

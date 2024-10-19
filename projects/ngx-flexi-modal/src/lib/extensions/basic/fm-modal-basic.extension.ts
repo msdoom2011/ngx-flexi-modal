@@ -10,7 +10,7 @@ export const fmModalBasicExtension: IFmExtension<IFmModalBasicExtensionOptionsBy
     component: FmModalBasicComponent,
     options: {
       title: 'Error',
-      width: 'small',
+      width: 'tiny',
       inputs: {
         icon: 'error'
       },
@@ -24,7 +24,7 @@ export const fmModalBasicExtension: IFmExtension<IFmModalBasicExtensionOptionsBy
     component: FmModalBasicComponent,
     options: {
       title: 'Warning',
-      width: 'small',
+      width: 'tiny',
       inputs: {
         icon: 'warning'
       },
@@ -38,7 +38,7 @@ export const fmModalBasicExtension: IFmExtension<IFmModalBasicExtensionOptionsBy
     component: FmModalBasicComponent,
     options: {
       title: 'Success',
-      width: 'small',
+      width: 'tiny',
       inputs: {
         icon: 'success'
       },
@@ -52,7 +52,7 @@ export const fmModalBasicExtension: IFmExtension<IFmModalBasicExtensionOptionsBy
     component: FmModalBasicComponent,
     options: {
       title: 'Information',
-      width: 'small',
+      width: 'tiny',
       inputs: {
         icon: 'info'
       },
@@ -67,7 +67,7 @@ export const fmModalBasicExtension: IFmExtension<IFmModalBasicExtensionOptionsBy
     options: {
       title: 'Confirmation',
       closable: false,
-      width: 'small',
+      width: 'tiny',
       inputs: {
         icon: 'confirm'
       },

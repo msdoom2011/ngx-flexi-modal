@@ -1,6 +1,6 @@
 import {InjectionToken} from '@angular/core';
 
-import {IFmExtension, IFmModalOptions} from './services/modals/flexi-modals.definitions';
+import { IFmExtension, IFmModalOptions, TFmWidthPreset } from './services/modals/flexi-modals.definitions';
 import {
   IFmModalColorScheme,
   IFmModalStylingOptions,
@@ -25,4 +25,8 @@ export const FLEXI_MODAL_STYLING_OPTIONS = new InjectionToken<IFmModalStylingOpt
 
 export const FLEXI_MODAL_THEME = new InjectionToken<Array<IFmModalThemeOptions>>(
   'Flexi modal theme',
+);
+
+export const FLEXI_MODAL_WIDTH_PRESETS = new InjectionToken<Record<TFmWidthPreset, number>>(
+  'Flexi modal width presets',
 );

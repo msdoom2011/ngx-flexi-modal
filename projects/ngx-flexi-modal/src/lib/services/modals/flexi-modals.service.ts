@@ -1,35 +1,26 @@
-import {
-  ComponentRef,
-  computed,
-  EmbeddedViewRef,
-  inject,
-  Injectable,
-  signal,
-  TemplateRef,
-  Type
-} from '@angular/core';
-import {BehaviorSubject, filter, Observable, Subject} from 'rxjs';
+import { ComponentRef, computed, EmbeddedViewRef, inject, Injectable, signal, TemplateRef, Type } from '@angular/core';
+import { BehaviorSubject, filter, Observable, Subject } from 'rxjs';
 
-import {FLEXI_MODAL_DEFAULT_OPTIONS, FLEXI_MODAL_EXTENSION} from '../../flexi-modals.tokens';
-import {FmModalBeforeCloseEvent} from './events/fm-modal-before-close.event';
-import {FlexiModalsThemeService} from '../theme/flexi-modals-theme.service';
-import {FmModalBeforeOpenEvent} from './events/fm-modal-before-open.event';
-import {FmModalWithComponent} from '../../models/fm-modal-with-component';
-import {FmModalWithTemplate} from '../../models/fm-modal-with-template';
-import {isPlainObject, normalizeOptions} from '../../tools/utils';
-import {FmModalUpdateEvent} from './events/fm-modal-update.event';
-import {FmModalCloseEvent} from './events/fm-modal-close.event';
-import {fmModalOptionsDefault} from './flexi-modals.constants';
-import {FmModalOpenEvent} from './events/fm-modal-open.event';
-import {FmModal} from '../../models/fm-modal';
+import { FLEXI_MODAL_DEFAULT_OPTIONS, FLEXI_MODAL_EXTENSION } from '../../flexi-modals.tokens';
+import { FmModalBeforeCloseEvent } from './events/fm-modal-before-close.event';
+import { FlexiModalsThemeService } from '../theme/flexi-modals-theme.service';
+import { FmModalBeforeOpenEvent } from './events/fm-modal-before-open.event';
+import { FmModalWithComponent } from '../../models/fm-modal-with-component';
+import { FmModalWithTemplate } from '../../models/fm-modal-with-template';
+import { isPlainObject, normalizeOptions } from '../../tools/utils';
+import { FmModalUpdateEvent } from './events/fm-modal-update.event';
+import { FmModalCloseEvent } from './events/fm-modal-close.event';
+import { fmModalOptionsDefault } from './flexi-modals.constants';
+import { FmModalOpenEvent } from './events/fm-modal-open.event';
+import { FmModal } from '../../models/fm-modal';
 import {
-  IFmModalWithComponentOptions,
   IFmExtension,
-  IFmExtensionOptionsByModalTypes,
   IFmExtensionModalTypeConfig,
+  IFmExtensionOptionsByModalTypes,
   IFmModalOptions,
+  IFmModalWithComponentOptions,
   IFmModalWithTemplateOptions,
-  TFmModalEvent
+  TFmModalEvent,
 } from './flexi-modals.definitions';
 
 @Injectable({

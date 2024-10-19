@@ -21,6 +21,13 @@ export const appConfig: ApplicationConfig = {
         animation: 'zoom-out',
         spinner: 'round-dotted',
       }),
+      // withWidthPresets({
+      //   large: 1280,
+      //   big: 960,
+      //   medium: 768,
+      //   small: 568,
+      //   tiny: 700,
+      // }),
       // withStyling({
         // frameShadow: '20px 20px 20px 0 rgba(255, 0, 0, 0.3)',
         // frameBorder: false,
