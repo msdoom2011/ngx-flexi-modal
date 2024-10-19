@@ -1,4 +1,4 @@
-import { SimpleTextComponent } from '../components/modal-content/simple-text/simple-text.component';
+import { SimpleTextComponent } from '../components/modal-content/simple-text.component';
 import { initializeServiceModals, showComponent } from '../support/helpers/common-helpers';
 import {
   fmDefaultColorScheme,

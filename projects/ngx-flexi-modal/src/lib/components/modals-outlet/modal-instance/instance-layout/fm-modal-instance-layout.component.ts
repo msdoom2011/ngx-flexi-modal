@@ -4,7 +4,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  contentChild,
   effect,
   ElementRef,
   inject,
@@ -82,7 +81,6 @@ export class FmModalInstanceLayoutComponent implements OnInit, OnDestroy {
   private readonly _bodyWrapperRef = viewChild.required<ElementRef<HTMLDivElement>>('bodyWrapper');
   private readonly _headerWrapperRef = viewChild<ElementRef<HTMLDivElement>>('headerWrapper');
   private readonly _headerActionsRef = viewChild<string, ElementRef<HTMLElement>>('headerActions', { read: ElementRef });
-  private readonly _headerContentRef = contentChild(FmModalInstanceHeaderComponent);
 
   // Signals
   public readonly modal = this._instance.modal;
@@ -281,6 +279,9 @@ export class FmModalInstanceLayoutComponent implements OnInit, OnDestroy {
 
   private _runOpeningAnimation(animationName: TFmModalOpeningAnimation): void {
     const animationConfig = fmModalOpeningAnimations[animationName];
+
+    // required for tests
+    this._elementRef.nativeElement.dataset['animation'] = animationName;
 
     if (!animationConfig) {
       return;

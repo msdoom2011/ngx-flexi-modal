@@ -2,7 +2,7 @@ import { Provider } from '@angular/core';
 
 import { initializeServiceModals, initializeTemplateModals, showComponent } from '../../support/helpers/common-helpers';
 import { ModalSimpleTextComponent } from '../../components/modals-templated/modals/modal-simple-text.component';
-import { SimpleTextComponent } from '../../components/modal-content/simple-text/simple-text.component';
+import { SimpleTextComponent } from '../../components/modal-content/simple-text.component';
 import { withDefaultOptions } from '../../../projects/ngx-flexi-modal/src/lib/flexi-modals.providers';
 import {
   TFmModalSpinnerType

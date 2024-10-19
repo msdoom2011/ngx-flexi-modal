@@ -1,5 +1,5 @@
 import { initializeServiceModals, initializeTemplateModals, showComponent } from '../../support/helpers/common-helpers';
-import { SimpleTextComponent } from '../../components/modal-content/simple-text/simple-text.component';
+import { SimpleTextComponent } from '../../components/modal-content/simple-text.component';
 import { ModalEmptyComponent } from '../../components/modals-templated/modals/modal-empty.component';
 import { withDefaultOptions } from '../../../projects/ngx-flexi-modal/src/lib/flexi-modals.providers';
 
@@ -41,7 +41,7 @@ describe('Option "data"', () => {
     });
   });
 
-  it('should have a specified default value (service)', () => {
+  it('should has a specified default value (service)', () => {
     const data = { test: true };
 
     initializeServiceModals(withDefaultOptions({ data }));
@@ -53,7 +53,7 @@ describe('Option "data"', () => {
     });
   });
 
-  it('should have a specified default value (templated)', () => {
+  it('should has a specified default value (templated)', () => {
     const data = { test: true };
 
     initializeTemplateModals(ModalEmptyComponent, { inputs: { opened: true }}, withDefaultOptions({ data }));

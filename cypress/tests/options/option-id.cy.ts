@@ -1,6 +1,6 @@
 import { initializeServiceModals, initializeTemplateModals, showComponent } from '../../support/helpers/common-helpers';
 import { ModalSimpleTextComponent } from '../../components/modals-templated/modals/modal-simple-text.component';
-import { SimpleTextComponent } from '../../components/modal-content/simple-text/simple-text.component';
+import { SimpleTextComponent } from '../../components/modal-content/simple-text.component';
 
 describe('Option "id"', () => {
 

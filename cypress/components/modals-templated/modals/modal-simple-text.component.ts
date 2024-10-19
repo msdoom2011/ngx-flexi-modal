@@ -2,7 +2,7 @@ import { NgTemplateOutlet } from '@angular/common';
 import { Component } from '@angular/core';
 
 import { FmModalComponent } from '../../../../projects/ngx-flexi-modal/src/lib/components/modal/fm-modal.component';
-import { SimpleTextComponent } from '../../modal-content/simple-text/simple-text.component';
+import { SimpleTextComponent } from '../../modal-content/simple-text.component';
 import { ModalWithTemplate } from '../modal-with-template';
 import {
   FmModalBodyDirective
@@ -22,6 +22,7 @@ import {
       [opened]="opened()"
       [spinner]="spinner()"
       [maximizable]="maximizable()"
+      [animation]="animation()"
       [closable]="closable()"
       #modal
     >

@@ -20,7 +20,7 @@ export type TFmModalScroll = 'modal' | 'content';
 export type TFmModalButtonPosition = 'left' | 'center' | 'right';
 export type TFmModalPosition = 'top' | 'center';
 export type TFmModalOpeningAnimation = 'fade-in' | 'zoom-in' | 'zoom-out' | 'slide' | 'appear' | 'fall-down' | 'roll-out';
-  export type TFmModalSpinnerType = 'round-dotted' | 'round-dashed' | 'linear-dotted' | 'linear-dashed';
+export type TFmModalSpinnerType = 'round-dotted' | 'round-dashed' | 'linear-dotted' | 'linear-dashed';
 export type TFmModalEvent = (
   FmModalBeforeOpenEvent
   | FmModalOpenEvent

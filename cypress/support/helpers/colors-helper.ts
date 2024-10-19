@@ -1,7 +1,7 @@
 import { Provider } from '@angular/core';
 
 import { ModalSimpleTextComponent } from '../../components/modals-templated/modals/modal-simple-text.component';
-import { SimpleTextComponent } from '../../components/modal-content/simple-text/simple-text.component';
+import { SimpleTextComponent } from '../../components/modal-content/simple-text.component';
 import { initializeServiceModals, initializeTemplateModals, showComponent } from './common-helpers';
 import {
   fmDefaultColorScheme
