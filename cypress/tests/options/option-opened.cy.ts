@@ -48,14 +48,14 @@ describe('Option "opened"', () => {
     cy.getCy('modal').should('not.exist');
 
     switchModal(true);
-    checkOpened(true);
 
     cy.getCy('modal').should('be.visible');
+    checkOpened(true);
 
     switchModal(false);
-    checkOpened(false);
 
     cy.getCy('modal').should('not.exist');
+    checkOpened(false);
 
     cy.get('@fixture').then((fixture: any) => {
       fixture.component.opened.set(true);

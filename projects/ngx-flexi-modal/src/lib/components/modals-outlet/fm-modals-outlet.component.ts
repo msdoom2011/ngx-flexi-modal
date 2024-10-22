@@ -11,7 +11,7 @@ import {
   signal,
   TemplateRef,
 } from '@angular/core';
-import { NgComponentOutlet, NgForOf, NgTemplateOutlet } from '@angular/common';
+import { NgComponentOutlet, NgTemplateOutlet } from '@angular/common';
 import { Subject, takeUntil } from 'rxjs';
 
 import { FmModalBeforeCloseEvent } from '../../services/modals/events/fm-modal-before-close.event';
@@ -24,10 +24,10 @@ import { FmModalHeaderTplDirective } from './directives/fm-modal-header-tpl.dire
 import { FmModalFooterTplDirective } from './directives/fm-modal-footer-tpl.directive';
 import { FlexiModalsService } from '../../services/modals/flexi-modals.service';
 import {
-  FmModalInstanceWithComponentComponent
+  FmModalInstanceWithComponentComponent,
 } from './modal-instance/instance-types/fm-modal-instance-with-component.component';
 import {
-  FmModalInstanceWithTemplateComponent
+  FmModalInstanceWithTemplateComponent,
 } from './modal-instance/instance-types/fm-modal-instance-with-template.component';
 
 const MODAL_OPENED_CLASS = 'fm-modal-opened';
@@ -43,7 +43,6 @@ const MODAL_OPENED_CLASS = 'fm-modal-opened';
     NgComponentOutlet,
     FmModalInstanceWithComponentComponent,
     FmModalInstanceWithTemplateComponent,
-    NgForOf,
   ],
   host: {
     'data-cy': 'modals-outlet',

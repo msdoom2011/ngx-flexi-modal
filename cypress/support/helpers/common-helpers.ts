@@ -37,7 +37,7 @@ export function initializeTemplateModals<C extends ModalWithTemplate>(
   ...providers: Array<Provider | Array<Provider>>
 ): Chainable<MountResponse<ModalWithTemplateRootComponent<C>>> {
 
-  return cy.mount<ModalWithTemplateRootComponent<C>>(ModalWithTemplateRootComponent, {
+  const mountResult = cy.mount<ModalWithTemplateRootComponent<C>>(ModalWithTemplateRootComponent, {
     componentProperties: {
       component: modalComponent,
       ...componentProperties,
@@ -49,14 +49,21 @@ export function initializeTemplateModals<C extends ModalWithTemplate>(
       provideNoopAnimations(),
       provideFlexiModals(...providers),
     ],
-  }).then(mountResponse=> {
-    cy.wrap(mountResponse.fixture).as('fixture');
-    cy.wrap(mountResponse.component).as('component');
-    cy.wrap(mountResponse.component.modal).as('modalComponent');
-    cy.wrap(mountResponse.component.modal.modal()).as('modal');
+  })
+    .then(mountResponse=> {
+      cy.wrap(mountResponse.fixture).as('fixture');
+      cy.wrap(mountResponse.component).as('component');
 
-    return cy.wrap(mountResponse);
+      return cy.wrap(mountResponse);
+    });
+
+  cy.get('@component').its('modal').should('be.ok');
+  cy.get('@component').then((component: any) => {
+    cy.wrap(component.modal).as('modalComponent');
+    cy.wrap(component.modal.modal()).as('modal');
   });
+
+  return mountResult;
 }
 
 export function showComponent<T extends object>(

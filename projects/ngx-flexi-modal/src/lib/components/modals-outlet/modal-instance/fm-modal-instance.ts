@@ -186,9 +186,7 @@ export abstract class FmModalInstance<ModalT extends FmModal> implements OnInit,
           takeUntil(this._destroy$),
         )
         .subscribe(() => {
-          this._zone.run(() => {
-            this.modal().close();
-          });
+          this.modal().close();
         });
     });
   }
@@ -203,9 +201,7 @@ export abstract class FmModalInstance<ModalT extends FmModal> implements OnInit,
           takeUntil(this._destroy$),
         )
         .subscribe(($event: KeyboardEvent) => {
-          this._zone.run(() => {
-            this._onTabKeydownCallback($event);
-          });
+          this._onTabKeydownCallback($event);
         });
     });
   }

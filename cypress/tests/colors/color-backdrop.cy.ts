@@ -9,12 +9,12 @@ const propName = 'backdrop';
 describe(`Testing color "${propName}"`, () => {
   const configs: Array<IColorTestsConfig> = [
     {
-      label: (label: string) => label,
+      label: (label: string) => `${label} (service)`,
       initialize: initializeBackdrop,
       templated: false,
     },
     {
-      label: (label: string) => `${label} for template defined modal`,
+      label: (label: string) => `${label} (templated)`,
       initialize: initializeBackdropTemplated,
       templated: true,
     },

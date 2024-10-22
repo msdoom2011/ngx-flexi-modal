@@ -11,6 +11,7 @@ import {
   selector: 'cy-modal-empty',
   template: `
     <fm-modal
+      [id]="id()"
       [opened]="opened()"
       [closable]="closable()"
       [maximizable]="maximizable()"
@@ -19,6 +20,8 @@ import {
       [title]="title()"
       [data]="data()"
       [theme]="theme()"
+      (open)="open.emit($event)"
+      (close)="close.emit($event)"
       #modal
     >
       <cy-simple-text *fmModalBody />

@@ -14,13 +14,15 @@ import {
   OnChanges,
   OnDestroy,
   output,
-  signal, SimpleChange,
+  signal,
+  SimpleChange,
   SimpleChanges,
   TemplateRef,
 } from '@angular/core';
 import { filter, Subject, takeUntil } from 'rxjs';
 
 import { FmModalBeforeCloseEvent } from '../../services/modals/events/fm-modal-before-close.event';
+import { FmModalBeforeOpenEvent } from '../../services/modals/events/fm-modal-before-open.event';
 import { FlexiModalsThemeService } from '../../services/theme/flexi-modals-theme.service';
 import { FmModalUpdateEvent } from '../../services/modals/events/fm-modal-update.event';
 import { FmModalCloseEvent } from '../../services/modals/events/fm-modal-close.event';
@@ -41,6 +43,7 @@ import {
   TFmModalSpinnerType,
   TFmModalWidth,
 } from '../../services/modals/flexi-modals.definitions';
+import { FmModal } from '../../models/fm-modal';
 
 @Component({
   selector: 'fm-modal',
@@ -58,7 +61,7 @@ export class FmModalComponent implements DoCheck, OnChanges, AfterContentInit, O
   private readonly _elementRef = inject(ElementRef);
 
   // Inputs
-  public readonly _id = input<string | undefined>(undefined, { alias: 'id' });
+  public readonly _id = input<string | undefined>(FmModal.generateId(), { alias: 'id' });
   public readonly _opened = model<boolean>(false, { alias: 'opened' });
   public readonly _maximized = model<boolean | undefined>(undefined, { alias: 'maximized' });
   public readonly _title = input<string | undefined>(undefined, { alias: 'title' });
@@ -75,9 +78,10 @@ export class FmModalComponent implements DoCheck, OnChanges, AfterContentInit, O
 
   // Outputs
   public readonly _changeEvent = output<FmModalUpdateEvent>({ alias: 'change' });
+  public readonly _beforeOpenEvent = output<FmModalBeforeOpenEvent>({ alias: 'beforeOpen' });
   public readonly _openEvent = output<FmModalOpenEvent>({ alias: 'open' });
-  public readonly _closeEvent = output<FmModalCloseEvent>({ alias: 'close' });
   public readonly _beforeCloseEvent = output<FmModalBeforeCloseEvent>({ alias: 'beforeClose' });
+  public readonly _closeEvent = output<FmModalCloseEvent>({ alias: 'close' });
 
   // Signals
   public readonly modal = signal<FmModalWithTemplate | null>(null);
@@ -97,7 +101,7 @@ export class FmModalComponent implements DoCheck, OnChanges, AfterContentInit, O
   // Computed
 
   public readonly id = computed<string>(() => {
-    return this.modal()?.id() || '';
+    return this.modal()?.id() || this._id() || '';
   });
 
   public readonly opened = computed<boolean>(() => {
@@ -133,48 +137,13 @@ export class FmModalComponent implements DoCheck, OnChanges, AfterContentInit, O
 
   // Effects
 
-  private readonly _modalChangeEffect = effect((onCleanup) => {
-    if (!this.modal()) {
-      return;
-    }
-
-    const subscription = this.service.events$
-      .pipe(
-        filter($event => $event.id === this.id()),
-        takeUntil(this._destroy$)
-      )
-      .subscribe($event => {
-        if ($event instanceof FmModalOpenEvent) {
-          this._openEvent.emit($event);
-
-        } else if ($event instanceof FmModalBeforeCloseEvent) {
-          this._beforeCloseEvent.emit($event);
-
-        } else if ($event instanceof FmModalCloseEvent) {
-          this._opened.set(false);
-          this.modal.set(null);
-
-          this._closeEvent.emit($event);
-
-        } else if ($event instanceof FmModalUpdateEvent) {
-          this._changeEvent.emit(<FmModalUpdateEvent>$event);
-        }
-      });
-
-    return onCleanup(() => {
-      subscription.unsubscribe();
-    });
-  });
-
   private readonly _classesChangeEffect = effect(() => {
     if (!this._classesChanged()) {
       return;
     }
 
+    this.service.updateModal(this.id(), { classes: this._classes() });
     this._classesChanged.set(false);
-    this.service.updateModal(this.id(), {
-      classes: this._classes(),
-    });
   }, {
     allowSignalWrites: true,
   });
@@ -226,6 +195,8 @@ export class FmModalComponent implements DoCheck, OnChanges, AfterContentInit, O
       return;
     }
 
+    this._listenModalEvents();
+
     const modal = this.service.showTemplate(bodyTpl, {
       id: this._id(),
       title: this._title(),
@@ -248,11 +219,8 @@ export class FmModalComponent implements DoCheck, OnChanges, AfterContentInit, O
     });
 
     if (modal) {
+      this._opened.set(true);
       this.modal.set(modal);
-
-      modal.content$
-        .pipe(filter(Boolean))
-        .subscribe(() => this._opened.set(true));
     }
   }
 
@@ -282,6 +250,36 @@ export class FmModalComponent implements DoCheck, OnChanges, AfterContentInit, O
 
 
   // Private methods
+
+  private _listenModalEvents(): void {
+    const subscription = this.service.events$
+      .pipe(
+        filter($event => $event.id === this.id()),
+        takeUntil(this._destroy$)
+      )
+      .subscribe($event => {
+        if ($event instanceof FmModalUpdateEvent) {
+          this._changeEvent.emit(<FmModalUpdateEvent>$event);
+
+        } else if ($event instanceof FmModalBeforeOpenEvent) {
+          this._beforeOpenEvent.emit($event);
+
+        } else if ($event instanceof FmModalOpenEvent) {
+          this._openEvent.emit($event);
+
+        } else if ($event instanceof FmModalBeforeCloseEvent) {
+          this._beforeCloseEvent.emit($event);
+
+        } else if ($event instanceof FmModalCloseEvent) {
+          subscription.unsubscribe();
+
+          this._opened.set(false);
+          this.modal.set(null);
+
+          this._closeEvent.emit($event);
+        }
+      });
+  }
 
   private _handleOpenedChange(opened: SimpleChange): void {
     if (!opened) {

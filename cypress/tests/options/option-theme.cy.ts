@@ -1,4 +1,9 @@
-import { initializeServiceModals, initializeTemplateModals, showComponent } from '../../support/helpers/common-helpers';
+import {
+  cySelector,
+  initializeServiceModals,
+  initializeTemplateModals,
+  showComponent,
+} from '../../support/helpers/common-helpers';
 import { withDefaultOptions, withThemes } from '../../../projects/ngx-flexi-modal/src/lib/flexi-modals.providers';
 import { SimpleTextComponent } from '../../components/modal-content/simple-text.component';
 import { ModalEmptyComponent } from '../../components/modals-templated/modals/modal-empty.component';
@@ -10,8 +15,9 @@ describe('Option "theme"', () => {
 
   it('should be empty and the modal should use the global theme setting (service)', () => {
     initializeServiceModals();
-    showComponent(SimpleTextComponent)
-      .then((modal: any) => cy.wrap(modal).as('modal'));
+    showComponent(SimpleTextComponent);
+
+    cy.getCy('modal').should('be.visible');
 
     checkOutletTheme(FM_DEFAULT_THEME);
     checkModalTheme(FM_DEFAULT_THEME, false);
@@ -20,25 +26,33 @@ describe('Option "theme"', () => {
   it('should be empty and the modal should use the global theme setting (templated)', () => {
     initializeTemplateModals(ModalEmptyComponent, { inputs: { opened: true }});
 
+    cy.getCy('modal').should('be.visible');
+
     checkOutletTheme(FM_DEFAULT_THEME);
     checkModalTheme(FM_DEFAULT_THEME, false);
   });
 
-  it('should be set via the default modal options configuration (service)', () => {
+  it.only('should be set via the default modal options configuration (service)', () => {
     initializeServiceModals(
       withDefaultOptions({ theme: 'dark' }),
       withThemes([
         { name: 'light', default: true },
         { name: 'dark' },
       ]),
-    );
+    ).then((mountResult) => {
+      cy.wrap(mountResult.fixture).as('fixture');
+    });
+
     showComponent(SimpleTextComponent)
       .then((modal: any) => cy.wrap(modal).as('modal'));
+
+    cy.getCy('modal').should('be.visible');
 
     checkOutletTheme('light');
     checkModalTheme('dark');
 
     cy.get('@modal').then((modal: any) => modal.update({ theme: 'light' }));
+    cy.get('@fixture').then((fixture: any) => fixture.detectChanges());
 
     checkOutletTheme('light');
     checkModalTheme('light');
@@ -48,15 +62,16 @@ describe('Option "theme"', () => {
   it('should be set via the default modal options configuration (templated)', () => {
     initializeTemplateModals(
       ModalEmptyComponent,
-      { inputs: { opened: true }},
+      { inputs: { opened: true, id: 'templated-modal' }},
       withDefaultOptions({ theme: 'dark' }),
       withThemes([
         { name: 'light', default: true },
         { name: 'dark' },
       ]),
     );
-    showComponent(SimpleTextComponent)
-      .then((modal: any) => cy.wrap(modal).as('modal'));
+    showComponent(SimpleTextComponent);
+
+    cy.get(cySelector('modal') + '#templated-modal').should('be.visible');
 
     checkOutletTheme('light');
     checkModalTheme('dark');
@@ -73,8 +88,7 @@ describe('Option "theme"', () => {
 
   it('should ignore the invalid theme name (service)', () => {
     initializeServiceModals();
-    showComponent(SimpleTextComponent, { theme: 'test' })
-      .then((modal: any) => cy.wrap(modal).as('modal'));
+    showComponent(SimpleTextComponent, { theme: 'test' });
 
     checkOutletTheme(FM_DEFAULT_THEME);
     checkModalTheme(FM_DEFAULT_THEME, false);

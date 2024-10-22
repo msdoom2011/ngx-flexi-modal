@@ -213,19 +213,6 @@ export class FlexiModalsService<
 
   // Private implementation
 
-  private _normalizeOptions<ModalOptionsT extends Partial<IFmModalOptions<any>>>(
-    openUntilOrOptions: ModalOptionsT | Observable<unknown> | undefined
-  ): ModalOptionsT {
-    return <ModalOptionsT>{
-      ...fmModalOptionsDefault,
-      ...(this._defaultOptions || {}),
-      ...(isPlainObject(openUntilOrOptions)
-        ? (normalizeOptions(<ModalOptionsT>openUntilOrOptions) || {})
-        : { openUntil: openUntilOrOptions }
-      )
-    };
-  }
-
   private _showModal<ModalT extends FmModal>(modal: ModalT): ModalT | null {
     const $beforeOpenEvent = new FmModalBeforeOpenEvent(modal);
 
@@ -250,5 +237,18 @@ export class FlexiModalsService<
       });
 
     return modal;
+  }
+
+  private _normalizeOptions<ModalOptionsT extends Partial<IFmModalOptions<any>>>(
+    openUntilOrOptions: ModalOptionsT | Observable<unknown> | undefined
+  ): ModalOptionsT {
+    return <ModalOptionsT>{
+      ...fmModalOptionsDefault,
+      ...(this._defaultOptions || {}),
+      ...(isPlainObject(openUntilOrOptions)
+        ? (normalizeOptions(<ModalOptionsT>openUntilOrOptions) || {})
+        : { openUntil: openUntilOrOptions }
+      )
+    };
   }
 }

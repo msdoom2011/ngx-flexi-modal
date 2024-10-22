@@ -130,10 +130,6 @@ export abstract class FmModal<
 
   // Internal implementation
 
-  private _generateModalId(): string {
-    return `flexi-modal-${generateRandomId()}`;
-  }
-
   protected _normalizeOptions(options: OptionsT): ConfigT {
     const config = <ConfigT>{
       ...(!Object.keys(this._config()).length
@@ -144,7 +140,7 @@ export abstract class FmModal<
     };
 
     if (!config.id) {
-      config.id = this._generateModalId();
+      config.id = FmModal.generateId();
     }
 
     if (config.actions && config.actions.length > 0) {
@@ -158,5 +154,12 @@ export abstract class FmModal<
     }
 
     return config;
+  }
+
+
+  // Static methods
+
+  public static generateId(): string {
+    return `flexi-modal-${generateRandomId()}`;
   }
 }

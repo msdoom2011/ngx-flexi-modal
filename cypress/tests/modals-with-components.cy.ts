@@ -4,6 +4,7 @@ import {
   fmDefaultColorScheme,
   fmDefaultStyling,
 } from '../../projects/ngx-flexi-modal/src/lib/services/theme/flexi-modals-theme.constants';
+import { fmModalWidthPresets } from '../../projects/ngx-flexi-modal/src/lib/services/modals/flexi-modals.constants';
 
 describe('FmModalsOutletComponent', () => {
   const windowWidth = 500;
@@ -15,10 +16,10 @@ describe('FmModalsOutletComponent', () => {
 
   it('should display modal properly using default settings', () => {
     const contentHeight = 100;
-    const minBodyWidth = 300;
+    const minBodyWidth = fmModalWidthPresets.tiny;
 
     initializeServiceModals();
-    showComponent(SimpleTextComponent);
+    showComponent(SimpleTextComponent).then((modal: any) => cy.wrap(modal).as('modal'));
 
     cy.getCy('modals-backdrop').should('be.visible').invoke('outerWidth').should('eq', windowWidth);
     cy.getCy('modals-backdrop').invoke('outerHeight').should('eq', windowHeight);
@@ -63,7 +64,7 @@ describe('FmModalsOutletComponent', () => {
     cy.getCy('modal-loader').invoke('outerWidth').should('eq', minBodyWidth);
   });
 
-  it.only('should display with correct styling', () => {
+  it('should display with correct styling', () => {
     const options = fmDefaultStyling;
     const frameShadowColor = (String(options.frameShadow).match(/rgba\([^)]+\)/) || [])[0];
     const title = 'Modal Title';
@@ -86,7 +87,7 @@ describe('FmModalsOutletComponent', () => {
       .invoke('css', 'box-shadow')
         .should('include', frameShadowColor)
         .should('not.include', fmDefaultColorScheme.border);
-    cy.getCy('modal-body').invoke('outerWidth').should('eq', 300);
+    cy.getCy('modal-body').invoke('outerWidth').should('eq', fmModalWidthPresets.tiny);
     cy.getCy('modal-body').invoke('css', 'border-radius').should('eq', options.frameRounding + 'px');
     cy.getCy('modal-header-actions').should('have.class', 'position-' + options.headerActionsPosition);
 

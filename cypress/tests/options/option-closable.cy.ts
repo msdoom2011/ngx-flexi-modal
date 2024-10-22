@@ -1,4 +1,9 @@
-import { initializeServiceModals, initializeTemplateModals, showComponent } from '../../support/helpers/common-helpers';
+import {
+  cySelector,
+  initializeServiceModals,
+  initializeTemplateModals,
+  showComponent,
+} from '../../support/helpers/common-helpers';
 import { SimpleTextComponent } from '../../components/modal-content/simple-text.component';
 import { ModalEmptyComponent } from '../../components/modals-templated/modals/modal-empty.component';
 import { withDefaultOptions } from '../../../projects/ngx-flexi-modal/src/lib/flexi-modals.providers';
@@ -56,9 +61,6 @@ describe('Option "closable"', () => {
     cy.get('@modal').then((modal: any) => modal.update({ closable: secondValue }));
 
     checkCloseBtn(secondValue);
-
-    cy.getCy('modal-closing-layer').click();
-    cy.getCy('modal').should('not.exist');
   });
 
   it('should be configurable in runtime (templated)', () => {
@@ -77,9 +79,39 @@ describe('Option "closable"', () => {
     });
 
     checkCloseBtn(secondValue);
+  });
 
+  it('should be closable by mouse click on backdrop and hitting Escape key', () => {
+    initializeServiceModals();
+
+    showComponent(SimpleTextComponent, { closable: true });
+
+    cy.getCy('modal').should('be.visible');
     cy.getCy('modal-closing-layer').click();
     cy.getCy('modal').should('not.exist');
+
+    showComponent(SimpleTextComponent, { closable: true });
+
+    cy.getCy('modal').should('be.visible');
+    cy.window().trigger('keydown', { key: 'Escape' });
+    cy.getCy('modal').should('not.exist');
+
+    showComponent(SimpleTextComponent, { closable: true, id: 'first-modal-id' });
+    cy.get('#first-modal-id').should('be.visible');
+
+    showComponent(SimpleTextComponent, { closable: true, id: 'second-modal-id' });
+    cy.get('#second-modal-id').should('be.visible');
+
+    cy.get('#second-modal-id ' + cySelector('modal-closing-layer')).click();
+    cy.get('#second-modal-id').should('not.exist');
+    cy.get('#first-modal-id').should('be.visible');
+
+    showComponent(SimpleTextComponent, { closable: true, id: 'second-modal-id' });
+    cy.get('#second-modal-id').should('be.visible');
+
+    cy.window().trigger('keydown', { key: 'Escape' });
+    cy.get('#second-modal-id').should('not.exist');
+    cy.get('#first-modal-id').should('be.visible');
   });
 });
 

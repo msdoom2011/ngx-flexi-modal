@@ -26,12 +26,12 @@ export class ColorsHelper {
 
   public static configs: Array<IColorTestsConfig> = [
     {
-      label: (label: string) => label,
+      label: (label: string) => `${label} (service)`,
       initialize: ColorsHelper.initializeModal,
       templated: false,
     },
     {
-      label: (label: string) => `${label} for template defined modal`,
+      label: (label: string) => `${label} (templated)`,
       initialize: ColorsHelper.initializeModalTemplated,
       templated: true,
     },
@@ -64,13 +64,13 @@ export class ColorsHelper {
       ModalSimpleTextComponent,
       {
         inputs: {
+          opened: true,
           maximizable: true,
         },
       },
       ...providers
     );
 
-    cy.get('@modal').then((modal: any) => modal.open());
     cy.getCy('modal-body').should('be.visible');
   }
 
