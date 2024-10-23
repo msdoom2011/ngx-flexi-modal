@@ -5,7 +5,6 @@ import { provideFlexiModals, withDefaultOptions, withModalPresets, withThemes } 
 
 import { modalBasicCustomPresets } from './modal/basic-custom/modal-basic-custom.presets';
 
-
 export const appConfig: ApplicationConfig = {
   providers: [
     provideExperimentalZonelessChangeDetection(),

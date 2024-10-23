@@ -28,7 +28,7 @@ export class FmModalInstanceWithTemplateComponent<ContentT extends Record<string
 extends FmModalInstance<FmModalWithTemplate<ContentT>>
 implements AfterViewInit {
 
-  public ngAfterViewInit() {
+  protected _renderContent(): void {
     const content$ = this.modal().content$;
     const embeddedViewRef = this._contentRef()?.createEmbeddedView<ContentT>(
       this.modal().content,

@@ -1,4 +1,4 @@
-@if (modal().config().actionsTpl) {
+@if (modal().config().actionsTpl?.length) {
   @for (actionDirective of modal().config().actionsTpl; track actionDirective.id) {
     @if (actionDirective.options().visible) {
       <!-- eslint-disable-next-line -->

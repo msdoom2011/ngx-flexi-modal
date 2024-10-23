@@ -9,11 +9,17 @@ import { FmModalFactory } from './fm-modal.factory';
 export class FmModalWithComponentFactory extends FmModalFactory<FmModalWithComponent> {
 
   public test(subject: unknown): boolean {
-    return !!(subject && typeof subject === 'function');
+    return !!(
+      subject
+      && (
+        typeof subject === 'function'
+        || subject instanceof Promise
+      )
+    );
   }
 
   public create<ComponentT = unknown>(
-    component: Type<ComponentT>,
+    component: Type<ComponentT> | Promise<Type<ComponentT>>,
     options: IFmModalWithComponentOptions<ComponentT>
   ): FmModalWithComponent<ComponentT> {
 

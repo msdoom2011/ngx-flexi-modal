@@ -1,3 +1,5 @@
+<h3 class="fm-modal-header" *fmModalHeader>CUSTOM TITLE</h3>
+
 <p>Service created modal works!</p>
 <p>Service created modal works!</p>
 <p>Service created modal works!</p>
@@ -11,3 +13,14 @@
 <p>Service created modal works!</p>
 <p>Service created modal works!</p>
 <p>Service created modal works!</p>
+
+<div class="fm-modal-footer" *fmModalFooter="let actionsTpl = $actionsTpl">
+  <div>CUSTOM TEXT</div>
+  <ng-container *ngTemplateOutlet="actionsTpl" />
+</div>
+
+<button
+  class="fm-modal-action-button primary"
+  *fmModalAction="{ closeOnClick: false }"
+  (click)="onClick()"
+>Custom Button</button>

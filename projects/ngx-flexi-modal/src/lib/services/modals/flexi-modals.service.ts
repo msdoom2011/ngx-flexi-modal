@@ -11,6 +11,8 @@ import { FLEXI_MODAL_FACTORY } from '../../flexi-modals.tokens';
 import { FmModalFactory } from './factories/fm-modal.factory';
 import { isPlainObject } from '../../tools/utils';
 import { FmModal } from '../../models/fm-modal';
+import { FmModalMinimizeEvent } from './events/fm-modal-minimize.event';
+import { FmModalMaximizeEvent } from './events/fm-modal-maximize.event';
 
 @Injectable({
   providedIn: 'root'
@@ -98,6 +100,18 @@ export class FlexiModalsService {
       modal,
       changes,
     ));
+
+    if ('maximized' in changes) {
+      const $maximizeEvent = changes.maximized
+        ? new FmModalMaximizeEvent(modal)
+        : new FmModalMinimizeEvent(modal);
+
+      this._events$.next($maximizeEvent);
+
+      changes.maximized
+        ? modal.config().onMaximize?.(<FmModalMaximizeEvent>$maximizeEvent)
+        : modal.config().onMinimize?.(<FmModalMinimizeEvent>$maximizeEvent);
+    }
   }
 
   public close(modalId: string): void {

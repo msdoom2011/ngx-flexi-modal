@@ -1,4 +1,5 @@
-import {Component, computed, inject, signal} from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
+import { NgTemplateOutlet } from '@angular/common';
 import {
   FmModalBodyDirective,
   FmModalActionDirective,
@@ -8,11 +9,12 @@ import {
   FmModalOpenEvent,
   FlexiModalsService,
   FlexiModalsThemeService,
-} from "ngx-flexi-modal";
+  FmModalMaximizeEvent,
+  FmModalMinimizeEvent,
+  FmModalLoaderComponent,
+} from 'ngx-flexi-modal';
 
-import {TemplateAwareComponent} from "../modal-content/template-aware/template-aware.component";
-import {ModalAwareComponent} from "../modal-content/modal-aware/modal-aware.component";
-import { NgTemplateOutlet } from '@angular/common';
+import {TemplateAwareComponent} from '../modal-content/template-aware/template-aware.component';
 
 @Component({
   selector: 'fm-app-showcase',
@@ -24,7 +26,7 @@ import { NgTemplateOutlet } from '@angular/common';
     FmModalHeaderDirective,
     FmModalFooterDirective,
     FmModalActionDirective,
-    ModalAwareComponent,
+    FmModalLoaderComponent,
     TemplateAwareComponent,
     NgTemplateOutlet,
   ],
@@ -69,27 +71,31 @@ export class ShowcaseComponent {
   }
 
   public onOpenComponentModal(): void {
-    this.modals.show(ModalAwareComponent, {
-      // title: 'Modal title',
-      actions: [
-        {
-          label: 'Okay',
-          primary: true,
-          onClick: () => alert('Okay!'),
-        },
-        {
-          closeOnClick: false,
-          label: 'Show error',
-          onClick: () => {
-            this.modals.closeAll();
-            this.modals.show('error', {
-              message: 'Some internal error',
-              theme: 'light'
-            });
-          }
-        },
-      ]
-    });
+    // this.modals.show(ModalAwareComponent, {
+    this.modals.show(
+      import('../modal-content/modal-aware/modal-aware.component').then(i => i.ModalAwareComponent),
+      {
+        // title: 'Modal title',
+        actions: [
+          {
+            label: 'Okay',
+            primary: true,
+            onClick: () => alert('Okay!'),
+          },
+          {
+            closeOnClick: false,
+            label: 'Show error',
+            onClick: () => {
+              this.modals.closeAll();
+              this.modals.show('error', {
+                message: 'Some internal error',
+                theme: 'light',
+              });
+            },
+          },
+        ],
+      },
+    );
   }
 
   public onOpenError(): void {
@@ -141,11 +147,27 @@ export class ShowcaseComponent {
       //     }, 4000);
       //   }, 2000);
       // }),
+      onMaximize: ($event) => {
+        console.log('MAXIMIZE EVENT', $event);
+      },
+      onMinimize: ($event) => {
+        console.log('MINIMIZE EVENT', $event);
+      },
     });
   }
 
   public onTemplateModalOpened($event: FmModalOpenEvent): void {
     console.log($event);
     console.log('TEMPLATE MODAL OPENED!!!');
+  }
+
+  public onTemplateModalMaximized($event: FmModalMaximizeEvent): void {
+    console.log($event);
+    console.log('TEMPLATE MODAL MAXIMIZED!!!');
+  }
+
+  public onTemplateModalMinimized($event: FmModalMinimizeEvent): void {
+    console.log($event);
+    console.log('TEMPLATE MODAL MINIMIZED!!!');
   }
 }

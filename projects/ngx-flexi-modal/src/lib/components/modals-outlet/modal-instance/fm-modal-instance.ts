@@ -1,5 +1,5 @@
 import {
-  afterRender,
+  afterRender, AfterViewInit,
   computed,
   Directive,
   effect,
@@ -32,7 +32,7 @@ import {FmModal} from '../../../models/fm-modal';
     '[class]': 'hostClasses()',
   },
 })
-export abstract class FmModalInstance<ModalT extends FmModal> implements OnInit, OnDestroy {
+export abstract class FmModalInstance<ModalT extends FmModal> implements OnInit, AfterViewInit, OnDestroy {
 
   // Dependencies
   protected readonly _service = inject(FlexiModalsService);
@@ -58,8 +58,8 @@ export abstract class FmModalInstance<ModalT extends FmModal> implements OnInit,
   protected readonly _viewportRef = viewChild.required('viewport', { read: ElementRef<HTMLElement> });
 
   // Private props
-  private readonly _destroy$ = new Subject<void>();
-  private _destroySubscription: Subscription | null = null;
+  protected readonly _destroy$ = new Subject<void>();
+  private _modalDestroySubscr: Subscription | null = null;
 
 
   // Computed
@@ -93,11 +93,11 @@ export abstract class FmModalInstance<ModalT extends FmModal> implements OnInit,
       return;
     }
 
-    if (this._destroySubscription) {
-      this._destroySubscription.unsubscribe();
+    if (this._modalDestroySubscr) {
+      this._modalDestroySubscr.unsubscribe();
     }
 
-    this._destroySubscription = modalDestroy$
+    this._modalDestroySubscr = modalDestroy$
       .pipe(takeUntil(this._destroy$))
       .subscribe(() => this.modal().close());
   });
@@ -149,6 +149,10 @@ export abstract class FmModalInstance<ModalT extends FmModal> implements OnInit,
     this._initializeOnTabKeydown();
   }
 
+  public ngAfterViewInit(): void {
+    this._renderContent();
+  }
+
   public ngOnDestroy(): void {
     this._destroy$.next();
     this._destroy$.complete();
@@ -163,6 +167,8 @@ export abstract class FmModalInstance<ModalT extends FmModal> implements OnInit,
 
 
   // Internal implementation
+
+  protected abstract _renderContent(): void;
 
   protected _initializeFocusableElements(): void {
     toObservable(this.modal().maximized, { injector: this._injector })

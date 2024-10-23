@@ -10,6 +10,8 @@ export enum FmModalEventType {
   BeforeClose = 'BEFORE_CLOSE',
   Close = 'CLOSE',
   Update = 'UPDATE',
+  Maximize = 'MAXIMIZE',
+  Minimize = 'MINIMIZE',
 }
 
 export const fmModalWidthPresets: Record<TFmWidthPreset, number> = {
@@ -30,6 +32,8 @@ export const fmModalOptionsDefault: IFmModalConfig = {
   actionsTpl: undefined,
   onClose: undefined,
   onOpen: undefined,
+  onMaximize: undefined,
+  onMinimize: undefined,
   animation: 'slide',
   position: 'top',
   width: 'fit-content',

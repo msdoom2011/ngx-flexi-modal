@@ -1,13 +1,14 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, OnInit, Type } from '@angular/core';
 import { SIGNAL } from '@angular/core/primitives/signals';
 import { NgComponentOutlet } from '@angular/common';
+import { delay, Subject, takeUntil } from 'rxjs';
 
 import { FmModalInstanceHeaderComponent } from '../instance-layout/header/fm-modal-instance-header.component';
 import { FmModalInstanceFooterComponent } from '../instance-layout/footer/fm-modal-instance-footer.component';
 import { FmModalInstanceLayoutComponent } from '../instance-layout/fm-modal-instance-layout.component';
-import { IFlexiModalAware } from '../../../../services/modals/flexi-modals.definitions';
 import { FmModalWithComponent } from '../../../../models/fm-modal-with-component';
 import { FM_MODAL_INSTANCE } from '../fm-modal-instance.providers';
+import { IFmModalAware } from '../../../fm-modal.abstract';
 import { FmModalInstance } from '../fm-modal-instance';
 
 @Component({
@@ -26,14 +27,55 @@ import { FmModalInstance } from '../fm-modal-instance';
     { provide: FM_MODAL_INSTANCE, useExisting: FmModalInstanceWithComponentComponent },
   ],
 })
-export class FmModalInstanceWithComponentComponent<ComponentT extends Partial<IFlexiModalAware>>
+export class FmModalInstanceWithComponentComponent<ComponentT extends Partial<IFmModalAware>>
 extends FmModalInstance<FmModalWithComponent<ComponentT, any>>
-implements AfterViewInit {
+implements OnInit, AfterViewInit {
 
-  public ngAfterViewInit() {
+  private _startLoading$ = new Subject<void>();
+  private _stopLoading$ = new Subject<void>();
+
+  public override ngOnInit(): void {
+    super.ngOnInit();
+
+    this._startLoading$
+      .pipe(
+        delay(10),
+        takeUntil(this._stopLoading$),
+        takeUntil(this._destroy$)
+      )
+      .subscribe(() => {
+        this.modal().startLoading(false);
+      });
+
+    this._stopLoading$
+      .pipe(takeUntil(this._destroy$))
+      .subscribe(() => {
+        this.modal().stopLoading();
+      });
+  }
+
+  protected _renderContent(): void {
+    const modal = this.modal();
+    const content = modal.content;
+
+    if (content instanceof Promise) {
+      this._startLoading$.next();
+
+      content.then(component => {
+        this._stopLoading$.next();
+        this._renderComponent(component);
+      });
+
+      return;
+    }
+
+    this._renderComponent(content);
+  }
+
+  private _renderComponent(component: Type<ComponentT>): void {
     const modal = this.modal();
     const content$ = modal.content$;
-    const componentRef = this._contentRef()?.createComponent(modal.content, { injector: this._injector });
+    const componentRef = this._contentRef()?.createComponent(component, { injector: this._injector });
     const componentInputs = modal.config().inputs;
 
     if (componentRef?.instance.modal && componentRef.instance.modal[SIGNAL]) {

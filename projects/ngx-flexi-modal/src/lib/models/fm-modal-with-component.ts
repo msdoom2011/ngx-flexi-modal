@@ -12,7 +12,7 @@ extends FmModal<
   IFmModalWithComponentConfig<ComponentT, InputsT>,
   IFmModalWithComponentOptions<ComponentT, InputsT>,
   ComponentRef<ComponentT>,
-  Type<ComponentT>
+  Type<ComponentT> | Promise<Type<ComponentT>>
 >{
 
   public readonly type = FM_MODAL_WITH_COMPONENT_TYPE;

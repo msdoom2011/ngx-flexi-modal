@@ -1,4 +1,4 @@
-import {InputSignal, TemplateRef, Type} from '@angular/core';
+import {TemplateRef, Type} from '@angular/core';
 import {Observable} from 'rxjs';
 
 import {FmModalActionDirective} from '../../components/modal/directives/fm-modal-action.directive';
@@ -12,6 +12,8 @@ import {FmModalUpdateEvent} from './events/fm-modal-update.event';
 import {FmModalCloseEvent} from './events/fm-modal-close.event';
 import {FmModalOpenEvent} from './events/fm-modal-open.event';
 import {FmModal} from '../../models/fm-modal';
+import { FmModalMaximizeEvent } from './events/fm-modal-maximize.event';
+import { FmModalMinimizeEvent } from './events/fm-modal-minimize.event';
 
 export type TFmWidthPreset = 'tiny' | 'small' | 'medium' | 'big' | 'large';
 export type TFmModalWidth = 'fit-content' | 'fit-window' | TFmWidthPreset | number;
@@ -27,19 +29,9 @@ export type TFmModalEvent = (
   | FmModalBeforeCloseEvent
   | FmModalCloseEvent
   | FmModalUpdateEvent
+  | FmModalMaximizeEvent
+  | FmModalMinimizeEvent
 );
-
-
-// Modal aware component interface
-
-/*
- * Applicable only for components that will be opened via showComponent method
- * Implementing this interface provides access to the modal instance inside the rendered component.
- * The modal input is optional intentionally to ensure ability to use the same component outside the modal context.
- */
-export interface IFlexiModalAware {
-  modal: InputSignal<FmModalWithComponent | undefined>;
-}
 
 
 // Presets
@@ -76,16 +68,16 @@ export interface IFmShowModalFn {
   // show modal with component
 
   <InputsT extends object = Record<string, any>, ComponentT = object>(
-    component: Type<ComponentT>,
+    component: Type<ComponentT> | Promise<Type<ComponentT>>,
   ): FmModalWithComponent<ComponentT, InputsT> | null;
 
   <InputsT extends object = Record<string, any>, ComponentT = object>(
-    component: Type<ComponentT>,
+    component: Type<ComponentT> | Promise<Type<ComponentT>>,
     openUntil$: Observable<any>
   ): FmModalWithComponent<ComponentT, InputsT> | null;
 
   <InputsT extends object = Record<string, any>, ComponentT = object>(
-    component: Type<ComponentT>,
+    component: Type<ComponentT> | Promise<Type<ComponentT>>,
     options: IFmModalWithComponentOptions<ComponentT>
   ): FmModalWithComponent<ComponentT, InputsT> | null;
 
@@ -128,6 +120,8 @@ export interface IFmModalConfig<ModalT extends FmModal = FmModal> {
   actionsTpl: Array<FmModalActionDirective> | undefined;
   onOpen: (($event: FmModalOpenEvent<ModalT>) => void) | undefined;
   onClose: (($event: FmModalBeforeCloseEvent<ModalT>) => void) | undefined;
+  onMaximize: (($event: FmModalMaximizeEvent<ModalT>) => void) | undefined;
+  onMinimize: (($event: FmModalMinimizeEvent<ModalT>) => void) | undefined;
   animation: TFmModalOpeningAnimation;
   position: TFmModalPosition;
   spinner: TFmModalSpinnerType;

@@ -23,6 +23,8 @@ import { filter, Subject, takeUntil } from 'rxjs';
 
 import { FmModalBeforeCloseEvent } from '../../services/modals/events/fm-modal-before-close.event';
 import { FmModalBeforeOpenEvent } from '../../services/modals/events/fm-modal-before-open.event';
+import { FmModalMinimizeEvent } from '../../services/modals/events/fm-modal-minimize.event';
+import { FmModalMaximizeEvent } from '../../services/modals/events/fm-modal-maximize.event';
 import { FlexiModalsThemeService } from '../../services/theme/flexi-modals-theme.service';
 import { FmModalUpdateEvent } from '../../services/modals/events/fm-modal-update.event';
 import { FmModalCloseEvent } from '../../services/modals/events/fm-modal-close.event';
@@ -33,6 +35,7 @@ import { FmModalFooterDirective } from './directives/fm-modal-footer.directive';
 import { FlexiModalsService } from '../../services/modals/flexi-modals.service';
 import { FmModalBodyDirective } from './directives/fm-modal-body.directive';
 import { FmModalWithTemplate } from '../../models/fm-modal-with-template';
+import { FmModal } from '../../models/fm-modal';
 import {
   IFmModalWithTemplateConfig,
   IFmModalWithTemplateOptions,
@@ -43,7 +46,6 @@ import {
   TFmModalSpinnerType,
   TFmModalWidth,
 } from '../../services/modals/flexi-modals.definitions';
-import { FmModal } from '../../models/fm-modal';
 
 @Component({
   selector: 'fm-modal',
@@ -78,6 +80,8 @@ export class FmModalComponent implements DoCheck, OnChanges, AfterContentInit, O
 
   // Outputs
   public readonly _changeEvent = output<FmModalUpdateEvent>({ alias: 'change' });
+  public readonly _maximizeEvent = output<FmModalMaximizeEvent>({ alias: 'maximize' });
+  public readonly _minimizeEvent = output<FmModalMinimizeEvent>({ alias: 'minimize' });
   public readonly _beforeOpenEvent = output<FmModalBeforeOpenEvent>({ alias: 'beforeOpen' });
   public readonly _openEvent = output<FmModalOpenEvent>({ alias: 'open' });
   public readonly _beforeCloseEvent = output<FmModalBeforeCloseEvent>({ alias: 'beforeClose' });
@@ -259,7 +263,13 @@ export class FmModalComponent implements DoCheck, OnChanges, AfterContentInit, O
       )
       .subscribe($event => {
         if ($event instanceof FmModalUpdateEvent) {
-          this._changeEvent.emit(<FmModalUpdateEvent>$event);
+          this._changeEvent.emit($event);
+
+        } if ($event instanceof FmModalMaximizeEvent) {
+          this._maximizeEvent.emit($event);
+
+        } if ($event instanceof FmModalMinimizeEvent) {
+          this._minimizeEvent.emit($event);
 
         } else if ($event instanceof FmModalBeforeOpenEvent) {
           this._beforeOpenEvent.emit($event);
