@@ -4,17 +4,17 @@ import { Provider, Type } from '@angular/core';
 import { Observable } from 'rxjs';
 import Chainable = Cypress.Chainable;
 
-import { provideFlexiModals } from '../../../projects/ngx-flexi-modal/src/lib/flexi-modals.providers';
+import { ModalWithTemplateRootComponent } from '../../components/modals-templated/modal-with-template-root.component';
 import { FlexiModalsService } from '../../../projects/ngx-flexi-modal/src/lib/services/modals/flexi-modals.service';
+import { FmModalWithComponent } from '../../../projects/ngx-flexi-modal/src/lib/models/fm-modal-with-component';
+import { provideFlexiModals } from '../../../projects/ngx-flexi-modal/src/lib/flexi-modals.providers';
+import { ModalWithTemplate } from '../../components/modals-templated/modal-with-template';
 import {
   FmModalsOutletComponent
 } from '../../../projects/ngx-flexi-modal/src/lib/components/modals-outlet/fm-modals-outlet.component';
 import {
   IFmModalWithComponentOptions
 } from '../../../projects/ngx-flexi-modal/src/lib/services/modals/flexi-modals.definitions';
-import { ModalWithTemplateRootComponent } from '../../components/modals-templated/modal-with-template-root.component';
-import { ModalWithTemplate } from '../../components/modals-templated/modal-with-template';
-import { FmModalWithComponent } from '../../../projects/ngx-flexi-modal/src/lib/models/fm-modal-with-component';
 
 export function initializeServiceModals(
   ...providers: Array<Provider | Array<Provider>>
@@ -73,7 +73,7 @@ export function showComponent<T extends object>(
 
   return cy.inject(FlexiModalsService)
     .then(service => {
-      return cy.wrap(service.show(component, <any>options));
+      return cy.wrap(service.open(component, <any>options));
     });
 }
 

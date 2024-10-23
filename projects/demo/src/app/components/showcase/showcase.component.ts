@@ -71,8 +71,8 @@ export class ShowcaseComponent {
   }
 
   public onOpenComponentModal(): void {
-    // this.modals.show(ModalAwareComponent, {
-    this.modals.show(
+    // this.modals.open(ModalAwareComponent, {
+    this.modals.open(
       import('../modal-content/modal-aware/modal-aware.component').then(i => i.ModalAwareComponent),
       {
         // title: 'Modal title',
@@ -87,7 +87,7 @@ export class ShowcaseComponent {
             label: 'Show error',
             onClick: () => {
               this.modals.closeAll();
-              this.modals.show('error', {
+              this.modals.open('error', {
                 message: 'Some internal error',
                 theme: 'light',
               });
@@ -99,7 +99,7 @@ export class ShowcaseComponent {
   }
 
   public onOpenError(): void {
-    this.modals.show('error', {
+    this.modals.open('error', {
       title: 'Error: Failed to process your request, Failed to process your request',
       message:
         'Oops! Some unfortunate error occurred. ' +
@@ -111,7 +111,7 @@ export class ShowcaseComponent {
   }
 
   public onOpenWarning(): void {
-    this.modals.show('warning', {
+    this.modals.open('warning', {
       title: 'Warning: Disabled functionality',
       message:
         'Currently requested functionality is disabled. ' +
@@ -120,19 +120,19 @@ export class ShowcaseComponent {
   }
 
   public onOpenSuccess(): void {
-    this.modals.show('success', {
+    this.modals.open('success', {
       message: 'Your data was successfully saved'
     });
   }
 
   public onOpenInfo(): void {
-    this.modals.show('info', {
+    this.modals.open('info', {
       message: 'Our service was updated to the newer version'
     });
   }
 
   public onOpenConfirm(): void {
-    this.modals.show('confirm', {
+    this.modals.open('confirm', {
       title: 'You have unsaved changes. Are you really sure want to proceed and quit?',
       message: 'You have unsaved changes. Are you really sure want to proceed and quit?',
       // onOpen: (($event) => {

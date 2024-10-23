@@ -52,7 +52,7 @@ import {
   standalone: true,
   imports: [],
   template: '',
-  styleUrl: './fm-modal.component.scss',
+  styles: ':host { display: none; }',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FmModalComponent implements DoCheck, OnChanges, AfterContentInit, OnDestroy {
@@ -201,7 +201,7 @@ export class FmModalComponent implements DoCheck, OnChanges, AfterContentInit, O
 
     this._listenModalEvents();
 
-    const modal = this.service.show(bodyTpl, {
+    const modal = this.service.open(bodyTpl, {
       id: this._id(),
       title: this._title(),
       animation: this._animation(),

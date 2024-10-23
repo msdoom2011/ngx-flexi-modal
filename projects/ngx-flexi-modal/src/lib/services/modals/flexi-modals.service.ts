@@ -1,7 +1,7 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { filter, Observable, Subject } from 'rxjs';
 
-import { IFmModalOptions, IFmShowModalFn, TFmModalEvent } from './flexi-modals.definitions';
+import { IFmModalOptions, IFmOpenModalFn, TFmModalEvent } from './flexi-modals.definitions';
 import { FmModalBeforeCloseEvent } from './events/fm-modal-before-close.event';
 import { FmModalBeforeOpenEvent } from './events/fm-modal-before-open.event';
 import { FmModalUpdateEvent } from './events/fm-modal-update.event';
@@ -41,7 +41,7 @@ export class FlexiModalsService {
     return this._factories.find(factory => factory.test(subject));
   }
 
-  public show: IFmShowModalFn = (
+  public open: IFmOpenModalFn = (
     subject: unknown,
     openUntilOrOptions?: Observable<unknown> | object
   ): FmModal<any, any> | null => {

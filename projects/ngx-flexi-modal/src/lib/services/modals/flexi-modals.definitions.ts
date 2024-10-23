@@ -57,15 +57,15 @@ export interface IFmModalPresetConfig<
 }
 
 
-// Definition of the show modal function
+// Definition of the open modal function
 
 /**
  * Useful in case if there is need to extend current library by either new modal factory
  * or custom presets.
  */
-export interface IFmShowModalFn {
+export interface IFmOpenModalFn {
 
-  // show modal with component
+  // open modal with component as a content
 
   <InputsT extends object = Record<string, any>, ComponentT = object>(
     component: Type<ComponentT> | Promise<Type<ComponentT>>,
@@ -82,7 +82,7 @@ export interface IFmShowModalFn {
   ): FmModalWithComponent<ComponentT, InputsT> | null;
 
 
-  // show modal with template
+  // open modal with template as a content
 
   <ContextT extends Record<string, unknown>>(
     template: TemplateRef<ContextT>,
@@ -99,7 +99,7 @@ export interface IFmShowModalFn {
   ): FmModalWithTemplate<ContextT> | null;
 
 
-  // show modal using a preset
+  // open modal using a preset
 
   <ComponentT, T extends keyof IFmModalPresetOptionsByModalTypes>(
     modalType: T,

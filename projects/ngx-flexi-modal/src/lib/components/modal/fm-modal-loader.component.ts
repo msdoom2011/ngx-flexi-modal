@@ -4,8 +4,9 @@ import { FmModalComponent } from './fm-modal.component';
 
 @Component({
   selector: 'fm-modal-loader',
-  template: '',
   standalone: true,
+  template: '',
+  styles: ':host { display: none; }',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FmModalLoaderComponent implements OnInit, OnDestroy {

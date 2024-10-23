@@ -1,6 +1,5 @@
 import {
   afterNextRender,
-  afterRender,
   ChangeDetectionStrategy,
   Component,
   computed,
@@ -18,19 +17,20 @@ import { NgComponentOutlet, NgTemplateOutlet } from '@angular/common';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { filter, skip, Subject, takeUntil } from 'rxjs';
 
-import {
-  TFmModalOpeningAnimation,
-  TFmModalWidth,
-  TFmWidthPreset,
-} from '../../../../services/modals/flexi-modals.definitions';
 import { FmModalInstanceFooterComponent } from './footer/fm-modal-instance-footer.component';
 import { FmModalInstanceHeaderComponent } from './header/fm-modal-instance-header.component';
 import { FmModalInstanceLoaderComponent } from './loader/fm-modal-instance-loader.component';
 import { fmModalWidthPresets } from '../../../../services/modals/flexi-modals.constants';
 import { FmHeaderActionsComponent } from './header/actions/fm-header-actions.component';
+import { FLEXI_MODAL_WIDTH_PRESETS } from '../../../../flexi-modals.tokens';
 import { FM_MODAL_INSTANCE } from '../fm-modal-instance.providers';
 import { FmModalInstance } from '../fm-modal-instance';
 import { FmModal } from '../../../../models/fm-modal';
+import {
+  TFmModalOpeningAnimation,
+  TFmModalWidth,
+  TFmWidthPreset,
+} from '../../../../services/modals/flexi-modals.definitions';
 import {
   IFmModalMaximizeAnimationParams,
   IFmModalMinimizeAnimationParams,
@@ -40,7 +40,6 @@ import {
   getLoaderAnimation,
   getMaximizeAnimation,
 } from './fm-modal-instance-layout.animations';
-import { FLEXI_MODAL_WIDTH_PRESETS } from '../../../../flexi-modals.tokens';
 
 @Component({
   selector: 'fm-modal-instance-layout',
@@ -220,17 +219,14 @@ export class FmModalInstanceLayoutComponent implements OnInit, OnDestroy {
     }
   }});
 
-  public readonly ngAfterRender = afterRender({ read: () => {
-    if (this._maximizedChanged()) {
-      this._elementRef.nativeElement.scrollTop = 0;
-    }
-  }});
-
 
   // Callbacks
 
   public onMaximizeAnimationDone(): void {
-    this._runHeaderActionsAnimation();
+    if (this._maximizedChanged()) {
+      this._maximizedChanged.set(false);
+      this._runHeaderActionsAnimation();
+    }
   }
 
   public onLoadingAnimationDone(): void {
@@ -323,7 +319,6 @@ export class FmModalInstanceLayoutComponent implements OnInit, OnDestroy {
   private _runHeaderActionsAnimation(): void {
     if (
       !this._headerActionsRef()
-      || !this._maximizedChanged()
       || this.modal().maximized()
       || this.modal().theme().styling.headerActionsPosition !== 'outside'
     ) {

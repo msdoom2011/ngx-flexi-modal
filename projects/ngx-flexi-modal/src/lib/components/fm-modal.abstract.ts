@@ -8,7 +8,7 @@ import { normalizeOptions } from '../tools/utils';
 import { FmModal } from '../models/fm-modal';
 
 /**
- * Applicable only for components that will be opened via showComponent method
+ * Applicable only for components that will be opened via service "FlexiModalsService.open()" method.
  * Implementing this interface provides access to the modal instance inside the rendered component.
  * The modal input is optional intentionally to ensure ability to use the same component outside the modal context.
  */
