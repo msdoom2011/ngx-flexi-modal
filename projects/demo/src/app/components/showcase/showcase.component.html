@@ -27,9 +27,9 @@
 <button (click)="onOpenInfo()">Open Info</button>
 <button (click)="onOpenConfirm()">Open Confirm</button>
 
+<!-- title="Templated Modal And Another Very Long Title I Want That User Can See All The Time And Another Very Long Title I Want That User Can See All The Time" -->
 <fm-modal
   id="test-custom-id"
-  title="Templated Modal And Another Very Long Title I Want That User Can See All The Time And Another Very Long Title I Want That User Can See All The Time"
   width="medium"
   height="fit-content"
   position="center"
@@ -40,13 +40,13 @@
   (open)="onTemplateModalOpened($event)"
   #modal
 >
-  <h3
-    class="fm-modal-header"
-    [class]="'custom-header-theme--' + theme"
-    *fmModalHeader="let title = $title; let theme = $theme"
-  >
-    <span style="color: red">!!! {{ title }}</span>
-  </h3>
+<!--   <h3 -->
+<!--     class="fm-modal-header" -->
+<!--     [class]="'custom-header-theme&#45;&#45;' + theme" -->
+<!--     *fmModalHeader="let title = $title; let theme = $theme" -->
+<!--   > -->
+<!--     <span style="color: red">!!! {{ title }}</span> -->
+<!--   </h3> -->
 
   <fm-app-template-aware *fmModalBody [modal]="modal" />
 
