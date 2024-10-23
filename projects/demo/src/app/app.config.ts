@@ -1,17 +1,18 @@
-import {ApplicationConfig, provideExperimentalZonelessChangeDetection} from '@angular/core';
+import { ApplicationConfig, provideExperimentalZonelessChangeDetection } from '@angular/core';
 
-import {provideAnimationsAsync} from '@angular/platform-browser/animations/async';
-import {provideFlexiModals, withDefaultOptions, withThemes, withExtensions} from 'ngx-flexi-modal';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { provideFlexiModals, withDefaultOptions, withModalPresets, withThemes } from 'ngx-flexi-modal';
 
-// import {modalBasicCustomExtension} from "./modal/basic-custom/modal-basic-custom.extension";
+import { modalBasicCustomPresets } from './modal/basic-custom/modal-basic-custom.presets';
+
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideExperimentalZonelessChangeDetection(),
     provideAnimationsAsync(),
     provideFlexiModals(
-      withExtensions([
-        // modalBasicCustomExtension,
+      withModalPresets([
+        modalBasicCustomPresets,
       ]),
       withDefaultOptions({
         position: 'top',

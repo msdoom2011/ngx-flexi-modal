@@ -73,7 +73,7 @@ export function showComponent<T extends object>(
 
   return cy.inject(FlexiModalsService)
     .then(service => {
-      return cy.wrap(service.showComponent(component, <any>options));
+      return cy.wrap(service.show(component, <any>options));
     });
 }
 

@@ -69,7 +69,7 @@ export class ShowcaseComponent {
   }
 
   public onOpenComponentModal(): void {
-    this.modals.showComponent(ModalAwareComponent, {
+    this.modals.show(ModalAwareComponent, {
       // title: 'Modal title',
       actions: [
         {

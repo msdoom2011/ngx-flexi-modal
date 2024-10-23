@@ -78,7 +78,7 @@ describe('Option "onClose"', () => {
           if ($event.type === FmModalEventType.BeforeClose) {
             const modalsService = TestBed.inject(FlexiModalsService);
 
-            modalsService.showComponent(SimpleTextComponent, { id: innerModalId });
+            modalsService.show(SimpleTextComponent, { id: innerModalId });
             $event.preventDefault();
           }
         });

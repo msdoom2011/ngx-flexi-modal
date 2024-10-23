@@ -1,5 +1,5 @@
 import {IFmModalWithComponentOptions, IFmModalOptions} from '../services/modals/flexi-modals.definitions';
-import {IFmModalBasicInputs} from '../extensions/basic/fm-modal-basic.definitions';
+import {IFmModalBasicInputs} from '../presets/basic/fm-modal-basic.definitions';
 import {FmModalWithComponent} from '../models/fm-modal-with-component';
 
 export function generateRandomId(): number {

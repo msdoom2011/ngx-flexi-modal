@@ -1,7 +1,10 @@
 import { EnvironmentProviders, makeEnvironmentProviders, Provider } from '@angular/core';
 
-import { IFmExtension, IFmModalOptions, TFmWidthPreset } from './services/modals/flexi-modals.definitions';
-import { fmModalBasicExtension } from './extensions/basic/fm-modal-basic.extension';
+import { IFmModalPresets, IFmModalOptions, TFmWidthPreset } from './services/modals/flexi-modals.definitions';
+import { FmModalWithComponentFactory } from './services/modals/factories/fm-modal-with-component.factory';
+import { FmModalWithTemplateFactory } from './services/modals/factories/fm-modal-with-template.factory';
+import { FmModalPresetsFactory } from './services/modals/factories/fm-modal-presets.factory';
+import { fmModalBasicPresets } from './presets/basic/fm-modal-basic.presets';
 import {
   IFmModalColorScheme,
   IFmModalStylingOptions,
@@ -10,9 +13,11 @@ import {
 import {
   FLEXI_MODAL_COLOR_SCHEME,
   FLEXI_MODAL_DEFAULT_OPTIONS,
-  FLEXI_MODAL_EXTENSION,
+  FLEXI_MODAL_PRESET_COLLECTION,
+  FLEXI_MODAL_FACTORY,
   FLEXI_MODAL_STYLING_OPTIONS,
-  FLEXI_MODAL_THEME, FLEXI_MODAL_WIDTH_PRESETS,
+  FLEXI_MODAL_THEME,
+  FLEXI_MODAL_WIDTH_PRESETS,
 } from './flexi-modals.tokens';
 
 /**
@@ -23,7 +28,10 @@ import {
  */
 export function provideFlexiModals(...providers: Array<Array<Provider>> | Array<Provider>): EnvironmentProviders {
   return makeEnvironmentProviders([
-    { provide: FLEXI_MODAL_EXTENSION, useValue: fmModalBasicExtension, multi: true },
+    { provide: FLEXI_MODAL_PRESET_COLLECTION, useValue: fmModalBasicPresets, multi: true },
+    { provide: FLEXI_MODAL_FACTORY, useClass: FmModalWithComponentFactory, multi: true },
+    { provide: FLEXI_MODAL_FACTORY, useClass: FmModalWithTemplateFactory, multi: true },
+    { provide: FLEXI_MODAL_FACTORY, useClass: FmModalPresetsFactory, multi: true },
     ...providers,
   ]);
 }
@@ -66,8 +74,8 @@ export function withWidthPresets(presets: Record<TFmWidthPreset, number>): Array
   ];
 }
 
-export function withExtensions(extensions: Array<IFmExtension<any>>): Array<Provider> {
-  return extensions.map(extension => (
-    { provide: FLEXI_MODAL_EXTENSION, useValue: extension, multi: true }
+export function withModalPresets(presetCollections: Array<IFmModalPresets<any>>): Array<Provider> {
+  return presetCollections.map(presetCollection => (
+    { provide: FLEXI_MODAL_PRESET_COLLECTION, useValue: presetCollection, multi: true }
   ));
 }

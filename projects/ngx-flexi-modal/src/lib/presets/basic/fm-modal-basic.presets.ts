@@ -1,10 +1,10 @@
 import {FmModalBasicComponent} from './components/modal-basic/fm-modal-basic.component';
 import {FM_MODAL_NO_BUTTON_ID, FM_MODAL_YES_BUTTON_ID} from './fm-modal-basic.constants';
-import {IFmModalBasicExtensionOptionsByModalTypes} from './fm-modal-basic.definitions';
-import {IFmExtension} from '../../services/modals/flexi-modals.definitions';
+import {IFmModalBasicPresetsOptionsByModalTypes} from './fm-modal-basic.definitions';
+import {IFmModalPresets} from '../../services/modals/flexi-modals.definitions';
 import {extendBasicModalOptions} from './fm-modal-basic.helpers';
 
-export const fmModalBasicExtension: IFmExtension<IFmModalBasicExtensionOptionsByModalTypes> = {
+export const fmModalBasicPresets: IFmModalPresets<IFmModalBasicPresetsOptionsByModalTypes> = {
 
   error: {
     component: FmModalBasicComponent,
@@ -15,7 +15,7 @@ export const fmModalBasicExtension: IFmExtension<IFmModalBasicExtensionOptionsBy
         icon: 'error'
       },
     },
-    convert(config: IFmModalBasicExtensionOptionsByModalTypes['error']) {
+    convert(config: IFmModalBasicPresetsOptionsByModalTypes['error']) {
       return extendBasicModalOptions(this.options, config)
     }
   },
@@ -29,7 +29,7 @@ export const fmModalBasicExtension: IFmExtension<IFmModalBasicExtensionOptionsBy
         icon: 'warning'
       },
     },
-    convert(config: IFmModalBasicExtensionOptionsByModalTypes['warning']) {
+    convert(config: IFmModalBasicPresetsOptionsByModalTypes['warning']) {
       return extendBasicModalOptions(this.options, config)
     }
   },
@@ -43,7 +43,7 @@ export const fmModalBasicExtension: IFmExtension<IFmModalBasicExtensionOptionsBy
         icon: 'success'
       },
     },
-    convert(config: IFmModalBasicExtensionOptionsByModalTypes['success']) {
+    convert(config: IFmModalBasicPresetsOptionsByModalTypes['success']) {
       return extendBasicModalOptions(this.options, config);
     }
   },
@@ -57,7 +57,7 @@ export const fmModalBasicExtension: IFmExtension<IFmModalBasicExtensionOptionsBy
         icon: 'info'
       },
     },
-    convert(config: IFmModalBasicExtensionOptionsByModalTypes['info']) {
+    convert(config: IFmModalBasicPresetsOptionsByModalTypes['info']) {
       return extendBasicModalOptions(this.options, config);
     }
   },
@@ -72,7 +72,7 @@ export const fmModalBasicExtension: IFmExtension<IFmModalBasicExtensionOptionsBy
         icon: 'confirm'
       },
     },
-    convert(config: IFmModalBasicExtensionOptionsByModalTypes['confirm']) {
+    convert(config: IFmModalBasicPresetsOptionsByModalTypes['confirm']) {
       const options = extendBasicModalOptions(this.options, config);
 
       options.actions = [

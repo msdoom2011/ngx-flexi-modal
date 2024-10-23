@@ -142,7 +142,7 @@ export class FmModalComponent implements DoCheck, OnChanges, AfterContentInit, O
       return;
     }
 
-    this.service.updateModal(this.id(), { classes: this._classes() });
+    this.service.update(this.id(), { classes: this._classes() });
     this._classesChanged.set(false);
   }, {
     allowSignalWrites: true,
@@ -197,7 +197,7 @@ export class FmModalComponent implements DoCheck, OnChanges, AfterContentInit, O
 
     this._listenModalEvents();
 
-    const modal = this.service.showTemplate(bodyTpl, {
+    const modal = this.service.show(bodyTpl, {
       id: this._id(),
       title: this._title(),
       animation: this._animation(),
@@ -225,7 +225,7 @@ export class FmModalComponent implements DoCheck, OnChanges, AfterContentInit, O
   }
 
   public close(): void {
-    this.service.closeModal(this.id());
+    this.service.close(this.id());
   }
 
   public maximize(): void {
@@ -325,7 +325,7 @@ export class FmModalComponent implements DoCheck, OnChanges, AfterContentInit, O
     }
 
     if (Object.keys(options).length > 0) {
-      this.service.updateModal(this.id(), options);
+      this.service.update(this.id(), options);
     }
   }
 }

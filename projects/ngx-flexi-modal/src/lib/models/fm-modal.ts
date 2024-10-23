@@ -21,7 +21,7 @@ export abstract class FmModal<
   ContentToRenderT = any
 > {
 
-  public abstract readonly type: string;
+  public abstract readonly type: any;
 
   private readonly _config = signal<ConfigT>(<ConfigT>{});
 
@@ -96,7 +96,7 @@ export abstract class FmModal<
   }
 
   public update(options?: OptionsT): void {
-    this.service.updateModal(this.id(), options || this._config());
+    this.service.update(this.id(), options || this._config());
   }
 
   public maximize(): void {
@@ -124,7 +124,7 @@ export abstract class FmModal<
   }
 
   public close(): void {
-    this.service.closeModal(this.id());
+    this.service.close(this.id());
   }
 
 

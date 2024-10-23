@@ -2,10 +2,10 @@ import {IFmModalOptions} from '../../services/modals/flexi-modals.definitions';
 import {FmModalWithComponent} from '../../models/fm-modal-with-component';
 import {FmModalAction} from '../../models/actions/fm-modal-action';
 
-export type TFmModalBasicIcon = keyof IFmModalBasicExtensionOptionsByModalTypes | null;
+export type TFmModalBasicIcon = keyof IFmModalBasicPresetsOptionsByModalTypes | null;
 export type TFmModalBasicAlign = 'left' | 'center' | 'right';
 
-export interface IFmModalBasicExtensionOptionsByModalTypes {
+export interface IFmModalBasicPresetsOptionsByModalTypes {
   error: IFmModalBasicOptions;
   warning: IFmModalBasicOptions;
   success: IFmModalBasicOptions;

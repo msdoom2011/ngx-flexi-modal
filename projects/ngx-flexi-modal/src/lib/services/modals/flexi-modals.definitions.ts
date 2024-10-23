@@ -2,7 +2,7 @@ import {InputSignal, TemplateRef, Type} from '@angular/core';
 import {Observable} from 'rxjs';
 
 import {FmModalActionDirective} from '../../components/modal/directives/fm-modal-action.directive';
-import {IFmModalBasicExtensionOptionsByModalTypes} from '../../extensions/basic/fm-modal-basic.definitions';
+import {IFmModalBasicPresetsOptionsByModalTypes} from '../../presets/basic/fm-modal-basic.definitions';
 import {FmModalBeforeCloseEvent} from './events/fm-modal-before-close.event';
 import {FmModalBeforeOpenEvent} from './events/fm-modal-before-open.event';
 import {FmModalWithComponent} from '../../models/fm-modal-with-component';
@@ -42,26 +42,77 @@ export interface IFlexiModalAware {
 }
 
 
-// Extensions
+// Presets
 
 /**
- * An interface that is used for inheritance in case of creating your own extension
+ * An interface that is used for inheritance in case of creating your own presets
  */
-export interface IFmExtensionOptionsByModalTypes extends IFmModalBasicExtensionOptionsByModalTypes {
+export interface IFmModalPresetOptionsByModalTypes extends IFmModalBasicPresetsOptionsByModalTypes {
   // Must be empty here
 }
 
-export type IFmExtension<ModalTypeT extends IFmExtensionOptionsByModalTypes> = {
-  [K in keyof ModalTypeT]: IFmExtensionModalTypeConfig;
+export type IFmModalPresets<ModalTypeT extends IFmModalPresetOptionsByModalTypes> = {
+  [K in keyof ModalTypeT]: IFmModalPresetConfig;
 }
 
-export interface IFmExtensionModalTypeConfig<
+export interface IFmModalPresetConfig<
   ShortcutModalOptionsT extends Record<string, unknown> = any,
   ComponentT = any
 > {
   component: Type<ComponentT>;
   options: IFmModalWithComponentOptions<ComponentT>;
   convert: (config: ShortcutModalOptionsT) => IFmModalWithComponentOptions<ComponentT>;
+}
+
+
+// Definition of the show modal function
+
+/**
+ * Useful in case if there is need to extend current library by either new modal factory
+ * or custom presets.
+ */
+export interface IFmShowModalFn {
+
+  // show modal with component
+
+  <InputsT extends object = Record<string, any>, ComponentT = object>(
+    component: Type<ComponentT>,
+  ): FmModalWithComponent<ComponentT, InputsT> | null;
+
+  <InputsT extends object = Record<string, any>, ComponentT = object>(
+    component: Type<ComponentT>,
+    openUntil$: Observable<any>
+  ): FmModalWithComponent<ComponentT, InputsT> | null;
+
+  <InputsT extends object = Record<string, any>, ComponentT = object>(
+    component: Type<ComponentT>,
+    options: IFmModalWithComponentOptions<ComponentT>
+  ): FmModalWithComponent<ComponentT, InputsT> | null;
+
+
+  // show modal with template
+
+  <ContextT extends Record<string, unknown>>(
+    template: TemplateRef<ContextT>,
+  ): FmModalWithTemplate<ContextT> | null;
+
+  <ContextT extends Record<string, unknown>>(
+    template: TemplateRef<ContextT>,
+    openUntil$: Observable<unknown>,
+  ): FmModalWithTemplate<ContextT> | null;
+
+  <ContextT extends Record<string, unknown>>(
+    template: TemplateRef<ContextT>,
+    options: IFmModalWithTemplateOptions<ContextT>,
+  ): FmModalWithTemplate<ContextT> | null;
+
+
+  // show modal using a preset
+
+  <ComponentT, T extends keyof IFmModalPresetOptionsByModalTypes>(
+    modalType: T,
+    options: IFmModalPresetOptionsByModalTypes[T]
+  ): FmModalWithComponent<ComponentT> | null;
 }
 
 
@@ -107,7 +158,7 @@ export type IFmModalOptions<ModalT extends FmModal = FmModal> = TModalOptions<IF
 
 export interface IFmModalWithComponentConfig<
   ComponentT,
-  InputsT extends Record<string, unknown> = Record<string, unknown>
+  InputsT extends object = Record<string, unknown>
 >
 extends IFmModalConfig<FmModalWithComponent<ComponentT>> {
   inputs: InputsT;
@@ -115,7 +166,7 @@ extends IFmModalConfig<FmModalWithComponent<ComponentT>> {
 
 export type IFmModalWithComponentOptions<
   ComponentT,
-  InputsT extends Record<string, unknown> = Record<string, unknown>
+  InputsT extends object = Record<string, unknown>
 > = TModalOptions<IFmModalWithComponentConfig<ComponentT, InputsT>>;
 
 

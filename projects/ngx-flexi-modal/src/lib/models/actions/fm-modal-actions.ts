@@ -101,13 +101,13 @@ export class FmModalActions<ModalT extends FmModal> {
         newActionConfig$.complete();
       });
 
-    this._service.updateModal(this._modal.id(), { actions: actionConfigs });
+    this._service.update(this._modal.id(), { actions: actionConfigs });
 
     return newActionConfig$.asObservable();
   }
 
   public replaceAll(actionConfigs: Array<IFmModalActionConfig>): void {
-    this._service.updateModal(this._modal.id(), { actions: actionConfigs });
+    this._service.update(this._modal.id(), { actions: actionConfigs });
   }
 
   public removeById(actionId: string): void {
@@ -121,7 +121,7 @@ export class FmModalActions<ModalT extends FmModal> {
 
     actionConfigs.splice(actionIndex, 1);
 
-    this._service.updateModal(this._modal.id(), { actions: actionConfigs });
+    this._service.update(this._modal.id(), { actions: actionConfigs });
   }
 
   public wrap(actionConfig: IFmModalActionConfig): FmModalAction {
