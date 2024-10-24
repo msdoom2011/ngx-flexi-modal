@@ -1,4 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, input } from '@angular/core';
+
+import { IFmModalAware } from '../../../projects/ngx-flexi-modal/src/lib/components/fm-modal.abstract';
+import { FmModal } from '../../../projects/ngx-flexi-modal/src/lib/models/fm-modal';
 
 @Component({
   selector: 'cy-many-text',
@@ -20,7 +23,10 @@ import { Component } from '@angular/core';
     }
   `
 })
-export class ManyTextComponent {
+export class ManyTextComponent implements IFmModalAware {
 
   public rows: Array<number> = new Array(30).fill(1);
+
+  // @TODO implementation of IFmModalAware MUST be optional!!!!
+  public modal = input<FmModal | null>();
 }

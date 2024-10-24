@@ -1,4 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, input } from '@angular/core';
+
+import { IFmModalAware } from '../../../projects/ngx-flexi-modal/src/lib/components/fm-modal.abstract';
+import { FmModal } from '../../../projects/ngx-flexi-modal/src/lib/models/fm-modal';
 
 @Component({
   selector: 'cy-simple-text',
@@ -16,9 +19,12 @@ import { Component } from '@angular/core';
     }
   `
 })
-export class SimpleTextComponent {
+export class SimpleTextComponent implements IFmModalAware {
 
   static content = 'The simple text component works!';
 
   public content = SimpleTextComponent.content;
+
+  // @TODO implementation of IFmModalAware MUST be optional!!!!
+  public modal = input<FmModal | null>();
 }

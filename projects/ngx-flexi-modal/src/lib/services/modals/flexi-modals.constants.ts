@@ -43,6 +43,7 @@ export const fmModalOptionsDefault: IFmModalConfig = {
   height: 'fit-content',
   scroll: 'content',
   spinner: 'round-dotted',
+  autofocus: false,
   maximized: false,
   closable: true,
   maximizable: false,

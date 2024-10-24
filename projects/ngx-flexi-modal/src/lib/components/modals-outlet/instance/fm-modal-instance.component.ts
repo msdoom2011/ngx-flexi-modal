@@ -126,16 +126,161 @@ implements OnInit, OnDestroy {
       return;
     }
 
-    const focusInModal = this._elementRef.nativeElement.contains(document.activeElement);
-    const focusableElements = this._focusableElements();
+    const isFocusInModal = this._elementRef.nativeElement.contains(document.activeElement);
+    const isAutofocusEnabled = this.modal().config().autofocus;
     const isActive = this.modal().active();
 
-    if (!isActive && focusInModal) {
+    if (!isActive && isFocusInModal) {
       return (<any>document.activeElement).blur();
 
-    } else if (!isActive || focusInModal) {
+    } else if (!isActive || !isAutofocusEnabled || isFocusInModal) {
       return;
     }
+
+    this._makeInitFocus();
+  });
+
+
+  // Lifecycle hooks
+
+  public ngOnInit(): void {
+    this._initializeModalListeners();
+    this._initializeOnEscapeKeydown();
+    this._initializeOnTabKeydown();
+  }
+
+  public ngOnDestroy(): void {
+    this._destroy$.next();
+    this._destroy$.complete();
+  }
+
+  public ngAfterRender = afterRender({ read: () => {
+    if (this.modal().ready() && this._focusableElementsUpdateRequested) {
+      this._focusableElementsUpdateRequested = false;
+      this._focusableElements.set(findFocusableElements(this._elementRef.nativeElement));
+    }
+  }});
+
+
+  // Internal implementation
+
+  private _initializeModalListeners(): void {
+    this.modal().events$
+      .pipe(
+        filter(() => this.modal().active()),
+        takeUntil(this._destroy$)
+      )
+      .subscribe(($event: TFmModalEvent) => {
+        switch ($event.type) {
+          case FmModalEventType.Ready:
+          case FmModalEventType.ContentChange:
+            this._focusableElementsUpdateRequested = true;
+            break;
+
+          case FmModalEventType.Update: {
+            const { actions, actionsTpl, headerTpl, footerTpl } = $event.changes;
+
+            if (actions || actionsTpl || headerTpl || footerTpl) {
+              this._focusableElementsUpdateRequested = true;
+            }
+          }
+        }
+      });
+  }
+
+  private _initializeOnEscapeKeydown(): void {
+    this._zone.runOutsideAngular(() => {
+      fromEvent<KeyboardEvent>(window, 'keydown')
+        .pipe(
+          filter(($event: KeyboardEvent) => {
+            return !!(
+              $event.key === 'Escape'
+              && this.modal().active()
+              && this.modal()?.config().closable
+            );
+          }),
+          takeUntil(this._destroy$),
+        )
+        .subscribe(() => {
+          this.modal().close();
+        });
+    });
+  }
+
+  private _initializeOnTabKeydown(): void {
+    const modalElement = this._elementRef.nativeElement;
+
+    this._zone.runOutsideAngular(() => {
+      fromEvent<FocusEvent>(window, 'focus', { capture: true })
+        .pipe(
+          filter(() => this.modal().active()),
+          takeUntil(this._destroy$),
+        )
+        .subscribe(($event: FocusEvent) => {
+          if (
+            !$event.target
+            || !($event.target instanceof Element)
+          ) {
+            return;
+
+          } else if (!modalElement.contains($event.target)) {
+            this._makeInitFocus();
+          }
+        });
+
+      fromEvent<KeyboardEvent>(window, 'keydown')
+        .pipe(
+          filter(($event: KeyboardEvent) => {
+            return $event.key === 'Tab' && this.modal().active();
+          }),
+          takeUntil(this._destroy$),
+        )
+        .subscribe(($event: KeyboardEvent) => {
+          this._onTabKeydownCallback($event);
+        });
+    });
+  }
+
+  private _onTabKeydownCallback($event: KeyboardEvent): void {
+    const elements = this._focusableElements();
+
+    if (!elements.length) {
+      $event.preventDefault();
+
+      return;
+    }
+
+    const focusedElement = <Element & { focus: () => any }>document.activeElement;
+    let indexToFocus = elements.indexOf(focusedElement);
+
+    if (
+      focusedElement !== document.body
+      && !this._elementRef.nativeElement.contains(focusedElement)
+    ) {
+      return this._makeInitFocus();
+
+    } else if (indexToFocus < 0) {
+      return;
+    }
+
+    indexToFocus += !$event.shiftKey ? 1 : -1;
+
+    if (!elements[indexToFocus]) {
+      $event.preventDefault();
+
+      if (indexToFocus >= elements.length) {
+        indexToFocus = 0;
+
+      } else if (indexToFocus < 0) {
+        indexToFocus = elements.length - 1;
+      }
+
+      elements[indexToFocus].focus();
+    }
+  }
+
+  private _makeInitFocus(): void {
+    const focusableElements = this._focusableElements();
 
     for (const element of focusableElements) {
       if (element.matches('[autofocus], [fm-autofocus="true"]')) {
@@ -168,123 +313,6 @@ implements OnInit, OnDestroy {
 
     } else if (!focusableElements.length) {
       (<any>document.activeElement).blur();
-    }
-  });
-
-
-  // Lifecycle hooks
-
-  public ngOnInit(): void {
-    this._initializeModalListeners();
-    this._initializeOnEscapeKeydown();
-    this._initializeOnTabKeydown();
-  }
-
-  public ngOnDestroy(): void {
-    this._destroy$.next();
-    this._destroy$.complete();
-  }
-
-  public ngAfterRender = afterRender({ read: () => {
-    if (this.modal().ready() && this._focusableElementsUpdateRequested) {
-      this._focusableElementsUpdateRequested = false;
-      this._focusableElements.set(findFocusableElements(this._elementRef.nativeElement));
-    }
-  }});
-
-
-  // Internal implementation
-
-  protected _initializeModalListeners(): void {
-    this.modal().events$
-      .pipe(
-        filter(() => this.modal().active()),
-        takeUntil(this._destroy$)
-      )
-      .subscribe(($event: TFmModalEvent) => {
-        switch ($event.type) {
-          case FmModalEventType.Ready:
-          case FmModalEventType.ContentChange:
-            this._focusableElementsUpdateRequested = true;
-            break;
-
-          case FmModalEventType.Update: {
-            const { actions, actionsTpl, headerTpl, footerTpl } = $event.changes;
-
-            if (actions || actionsTpl || headerTpl || footerTpl) {
-              this._focusableElementsUpdateRequested = true;
-            }
-          }
-        }
-      });
-  }
-
-  protected _initializeOnEscapeKeydown(): void {
-    this._zone.runOutsideAngular(() => {
-      fromEvent<KeyboardEvent>(window, 'keydown')
-        .pipe(
-          filter(($event: KeyboardEvent) => {
-            return !!(
-              $event.key === 'Escape'
-              && this.modal().active()
-              && this.modal()?.config().closable
-            );
-          }),
-          takeUntil(this._destroy$),
-        )
-        .subscribe(() => {
-          this.modal().close();
-        });
-    });
-  }
-
-  protected _initializeOnTabKeydown(): void {
-    this._zone.runOutsideAngular(() => {
-      fromEvent<KeyboardEvent>(window, 'keydown')
-        .pipe(
-          filter(($event: KeyboardEvent) => {
-            return $event.key === 'Tab' && this.modal().active();
-          }),
-          takeUntil(this._destroy$),
-        )
-        .subscribe(($event: KeyboardEvent) => {
-          this._onTabKeydownCallback($event);
-        });
-    });
-  }
-
-  protected _onTabKeydownCallback($event: KeyboardEvent): void {
-    const elements = this._focusableElements();
-
-    if (!elements.length) {
-      $event.preventDefault();
-
-      return;
-    }
-
-    const focusedElement = <Element & { focus: () => any }>document.activeElement;
-    let indexToFocus = elements.indexOf(focusedElement);
-
-    if (indexToFocus < 0) {
-      $event.preventDefault();
-      elements[0].focus();
-
-      return;
-    }
-
-    indexToFocus += !$event.shiftKey ? 1 : -1;
-
-    if (!elements[indexToFocus]) {
-      $event.preventDefault();
-
-      if (indexToFocus >= elements.length) {
-        indexToFocus = 0;
-
-      } else if (indexToFocus < 0) {
-        indexToFocus = elements.length - 1;
-      }
-
-      elements[indexToFocus].focus();
     }
   }
 }

@@ -147,6 +147,7 @@ export interface IFmModalConfig<ModalT extends FmModal = FmModal<any, any>> {
   width: TFmModalWidth;
   classes: Array<string> | undefined;
   theme: string | undefined;
+  autofocus: boolean;
   maximized: boolean;
   closable: boolean;
   maximizable: boolean;
