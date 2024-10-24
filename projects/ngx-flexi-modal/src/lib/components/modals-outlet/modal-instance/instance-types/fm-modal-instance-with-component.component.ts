@@ -62,6 +62,7 @@ implements OnInit, AfterViewInit {
       this._startLoading$.next();
 
       content.then(component => {
+        modal.markContentChanged();
         this._stopLoading$.next();
         this._renderComponent(component);
       });

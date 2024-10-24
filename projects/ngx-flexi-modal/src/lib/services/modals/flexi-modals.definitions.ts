@@ -1,19 +1,20 @@
 import {TemplateRef, Type} from '@angular/core';
 import {Observable} from 'rxjs';
 
-import {FmModalActionDirective} from '../../components/modal/directives/fm-modal-action.directive';
 import {IFmModalBasicPresetsOptionsByModalTypes} from '../../presets/basic/fm-modal-basic.definitions';
+import {FmModalActionDirective} from '../../components/modal/directives/fm-modal-action.directive';
+import { FmModalContentChangeEvent } from './events/fm-modal-content-change.event';
 import {FmModalBeforeCloseEvent} from './events/fm-modal-before-close.event';
 import {FmModalBeforeOpenEvent} from './events/fm-modal-before-open.event';
 import {FmModalWithComponent} from '../../models/fm-modal-with-component';
 import {FmModalWithTemplate} from '../../models/fm-modal-with-template';
+import { FmModalMaximizedChangeEvent } from './events/fm-modal-maximized-change.event';
 import {FmModalAction} from '../../models/actions/fm-modal-action';
 import {FmModalUpdateEvent} from './events/fm-modal-update.event';
 import {FmModalCloseEvent} from './events/fm-modal-close.event';
 import {FmModalOpenEvent} from './events/fm-modal-open.event';
 import {FmModal} from '../../models/fm-modal';
-import { FmModalMaximizeEvent } from './events/fm-modal-maximize.event';
-import { FmModalMinimizeEvent } from './events/fm-modal-minimize.event';
+import { FmModalActiveChangeEvent } from './events/fm-modal-active-change.event';
 
 export type TFmWidthPreset = 'tiny' | 'small' | 'medium' | 'big' | 'large';
 export type TFmModalWidth = 'fit-content' | 'fit-window' | TFmWidthPreset | number;
@@ -29,8 +30,9 @@ export type TFmModalEvent = (
   | FmModalBeforeCloseEvent
   | FmModalCloseEvent
   | FmModalUpdateEvent
-  | FmModalMaximizeEvent
-  | FmModalMinimizeEvent
+  | FmModalActiveChangeEvent
+  | FmModalContentChangeEvent
+  | FmModalMaximizedChangeEvent
 );
 
 
@@ -120,8 +122,8 @@ export interface IFmModalConfig<ModalT extends FmModal = FmModal> {
   actionsTpl: Array<FmModalActionDirective> | undefined;
   onOpen: (($event: FmModalOpenEvent<ModalT>) => void) | undefined;
   onClose: (($event: FmModalBeforeCloseEvent<ModalT>) => void) | undefined;
-  onMaximize: (($event: FmModalMaximizeEvent<ModalT>) => void) | undefined;
-  onMinimize: (($event: FmModalMinimizeEvent<ModalT>) => void) | undefined;
+  onMaximize: (($event: FmModalMaximizedChangeEvent<ModalT>) => void) | undefined;
+  onMinimize: (($event: FmModalMaximizedChangeEvent<ModalT>) => void) | undefined;
   animation: TFmModalOpeningAnimation;
   position: TFmModalPosition;
   spinner: TFmModalSpinnerType;
@@ -189,6 +191,7 @@ export interface IFmModalActionConfig {
   label: string;
   onClick: (($event: MouseEvent, action: FmModalAction) => unknown) | undefined;
   disabled: boolean;
+  autofocus: boolean;
   closeOnClick: boolean;
   primary: boolean;
   position: TFmModalButtonPosition;

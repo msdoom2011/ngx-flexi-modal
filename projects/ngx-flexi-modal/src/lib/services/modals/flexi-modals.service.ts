@@ -1,9 +1,10 @@
-import { computed, inject, Injectable, signal } from '@angular/core';
+import { computed, effect, inject, Injectable, signal } from '@angular/core';
 import { filter, Observable, Subject } from 'rxjs';
 
 import { IFmModalOptions, IFmOpenModalFn, TFmModalEvent } from './flexi-modals.definitions';
 import { FmModalBeforeCloseEvent } from './events/fm-modal-before-close.event';
 import { FmModalBeforeOpenEvent } from './events/fm-modal-before-open.event';
+import { FmModalMaximizedChangeEvent } from './events/fm-modal-maximized-change.event';
 import { FmModalUpdateEvent } from './events/fm-modal-update.event';
 import { FmModalCloseEvent } from './events/fm-modal-close.event';
 import { FmModalOpenEvent } from './events/fm-modal-open.event';
@@ -11,8 +12,7 @@ import { FLEXI_MODAL_FACTORY } from '../../flexi-modals.tokens';
 import { FmModalFactory } from './factories/fm-modal.factory';
 import { isPlainObject } from '../../tools/utils';
 import { FmModal } from '../../models/fm-modal';
-import { FmModalMinimizeEvent } from './events/fm-modal-minimize.event';
-import { FmModalMaximizeEvent } from './events/fm-modal-maximize.event';
+import { FmModalActiveChangeEvent } from './events/fm-modal-active-change.event';
 
 @Injectable({
   providedIn: 'root'
@@ -29,8 +29,22 @@ export class FlexiModalsService {
     return this._modals();
   });
 
+  constructor() {
+    effect(() => {
+      const activeModal = this.getActive();
+
+      if (activeModal) {
+        this.emitEvent(new FmModalActiveChangeEvent(activeModal, true));
+      }
+    });
+  }
+
   public get events$(): Observable<TFmModalEvent>{
     return this._events$.pipe(filter($event => !$event.stopped));
+  }
+
+  public emitEvent($event: TFmModalEvent): void {
+    this._events$.next($event);
   }
 
   public getFactories(): Array<FmModalFactory<any>> {
@@ -60,7 +74,7 @@ export class FlexiModalsService {
     const modal = factory.create(subject, modalOptions);
     const $beforeOpenEvent = new FmModalBeforeOpenEvent(modal);
 
-    this._events$.next($beforeOpenEvent);
+    this.emitEvent($beforeOpenEvent);
 
     if ($beforeOpenEvent.prevented || $beforeOpenEvent.stopped) {
       return null;
@@ -73,7 +87,7 @@ export class FlexiModalsService {
       .subscribe(() => {
         const $openEvent = new FmModalOpenEvent(modal);
 
-        this._events$.next($openEvent);
+        this.emitEvent($openEvent);
 
         if (!$openEvent.stopped) {
           modal.config().onOpen?.($openEvent);
@@ -96,21 +110,16 @@ export class FlexiModalsService {
       return [ ...modals ];
     });
 
-    this._events$.next(new FmModalUpdateEvent(
-      modal,
-      changes,
-    ));
+    this.emitEvent(new FmModalUpdateEvent(modal, changes));
 
-    if ('maximized' in changes) {
-      const $maximizeEvent = changes.maximized
-        ? new FmModalMaximizeEvent(modal)
-        : new FmModalMinimizeEvent(modal);
+    if ('maximized' in changes && typeof changes.maximized === 'boolean') {
+      const $maximizeEvent = new FmModalMaximizedChangeEvent(modal, changes.maximized);
 
-      this._events$.next($maximizeEvent);
+      this.emitEvent($maximizeEvent);
 
       changes.maximized
-        ? modal.config().onMaximize?.(<FmModalMaximizeEvent>$maximizeEvent)
-        : modal.config().onMinimize?.(<FmModalMinimizeEvent>$maximizeEvent);
+        ? modal.config().onMaximize?.($maximizeEvent)
+        : modal.config().onMinimize?.($maximizeEvent);
     }
   }
 
@@ -123,7 +132,7 @@ export class FlexiModalsService {
 
     const $beforeCloseEvent = new FmModalBeforeCloseEvent(modal);
 
-    this._events$.next($beforeCloseEvent);
+    this.emitEvent($beforeCloseEvent);
 
     if (!$beforeCloseEvent.stopped) {
       modal.config().onClose?.($beforeCloseEvent);
@@ -134,7 +143,7 @@ export class FlexiModalsService {
     }
 
     this._modals.update(modals => modals.filter(modalInst => modalInst.id() !== modalId));
-    this._events$.next(new FmModalCloseEvent(modal));
+    this.emitEvent(new FmModalCloseEvent(modal));
   }
 
   public closeAll(): void {

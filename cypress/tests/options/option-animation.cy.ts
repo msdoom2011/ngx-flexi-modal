@@ -50,7 +50,7 @@ describe('Option "animation"', () => {
     const animations: Record<TFmModalOpeningAnimation, TFmModalOpeningAnimation> = {
       'fade-in': 'fade-in',
       'zoom-in': 'zoom-in',
-      'zoom-out': 'slide',
+      'zoom-out': 'zoom-out',
       'slide': 'slide',
       'appear': 'appear',
       'fall-down': 'fall-down',

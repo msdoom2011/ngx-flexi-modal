@@ -51,6 +51,10 @@ implements IFmModalAware<ModalT>, AfterViewInit {
       footerTpl: this.footerRef()?.templateRef,
     };
 
+    if (!Object.values(options).filter(Boolean).length) {
+      return;
+    }
+
     modal.update(normalizeOptions(options));
   }
 }

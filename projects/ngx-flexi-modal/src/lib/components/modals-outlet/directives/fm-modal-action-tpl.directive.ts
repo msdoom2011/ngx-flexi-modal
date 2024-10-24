@@ -1,4 +1,5 @@
 import {Directive, inject, TemplateRef} from '@angular/core';
+
 import { FmModal } from '../../../models/fm-modal';
 
 interface IFmModalActionTplDirectiveContext<ModalT extends FmModal = FmModal> {
@@ -6,6 +7,7 @@ interface IFmModalActionTplDirectiveContext<ModalT extends FmModal = FmModal> {
   $label: string;
   $icon: string | undefined;
   $disabled: boolean;
+  $autofocus: boolean;
   $primary: boolean;
   $classes: string;
   $onClick: ($event: MouseEvent) => void;

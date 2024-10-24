@@ -22,12 +22,16 @@ export class FmModalAction {
     return this._config().id || '';
   });
 
-  public readonly config = computed<IFmModalActionConfig>(() => {
-    return this._config();
-  });
-
   public readonly index = computed<number>(() => {
     return this.modal.actions.getIndex(this.id());
+  });
+
+  public readonly disabled = computed<boolean>(() => {
+    return this._config().disabled;
+  });
+
+  public readonly config = computed<IFmModalActionConfig>(() => {
+    return this._config();
   });
 
 

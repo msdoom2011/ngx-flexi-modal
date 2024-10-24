@@ -1,5 +1,6 @@
 import {
-  afterRender, AfterViewInit,
+  afterRender,
+  AfterViewInit,
   computed,
   Directive,
   effect,
@@ -16,10 +17,11 @@ import {
   ViewContainerRef,
 } from '@angular/core';
 import {filter, fromEvent, Subject, Subscription, takeUntil} from 'rxjs';
-import {toObservable} from '@angular/core/rxjs-interop';
 
+import { FmModalMaximizedChangeEvent } from '../../../services/modals/events/fm-modal-maximized-change.event';
 import {FM_MODAL_HEADER_ACTION_CLASS} from './instance-layout/fm-modal-instance-layout.constants';
 import {FlexiModalsThemeService} from '../../../services/theme/flexi-modals-theme.service';
+import { TFmModalEvent } from '../../../services/modals/flexi-modals.definitions';
 import {FlexiModalsService} from '../../../services/modals/flexi-modals.service';
 import {findFocusableElements} from '../../../tools/utils';
 import {FmModal} from '../../../models/fm-modal';
@@ -114,6 +116,14 @@ export abstract class FmModalInstance<ModalT extends FmModal> implements OnInit,
       return;
     }
 
+    for (const element of focusableElements) {
+      if (element.matches('[autofocus], [fm-autofocus="true"]')) {
+        element.focus();
+
+        return;
+      }
+    }
+
     const viewportBox = this._viewportRef().nativeElement.getBoundingClientRect();
     let focusSucceeded = false;
 
@@ -171,10 +181,15 @@ export abstract class FmModalInstance<ModalT extends FmModal> implements OnInit,
   protected abstract _renderContent(): void;
 
   protected _initializeFocusableElements(): void {
-    toObservable(this.modal().maximized, { injector: this._injector })
-      .pipe(takeUntil(this._destroy$))
-      .subscribe(() => {
-        this._focusableElementsUpdateRequested.set(true);
+    this.modal().events$
+      .pipe(
+        filter(() => this.modal().active()),
+        takeUntil(this._destroy$)
+      )
+      .subscribe(($event: TFmModalEvent) => {
+        if ($event instanceof FmModalMaximizedChangeEvent) {
+          this._focusableElementsUpdateRequested.set(true);
+        }
       });
   }
 
@@ -226,15 +241,6 @@ export abstract class FmModalInstance<ModalT extends FmModal> implements OnInit,
 
     if (indexToFocus < 0) {
       $event.preventDefault();
-
-      for (const element of elements) {
-        if (element.hasAttribute('autofocus')) {
-          element.focus();
-
-          return;
-        }
-      }
-
       elements[0].focus();
 
       return;

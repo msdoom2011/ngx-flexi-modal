@@ -1,13 +1,16 @@
-import {computed, signal} from '@angular/core';
-import {BehaviorSubject, filter, Observable} from 'rxjs';
+import { computed, signal } from '@angular/core';
+import { BehaviorSubject, filter, Observable, Subject, takeUntil } from 'rxjs';
 
-import {fmModalActionOptionsDefault, fmModalOptionsDefault} from '../services/modals/flexi-modals.constants';
-import {IFmModalConfig, IFmModalOptions, TFmModalEvent} from '../services/modals/flexi-modals.definitions';
-import {FlexiModalsThemeService} from '../services/theme/flexi-modals-theme.service';
-import {IFmModalTheme} from '../services/theme/flexi-modals-theme.definitions';
-import {FlexiModalsService} from '../services/modals/flexi-modals.service';
-import {FmModalActions} from './actions/fm-modal-actions';
-import {generateRandomId} from '../tools/utils';
+import { fmModalActionOptionsDefault, fmModalOptionsDefault } from '../services/modals/flexi-modals.constants';
+import { IFmModalConfig, IFmModalOptions, TFmModalEvent } from '../services/modals/flexi-modals.definitions';
+import { FmModalContentChangeEvent } from '../services/modals/events/fm-modal-content-change.event';
+import { FlexiModalsThemeService } from '../services/theme/flexi-modals-theme.service';
+import { FmModalCloseEvent } from '../services/modals/events/fm-modal-close.event';
+import { FmModalOpenEvent } from '../services/modals/events/fm-modal-open.event';
+import { IFmModalTheme } from '../services/theme/flexi-modals-theme.definitions';
+import { FlexiModalsService } from '../services/modals/flexi-modals.service';
+import { generateRandomId, normalizeOptions } from '../tools/utils';
+import { FmModalActions } from './actions/fm-modal-actions';
 
 interface ILoadingInfo {
   loading: boolean;
@@ -27,6 +30,10 @@ export abstract class FmModal<
 
   private readonly _loading = signal<ILoadingInfo>({ loading: false, animation: true });
 
+  private readonly _rendered = signal<boolean>(false);
+
+  private readonly _destroy$ = new Subject<void>();
+
   public readonly actions!: FmModalActions<this>;
 
   public readonly events$!: Observable<TFmModalEvent>;
@@ -45,10 +52,24 @@ export abstract class FmModal<
     options: OptionsT,
   ) {
     this.actions = new FmModalActions(this.service, this);
+
     this.setOptions(options);
 
     this.events$ = this.service.events$
-      .pipe(filter(($event) => $event.id === this.id()))
+      .pipe(
+        filter(($event) => $event.id === this.id()),
+        takeUntil(this._destroy$),
+      );
+
+    this.events$.subscribe($event => {
+      if ($event instanceof FmModalOpenEvent) {
+        this._rendered.set(true);
+
+      } else if ($event instanceof FmModalCloseEvent) {
+        this._destroy$.next();
+        this._destroy$.complete();
+      }
+    });
   }
 
 
@@ -67,7 +88,11 @@ export abstract class FmModal<
   });
 
   public readonly active = computed<boolean>(() => {
-    return this.service.modals()[this.service.modals().length - 1]?.id === this.id;
+    return this.service.getActive()?.id === this.id;
+  });
+
+  public readonly rendered = computed<boolean>(() => {
+    return this._rendered();
   });
 
   public readonly theme = computed<IFmModalTheme>(() => {
@@ -97,6 +122,10 @@ export abstract class FmModal<
 
   public update(options?: OptionsT): void {
     this.service.update(this.id(), options || this._config());
+  }
+
+  public markContentChanged(): void {
+    this.service.emitEvent(new FmModalContentChangeEvent(this));
   }
 
   public maximize(): void {
@@ -133,10 +162,10 @@ export abstract class FmModal<
   protected _normalizeOptions(options: OptionsT): ConfigT {
     const config = <ConfigT>{
       ...(!Object.keys(this._config()).length
-        ? <ConfigT>fmModalOptionsDefault
+        ? fmModalOptionsDefault
         : this._config()
       ),
-      ...options
+      ...normalizeOptions(options)
     };
 
     if (!config.id) {

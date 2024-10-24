@@ -22,6 +22,7 @@ export class FmModalLoaderComponent implements OnInit, OnDestroy {
   }
 
   public ngOnDestroy(): void {
+    this._modalComponent.modal()?.markContentChanged();
     this._modalComponent.stopLoading();
   }
 }

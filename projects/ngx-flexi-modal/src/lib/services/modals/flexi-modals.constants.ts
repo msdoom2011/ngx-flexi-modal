@@ -10,8 +10,9 @@ export enum FmModalEventType {
   BeforeClose = 'BEFORE_CLOSE',
   Close = 'CLOSE',
   Update = 'UPDATE',
-  Maximize = 'MAXIMIZE',
-  Minimize = 'MINIMIZE',
+  ActiveChange = 'ACTIVE_CHANGE',
+  ContentChange = 'CONTENT_CHANGE',
+  MaximizedChange = 'MAXIMIZED_CHANGE',
 }
 
 export const fmModalWidthPresets: Record<TFmWidthPreset, number> = {
@@ -54,6 +55,7 @@ export const fmModalActionOptionsDefault: IFmModalActionConfig = {
   icon: undefined,
   classes: undefined,
   disabled: false,
+  autofocus: false,
   closeOnClick: true,
   primary: false,
   position: 'right',

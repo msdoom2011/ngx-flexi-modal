@@ -9,8 +9,7 @@ import {
   FmModalOpenEvent,
   FlexiModalsService,
   FlexiModalsThemeService,
-  FmModalMaximizeEvent,
-  FmModalMinimizeEvent,
+  FmModalMaximizedChangeEvent,
   FmModalLoaderComponent,
 } from 'ngx-flexi-modal';
 
@@ -75,7 +74,7 @@ export class ShowcaseComponent {
     this.modals.open(
       import('../modal-content/modal-aware/modal-aware.component').then(i => i.ModalAwareComponent),
       {
-        // title: 'Modal title',
+        title: 'Modal title',
         actions: [
           {
             label: 'Okay',
@@ -85,6 +84,7 @@ export class ShowcaseComponent {
           {
             closeOnClick: false,
             label: 'Show error',
+            autofocus: true,
             onClick: () => {
               this.modals.closeAll();
               this.modals.open('error', {
@@ -161,12 +161,12 @@ export class ShowcaseComponent {
     console.log('TEMPLATE MODAL OPENED!!!');
   }
 
-  public onTemplateModalMaximized($event: FmModalMaximizeEvent): void {
+  public onTemplateModalMaximized($event: FmModalMaximizedChangeEvent): void {
     console.log($event);
     console.log('TEMPLATE MODAL MAXIMIZED!!!');
   }
 
-  public onTemplateModalMinimized($event: FmModalMinimizeEvent): void {
+  public onTemplateModalMinimized($event: FmModalMaximizedChangeEvent): void {
     console.log($event);
     console.log('TEMPLATE MODAL MINIMIZED!!!');
   }

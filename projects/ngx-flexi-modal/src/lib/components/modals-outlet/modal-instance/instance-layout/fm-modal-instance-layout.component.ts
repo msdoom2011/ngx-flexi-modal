@@ -6,7 +6,6 @@ import {
   effect,
   ElementRef,
   inject,
-  Injector,
   OnDestroy,
   OnInit,
   signal,
@@ -14,29 +13,32 @@ import {
 } from '@angular/core';
 import { animate, AnimationBuilder, style } from '@angular/animations';
 import { NgComponentOutlet, NgTemplateOutlet } from '@angular/common';
-import { toObservable } from '@angular/core/rxjs-interop';
-import { filter, skip, Subject, takeUntil } from 'rxjs';
+import { filter, Subject, takeUntil } from 'rxjs';
 
+import { FmModalEventType, fmModalWidthPresets } from '../../../../services/modals/flexi-modals.constants';
 import { FmModalInstanceFooterComponent } from './footer/fm-modal-instance-footer.component';
 import { FmModalInstanceHeaderComponent } from './header/fm-modal-instance-header.component';
 import { FmModalInstanceLoaderComponent } from './loader/fm-modal-instance-loader.component';
-import { fmModalWidthPresets } from '../../../../services/modals/flexi-modals.constants';
 import { FmHeaderActionsComponent } from './header/actions/fm-header-actions.component';
 import { FLEXI_MODAL_WIDTH_PRESETS } from '../../../../flexi-modals.tokens';
 import { FM_MODAL_INSTANCE } from '../fm-modal-instance.providers';
+import { generateRandomId } from '../../../../tools/utils';
 import { FmModalInstance } from '../fm-modal-instance';
 import { FmModal } from '../../../../models/fm-modal';
 import {
+  TFmModalEvent,
   TFmModalOpeningAnimation,
   TFmModalWidth,
   TFmWidthPreset,
 } from '../../../../services/modals/flexi-modals.definitions';
 import {
+  IFmHeightAdjustParams,
   IFmModalMaximizeAnimationParams,
   IFmModalMinimizeAnimationParams,
 } from './fm-modal-instance-layout.definitions';
 import {
   fmModalOpeningAnimations,
+  getHeightAdjustAnimation,
   getLoaderAnimation,
   getMaximizeAnimation,
 } from './fm-modal-instance-layout.animations';
@@ -58,16 +60,21 @@ import {
   host: {
     'data-cy': 'modal-layout',
     'class': 'fm-modal--viewport',
+    '[class]': 'hostClasses()',
     '[class.scrollable]': 'modal().config().scroll === "modal"',
     '[class.maximized]': 'modal().maximized()',
-    '[class]': 'hostClasses()',
+    '[@adjustHeight]': `{
+      value: heightAdjustAnimationToken(),
+      params: heightAdjustAnimationParams(),
+    }`,
     '[@maximizeInOut]': `{
-      value: modal().maximized() ? "maximized" : "minimized",
-      params: getMaximizeAnimationParams(),
+      value: modal().maximized(),
+      params: maximizeAnimationParams(),
     }`,
     '(@maximizeInOut.done)': 'onMaximizeAnimationDone()'
   },
   animations: [
+    getHeightAdjustAnimation('adjustHeight'),
     getMaximizeAnimation('maximizeInOut'),
     getLoaderAnimation('fadeInOutLoader'),
   ],
@@ -75,7 +82,6 @@ import {
 export class FmModalInstanceLayoutComponent implements OnInit, OnDestroy {
 
   // Dependencies
-  private readonly _injector = inject(Injector);
   private readonly _elementRef = inject(ElementRef<HTMLElement>);
   private readonly _animationBuilder = inject(AnimationBuilder);
   private readonly _instance = inject<FmModalInstance<FmModal>>(FM_MODAL_INSTANCE);
@@ -89,11 +95,15 @@ export class FmModalInstanceLayoutComponent implements OnInit, OnDestroy {
 
   // Signals
   public readonly modal = this._instance.modal;
+  public readonly heightAdjustAnimationToken = signal<number>(0);
+  public readonly heightAdjustAnimationParams = signal<IFmHeightAdjustParams>(<any>{});
+  public readonly maximizeAnimationParams = signal<IFmModalMaximizeAnimationParams | IFmModalMinimizeAnimationParams>(<any>{});
   private readonly _loaderVisible = signal<boolean>(false);
   private readonly _maximizedChanged = signal<boolean>(false);
 
   // Private
   private readonly _destroy$ = new Subject<void>();
+  private readonly _createdAt = new Date();
 
 
   // Computed
@@ -197,14 +207,28 @@ export class FmModalInstanceLayoutComponent implements OnInit, OnDestroy {
   // Lifecycle hooks
 
   public ngOnInit(): void {
-    toObservable(this.modal().maximized, { injector: this._injector })
+    this.modal().events$
       .pipe(
-        skip(1),
         filter(() => this.modal().active()),
         takeUntil(this._destroy$),
       )
-      .subscribe(() => {
-        this._maximizedChanged.set(true);
+      .subscribe(($event: TFmModalEvent) => {
+        switch ($event.type) {
+          case FmModalEventType.MaximizedChange:
+            this.maximizeAnimationParams.set(this._calcMaximizeAnimationParams());
+            this._maximizedChanged.set(true);
+            break;
+
+          case FmModalEventType.ContentChange:
+            if (
+              !this.modal().maximized()
+              && new Date().valueOf() - this._createdAt.valueOf() > 50
+            ) {
+              this.heightAdjustAnimationParams.set(this._calcHeightAdjustAnimationParams());
+              this.heightAdjustAnimationToken.set(generateRandomId());
+            }
+            break;
+        }
       });
   }
 
@@ -233,47 +257,6 @@ export class FmModalInstanceLayoutComponent implements OnInit, OnDestroy {
     if (!this.modal().loading()) {
       this._loaderVisible.set(false);
     }
-  }
-
-
-  // Public methods
-
-  public getMaximizeAnimationParams(): IFmModalMaximizeAnimationParams | IFmModalMinimizeAnimationParams {
-    const hostElement = this._elementRef.nativeElement;
-    const bodyElement = this._bodyRef().nativeElement;
-    const bodyWrapperElement = this._bodyWrapperRef().nativeElement;
-    const bodyBox = bodyElement.getBoundingClientRect();
-    const hostBox = hostElement.getBoundingClientRect();
-    const hostStyles = window.getComputedStyle(hostElement);
-    const bodyStyles = window.getComputedStyle(bodyElement);
-    const bodyWrapperStyles = window.getComputedStyle(bodyWrapperElement);
-
-    if (!this.modal().maximized()) {
-      const headerHeight = this._headerWrapperRef()
-        ? this._headerWrapperRef()?.nativeElement.getBoundingClientRect().height
-        : 0;
-
-      return {
-        headerHeight: headerHeight + 'px',
-        alignItems: (
-          bodyBox.height
-          + parseInt(bodyWrapperStyles.paddingTop)
-          + parseInt(bodyWrapperStyles.paddingBottom)
-        ) > hostBox.height
-          ? 'flex-start'
-          : hostStyles.alignItems,
-      };
-    }
-
-    return {
-      width: bodyBox.width + 'px',
-      height: bodyBox.height + 'px',
-      paddingTop: bodyWrapperStyles.paddingTop,
-      paddingBottom: bodyWrapperStyles.paddingBottom,
-      paddingLeft: bodyWrapperStyles.paddingLeft,
-      paddingRight: bodyWrapperStyles.paddingRight,
-      borderRadius: bodyStyles.borderRadius,
-    };
   }
 
 
@@ -335,5 +318,51 @@ export class FmModalInstanceLayoutComponent implements OnInit, OnDestroy {
     player.onDone(() => {
       player.destroy();
     });
+  }
+
+  private _calcHeightAdjustAnimationParams(): IFmHeightAdjustParams {
+    const bodyBox = this._bodyRef().nativeElement.getBoundingClientRect();
+
+    return {
+      height: `${bodyBox.height}px`,
+    };
+  }
+
+  private _calcMaximizeAnimationParams(): IFmModalMaximizeAnimationParams | IFmModalMinimizeAnimationParams {
+    const hostElement = this._elementRef.nativeElement;
+    const bodyElement = this._bodyRef().nativeElement;
+    const bodyWrapperElement = this._bodyWrapperRef().nativeElement;
+    const bodyBox = bodyElement.getBoundingClientRect();
+    const hostBox = hostElement.getBoundingClientRect();
+    const hostStyles = window.getComputedStyle(hostElement);
+    const bodyStyles = window.getComputedStyle(bodyElement);
+    const bodyWrapperStyles = window.getComputedStyle(bodyWrapperElement);
+
+    if (!this.modal().maximized()) {
+      const headerHeight = this._headerWrapperRef()
+        ? this._headerWrapperRef()?.nativeElement.getBoundingClientRect().height
+        : 0;
+
+      return {
+        headerHeight: headerHeight + 'px',
+        alignItems: (
+          bodyBox.height
+          + parseInt(bodyWrapperStyles.paddingTop)
+          + parseInt(bodyWrapperStyles.paddingBottom)
+        ) > hostBox.height
+          ? 'flex-start'
+          : hostStyles.alignItems,
+      };
+    }
+
+    return {
+      width: bodyBox.width + 'px',
+      height: bodyBox.height + 'px',
+      paddingTop: bodyWrapperStyles.paddingTop,
+      paddingBottom: bodyWrapperStyles.paddingBottom,
+      paddingLeft: bodyWrapperStyles.paddingLeft,
+      paddingRight: bodyWrapperStyles.paddingRight,
+      borderRadius: bodyStyles.borderRadius,
+    };
   }
 }

@@ -8,6 +8,10 @@ export interface IFmModalAnimationConfig {
   transition: () => Array<AnimationMetadata>;
 }
 
+export interface IFmHeightAdjustParams {
+  height: string;
+}
+
 export interface IFmModalMaximizeAnimationParams {
   width: string;
   height: string;

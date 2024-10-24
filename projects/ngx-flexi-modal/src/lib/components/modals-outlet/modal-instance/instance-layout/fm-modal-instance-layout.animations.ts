@@ -1,4 +1,4 @@
-import {animate, group, query, sequence, style, transition, trigger} from '@angular/animations';
+import { animate, animateChild, group, query, sequence, style, transition, trigger } from '@angular/animations';
 
 import {TFmModalOpeningAnimation} from '../../../../services/modals/flexi-modals.definitions';
 import {IFmModalAnimationConfig} from './fm-modal-instance-layout.definitions';
@@ -14,7 +14,7 @@ export const getMaximizeAnimation = (animationName: string) => {
   const duration = 500;
 
   return trigger(animationName, [
-    transition('minimized => maximized', [
+    transition('false => true', [
       group([
         query(`.${FM_MODAL_BODY_WRAPPER_CLASS}`, [
           style({
@@ -74,7 +74,7 @@ export const getMaximizeAnimation = (animationName: string) => {
         paddingRight: '0',
       }
     }),
-    transition('maximized => minimized', [
+    transition('true => false', [
       group([
         query(`.${FM_MODAL_CONTAINER_CLASS}`, [
           style({
@@ -150,6 +150,26 @@ export const getMaximizeAnimation = (animationName: string) => {
   ]);
 };
 
+export const getHeightAdjustAnimation = (animationName: string)=> {
+  const duration = 300;
+
+  return trigger(animationName, [
+    transition('* => *', [
+      query(`.${FM_MODAL_BODY_CLASS}`, [
+        style({ height: '{{ height }}' }),
+        animate(`${duration}ms ease-in-out`, style({ height: '*' })),
+      ]),
+      query('@*', [
+        animateChild(),
+      ])
+    ], {
+      params: {
+        height: '100%',
+      },
+    }),
+  ]);
+};
+
 export const getLoaderAnimation = (animationName: string) => {
   return trigger(animationName, [
     transition('* => true', [
@@ -198,9 +218,7 @@ export const fmModalOpeningAnimations: Record<TFmModalOpeningAnimation, IFmModal
 
   'zoom-out': {
     fallback: 'slide',
-    validate: (modalBodyElement: HTMLDivElement) => {
-      return modalBodyElement.getBoundingClientRect().height < 800;
-    },
+    validate: () => true,
     transition: () => ([
       style({
         transform: 'perspective(30cm) translate3d(0, 0, 300px)'

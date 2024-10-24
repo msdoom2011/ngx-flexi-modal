@@ -26,6 +26,7 @@
             $id: actionConfig.id,
             $label: actionConfig.label,
             $disabled: actionConfig.disabled,
+            $autofocus: actionConfig.autofocus,
             $primary: actionConfig.primary,
             $icon: actionConfig.icon,
             $classes: getButtonClasses(actionConfig),
@@ -44,6 +45,7 @@
         [id]="actionConfig.id"
         [disabled]="actionConfig.disabled"
         [class]="getButtonClasses(actionConfig)"
+        [attr.fm-autofocus]="actionConfig.autofocus"
         (click)="onActionClick(actionConfig, $event)"
       >
         @if (actionConfig.icon) {

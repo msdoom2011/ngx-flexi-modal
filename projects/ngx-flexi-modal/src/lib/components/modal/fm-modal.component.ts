@@ -21,10 +21,10 @@ import {
 } from '@angular/core';
 import { filter, Subject, takeUntil } from 'rxjs';
 
+import { FmModalMaximizedChangeEvent } from '../../services/modals/events/fm-modal-maximized-change.event';
+import { FmModalActiveChangeEvent } from '../../services/modals/events/fm-modal-active-change.event';
 import { FmModalBeforeCloseEvent } from '../../services/modals/events/fm-modal-before-close.event';
 import { FmModalBeforeOpenEvent } from '../../services/modals/events/fm-modal-before-open.event';
-import { FmModalMinimizeEvent } from '../../services/modals/events/fm-modal-minimize.event';
-import { FmModalMaximizeEvent } from '../../services/modals/events/fm-modal-maximize.event';
 import { FlexiModalsThemeService } from '../../services/theme/flexi-modals-theme.service';
 import { FmModalUpdateEvent } from '../../services/modals/events/fm-modal-update.event';
 import { FmModalCloseEvent } from '../../services/modals/events/fm-modal-close.event';
@@ -79,9 +79,10 @@ export class FmModalComponent implements DoCheck, OnChanges, AfterContentInit, O
   public readonly _data = input<Record<string, unknown> | undefined>(undefined, { alias: 'data' });
 
   // Outputs
+  public readonly _activeEvent = output<FmModalActiveChangeEvent>({ alias: 'active' });
   public readonly _changeEvent = output<FmModalUpdateEvent>({ alias: 'change' });
-  public readonly _maximizeEvent = output<FmModalMaximizeEvent>({ alias: 'maximize' });
-  public readonly _minimizeEvent = output<FmModalMinimizeEvent>({ alias: 'minimize' });
+  public readonly _maximizeEvent = output<FmModalMaximizedChangeEvent>({ alias: 'maximize' });
+  public readonly _minimizeEvent = output<FmModalMaximizedChangeEvent>({ alias: 'minimize' });
   public readonly _beforeOpenEvent = output<FmModalBeforeOpenEvent>({ alias: 'beforeOpen' });
   public readonly _openEvent = output<FmModalOpenEvent>({ alias: 'open' });
   public readonly _beforeCloseEvent = output<FmModalBeforeCloseEvent>({ alias: 'beforeClose' });
@@ -262,14 +263,16 @@ export class FmModalComponent implements DoCheck, OnChanges, AfterContentInit, O
         takeUntil(this._destroy$)
       )
       .subscribe($event => {
-        if ($event instanceof FmModalUpdateEvent) {
+        if ($event instanceof FmModalActiveChangeEvent) {
+          this._activeEvent.emit($event);
+
+        } else if ($event instanceof FmModalUpdateEvent) {
           this._changeEvent.emit($event);
 
-        } if ($event instanceof FmModalMaximizeEvent) {
-          this._maximizeEvent.emit($event);
-
-        } if ($event instanceof FmModalMinimizeEvent) {
-          this._minimizeEvent.emit($event);
+        } if ($event instanceof FmModalMaximizedChangeEvent) {
+          $event.maximized
+            ? this._maximizeEvent.emit($event)
+            : this._minimizeEvent.emit($event);
 
         } else if ($event instanceof FmModalBeforeOpenEvent) {
           this._beforeOpenEvent.emit($event);
