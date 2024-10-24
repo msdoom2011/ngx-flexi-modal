@@ -1,7 +1,7 @@
 import { computed, Inject, Injectable, Optional, signal } from '@angular/core';
 
 import { FLEXI_MODAL_COLOR_SCHEME, FLEXI_MODAL_STYLING_OPTIONS, FLEXI_MODAL_THEME } from '../../flexi-modals.tokens';
-import { generateRandomId, normalizeOptions } from '../../tools/utils';
+import { generateRandomNumber, normalizeOptions } from '../../tools/utils';
 import {
   FM_DEFAULT_THEME,
   fmColorSchemeCssVars,
@@ -27,7 +27,7 @@ export class FlexiModalsThemeService {
 
   private readonly _themeName = signal<string>('');
 
-  private readonly _instanceId = generateRandomId();
+  private readonly _instanceId = generateRandomNumber();
 
   private _stylesElement: HTMLStyleElement | null = null;
 

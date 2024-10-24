@@ -1,12 +1,10 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 
+import { FmModalInstanceFooterActionsComponent } from './actions/fm-modal-instance-footer-actions.component';
 import { FlexiModalsThemeService } from '../../../../../services/theme/flexi-modals-theme.service';
 import { FmModalsOutletComponent } from '../../../fm-modals-outlet.component';
-import { FmModalInstanceFooterActionsComponent } from './actions/fm-modal-instance-footer-actions.component';
-import { FM_MODAL_INSTANCE } from '../../fm-modal-instance.providers';
-import { FmModalInstance } from '../../fm-modal-instance';
-import { FmModal } from '../../../../../models/fm-modal';
+import { FmModalInstanceComponent } from '../../fm-modal-instance.component';
 
 @Component({
   selector: 'fm-modal-instance-footer',
@@ -25,7 +23,7 @@ import { FmModal } from '../../../../../models/fm-modal';
 export class FmModalInstanceFooterComponent {
 
   // Dependencies
-  private readonly _instance = inject<FmModalInstance<FmModal>>(FM_MODAL_INSTANCE);
+  private readonly _instance = inject(FmModalInstanceComponent);
   private readonly _outlet = inject(FmModalsOutletComponent);
   private readonly _themes = inject(FlexiModalsThemeService);
 

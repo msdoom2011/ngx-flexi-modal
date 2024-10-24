@@ -5,9 +5,7 @@ import { FlexiModalsThemeService } from '../../../../../../services/theme/flexi-
 import { IFmModalActionConfig } from '../../../../../../services/modals/flexi-modals.definitions';
 import { FmModalsOutletComponent } from '../../../../fm-modals-outlet.component';
 import { FmModalAction } from '../../../../../../models/actions/fm-modal-action';
-import { FM_MODAL_INSTANCE } from '../../../fm-modal-instance.providers';
-import { FmModalInstance } from '../../../fm-modal-instance';
-import { FmModal } from '../../../../../../models/fm-modal';
+import { FmModalInstanceComponent } from '../../../fm-modal-instance.component';
 
 @Component({
   selector: 'fm-modal-instance-footer-actions',
@@ -24,7 +22,7 @@ import { FmModal } from '../../../../../../models/fm-modal';
 export class FmModalInstanceFooterActionsComponent {
 
   // Dependencies
-  private readonly _instance = inject<FmModalInstance<FmModal>>(FM_MODAL_INSTANCE);
+  private readonly _instance = inject(FmModalInstanceComponent);
   private readonly _outlet = inject(FmModalsOutletComponent);
   private readonly _themes = inject(FlexiModalsThemeService);
 

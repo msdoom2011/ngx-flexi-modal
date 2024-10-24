@@ -1,8 +1,8 @@
 import {
   afterRender,
-  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
   computed,
-  Directive,
   effect,
   ElementRef,
   inject,
@@ -14,27 +14,45 @@ import {
   OnInit,
   signal,
   viewChild,
-  ViewContainerRef,
 } from '@angular/core';
-import {filter, fromEvent, Subject, Subscription, takeUntil} from 'rxjs';
+import { filter, fromEvent, Subject, Subscription, takeUntil } from 'rxjs';
 
-import { FmModalMaximizedChangeEvent } from '../../../services/modals/events/fm-modal-maximized-change.event';
-import {FM_MODAL_HEADER_ACTION_CLASS} from './instance-layout/fm-modal-instance-layout.constants';
-import {FlexiModalsThemeService} from '../../../services/theme/flexi-modals-theme.service';
+import { FmModalContentWithComponentComponent } from './content/fm-modal-content-with-component.component';
+import { FmModalContentWithTemplateComponent } from './content/fm-modal-content-with-template.component';
+import { FmModalInstanceHeaderComponent } from './layout/header/fm-modal-instance-header.component';
+import { FmModalInstanceFooterComponent } from './layout/footer/fm-modal-instance-footer.component';
+import { FmModalInstanceLayoutComponent } from './layout/fm-modal-instance-layout.component';
+import { FlexiModalsThemeService } from '../../../services/theme/flexi-modals-theme.service';
+import { FM_MODAL_HEADER_ACTION_CLASS } from './layout/fm-modal-instance-layout.constants';
+import { FlexiModalsService } from '../../../services/modals/flexi-modals.service';
+import { FmModalEventType } from '../../../services/modals/flexi-modals.constants';
 import { TFmModalEvent } from '../../../services/modals/flexi-modals.definitions';
-import {FlexiModalsService} from '../../../services/modals/flexi-modals.service';
-import {findFocusableElements} from '../../../tools/utils';
-import {FmModal} from '../../../models/fm-modal';
+import { findFocusableElements } from '../../../tools/utils';
+import { FmModal } from '../../../models/fm-modal';
 
-@Directive({
+@Component({
+  selector: 'fm-modal-instance',
+  templateUrl: './fm-modal-instance.component.html',
+  styleUrl: './fm-modal-instance.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
+  imports: [
+    FmModalInstanceLayoutComponent,
+    FmModalInstanceHeaderComponent,
+    FmModalInstanceFooterComponent,
+    FmModalContentWithComponentComponent,
+    FmModalContentWithTemplateComponent,
+  ],
   host: {
     'data-cy': 'modal',
     '[id]': 'id()',
     '[class]': 'hostClasses()',
   },
 })
-export abstract class FmModalInstance<ModalT extends FmModal> implements OnInit, AfterViewInit, OnDestroy {
+export class FmModalInstanceComponent<
+  ModalT extends FmModal<any, any> = FmModal<any, any>
+>
+implements OnInit, OnDestroy {
 
   // Dependencies
   protected readonly _service = inject(FlexiModalsService);
@@ -53,15 +71,14 @@ export abstract class FmModalInstance<ModalT extends FmModal> implements OnInit,
 
   // Signals
   private readonly _focusableElements = signal<Array<Element & { focus: () => any }>>([]);
-  private readonly _focusableElementsUpdateRequested = signal<boolean>(true);
 
   // Public props
-  protected readonly _contentRef = viewChild.required('content', { read: ViewContainerRef });
   protected readonly _viewportRef = viewChild.required('viewport', { read: ElementRef<HTMLElement> });
 
   // Private props
   protected readonly _destroy$ = new Subject<void>();
-  private _modalDestroySubscr: Subscription | null = null;
+  private _modalDestroySubscription: Subscription | null = null;
+  private _focusableElementsUpdateRequested = false;
 
 
   // Computed
@@ -95,16 +112,20 @@ export abstract class FmModalInstance<ModalT extends FmModal> implements OnInit,
       return;
     }
 
-    if (this._modalDestroySubscr) {
-      this._modalDestroySubscr.unsubscribe();
+    if (this._modalDestroySubscription) {
+      this._modalDestroySubscription.unsubscribe();
     }
 
-    this._modalDestroySubscr = modalDestroy$
+    this._modalDestroySubscription = modalDestroy$
       .pipe(takeUntil(this._destroy$))
       .subscribe(() => this.modal().close());
   });
 
   private readonly _focusableElementsEffect = effect(() => {
+    if (!this.modal().ready()) {
+      return;
+    }
+
     const focusInModal = this._elementRef.nativeElement.contains(document.activeElement);
     const focusableElements = this._focusableElements();
     const isActive = this.modal().active();
@@ -154,13 +175,9 @@ export abstract class FmModalInstance<ModalT extends FmModal> implements OnInit,
   // Lifecycle hooks
 
   public ngOnInit(): void {
-    this._initializeFocusableElements();
+    this._initializeModalListeners();
     this._initializeOnEscapeKeydown();
     this._initializeOnTabKeydown();
-  }
-
-  public ngAfterViewInit(): void {
-    this._renderContent();
   }
 
   public ngOnDestroy(): void {
@@ -169,8 +186,8 @@ export abstract class FmModalInstance<ModalT extends FmModal> implements OnInit,
   }
 
   public ngAfterRender = afterRender({ read: () => {
-    if (this._focusableElementsUpdateRequested()) {
-      this._focusableElementsUpdateRequested.set(false);
+    if (this.modal().ready() && this._focusableElementsUpdateRequested) {
+      this._focusableElementsUpdateRequested = false;
       this._focusableElements.set(findFocusableElements(this._elementRef.nativeElement));
     }
   }});
@@ -178,17 +195,26 @@ export abstract class FmModalInstance<ModalT extends FmModal> implements OnInit,
 
   // Internal implementation
 
-  protected abstract _renderContent(): void;
-
-  protected _initializeFocusableElements(): void {
+  protected _initializeModalListeners(): void {
     this.modal().events$
       .pipe(
         filter(() => this.modal().active()),
         takeUntil(this._destroy$)
       )
       .subscribe(($event: TFmModalEvent) => {
-        if ($event instanceof FmModalMaximizedChangeEvent) {
-          this._focusableElementsUpdateRequested.set(true);
+        switch ($event.type) {
+          case FmModalEventType.Ready:
+          case FmModalEventType.ContentChange:
+            this._focusableElementsUpdateRequested = true;
+            break;
+
+          case FmModalEventType.Update: {
+            const { actions, actionsTpl, headerTpl, footerTpl } = $event.changes;
+
+            if (actions || actionsTpl || headerTpl || footerTpl) {
+              this._focusableElementsUpdateRequested = true;
+            }
+          }
         }
       });
   }

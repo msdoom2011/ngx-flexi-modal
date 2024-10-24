@@ -1,26 +1,39 @@
 <!-- <h3 class="fm-modal-header" *fmModalHeader>CUSTOM TITLE</h3> -->
 
-<p>Service created modal works!</p>
-<p>Service created modal works!</p>
-<p>Service created modal works!</p>
-<p>Service created modal works!</p>
-<p>Service created modal works!</p>
-<p>Service created modal works!</p>
-<p>Service created modal works!</p>
-<p>Service created modal works!</p>
-<p>Service created modal works!</p>
-<p>Service created modal works!</p>
-<p>Service created modal works!</p>
-<p>Service created modal works!</p>
-<p>Service created modal works!</p>
+<form>
+  <div class="field">
+    <label for="form-name">Name</label>
+    <input id="form-name" type="text" name="name" />
+  </div>
+
+  <div class="field">
+    <label for="form-surname">Surname</label>
+    <input id="form-surname" type="text" name="surname" />
+  </div>
+
+  <div class="field">
+    <label for="form-email">Email</label>
+    <input id="form-email" type="email" name="email" />
+  </div>
+
+  <div class="field">
+    <label for="form-birthday">Birthday</label>
+    <input id="form-birthday" type="date" name="birthday" />
+  </div>
+
+  <div class="field">
+    <label for="form-address">Address</label>
+    <input id="form-address" type="text" name="address" />
+  </div>
+</form>
 
 <!-- <div class="fm-modal-footer" *fmModalFooter="let actionsTpl = $actionsTpl"> -->
 <!--   <div>CUSTOM TEXT</div> -->
 <!--   <ng-container *ngTemplateOutlet="actionsTpl" /> -->
 <!-- </div> -->
 
-<!-- <button -->
-<!--   class="fm-modal-action-button primary" -->
-<!--   *fmModalAction="{ closeOnClick: false }" -->
-<!--   (click)="onClick()" -->
-<!-- >Custom Button</button> -->
+<button
+  class="fm-modal-action-button primary"
+  *fmModalAction="{ closeOnClick: false }"
+  (click)="onClick()"
+>Open error modal</button>

@@ -19,12 +19,12 @@ import { FmModalEventType, fmModalWidthPresets } from '../../../../services/moda
 import { FmModalInstanceFooterComponent } from './footer/fm-modal-instance-footer.component';
 import { FmModalInstanceHeaderComponent } from './header/fm-modal-instance-header.component';
 import { FmModalInstanceLoaderComponent } from './loader/fm-modal-instance-loader.component';
+import { FmModalReadyEvent } from '../../../../services/modals/events/fm-modal-ready.event';
 import { FmHeaderActionsComponent } from './header/actions/fm-header-actions.component';
+import { FlexiModalsService } from '../../../../services/modals/flexi-modals.service';
 import { FLEXI_MODAL_WIDTH_PRESETS } from '../../../../flexi-modals.tokens';
-import { FM_MODAL_INSTANCE } from '../fm-modal-instance.providers';
-import { generateRandomId } from '../../../../tools/utils';
-import { FmModalInstance } from '../fm-modal-instance';
-import { FmModal } from '../../../../models/fm-modal';
+import { FmModalInstanceComponent } from '../fm-modal-instance.component';
+import { generateRandomNumber } from '../../../../tools/utils';
 import {
   TFmModalEvent,
   TFmModalOpeningAnimation,
@@ -82,9 +82,10 @@ import {
 export class FmModalInstanceLayoutComponent implements OnInit, OnDestroy {
 
   // Dependencies
+  private readonly _service = inject(FlexiModalsService);
   private readonly _elementRef = inject(ElementRef<HTMLElement>);
   private readonly _animationBuilder = inject(AnimationBuilder);
-  private readonly _instance = inject<FmModalInstance<FmModal>>(FM_MODAL_INSTANCE);
+  private readonly _instance = inject(FmModalInstanceComponent);
   private readonly _widthPresets = inject<Record<TFmWidthPreset, number> | undefined>(FLEXI_MODAL_WIDTH_PRESETS, { optional: true });
 
   // Queries
@@ -99,11 +100,11 @@ export class FmModalInstanceLayoutComponent implements OnInit, OnDestroy {
   public readonly heightAdjustAnimationParams = signal<IFmHeightAdjustParams>(<any>{});
   public readonly maximizeAnimationParams = signal<IFmModalMaximizeAnimationParams | IFmModalMinimizeAnimationParams>(<any>{});
   private readonly _loaderVisible = signal<boolean>(false);
-  private readonly _maximizedChanged = signal<boolean>(false);
 
   // Private
   private readonly _destroy$ = new Subject<void>();
   private readonly _createdAt = new Date();
+  private _maximizedChanged = false;
 
 
   // Computed
@@ -113,7 +114,7 @@ export class FmModalInstanceLayoutComponent implements OnInit, OnDestroy {
 
     return (
       !modal.config().maximized
-      && modal.service.modals().length > 0
+      && this._service.modals().length > 0
       && modal.index() > 0
     );
   });
@@ -207,29 +208,7 @@ export class FmModalInstanceLayoutComponent implements OnInit, OnDestroy {
   // Lifecycle hooks
 
   public ngOnInit(): void {
-    this.modal().events$
-      .pipe(
-        filter(() => this.modal().active()),
-        takeUntil(this._destroy$),
-      )
-      .subscribe(($event: TFmModalEvent) => {
-        switch ($event.type) {
-          case FmModalEventType.MaximizedChange:
-            this.maximizeAnimationParams.set(this._calcMaximizeAnimationParams());
-            this._maximizedChanged.set(true);
-            break;
-
-          case FmModalEventType.ContentChange:
-            if (
-              !this.modal().maximized()
-              && new Date().valueOf() - this._createdAt.valueOf() > 50
-            ) {
-              this.heightAdjustAnimationParams.set(this._calcHeightAdjustAnimationParams());
-              this.heightAdjustAnimationToken.set(generateRandomId());
-            }
-            break;
-        }
-      });
+    this._listenModalEvents();
   }
 
   public ngOnDestroy(): void {
@@ -239,7 +218,9 @@ export class FmModalInstanceLayoutComponent implements OnInit, OnDestroy {
 
   public readonly ngAfterNextRender = afterNextRender({ read: () => {
     if (!this.modal().maximized()) {
-      this._runOpeningAnimation(this.modal().config().animation);
+      this._runOpeningAnimation(this.modal().config().animation, () => {
+        this._service.emitEvent(new FmModalReadyEvent(this.modal(), true));
+      });
     }
   }});
 
@@ -247,8 +228,11 @@ export class FmModalInstanceLayoutComponent implements OnInit, OnDestroy {
   // Callbacks
 
   public onMaximizeAnimationDone(): void {
-    if (this._maximizedChanged()) {
-      this._maximizedChanged.set(false);
+    // Needed to check if the animation had indeed been performed because of a known issue
+    // https://github.com/angular/angular/issues/23535
+
+    if (this._maximizedChanged) {
+      this._maximizedChanged = false;
       this._runHeaderActionsAnimation();
     }
   }
@@ -262,6 +246,32 @@ export class FmModalInstanceLayoutComponent implements OnInit, OnDestroy {
 
   // Private methods
 
+  private _listenModalEvents(): void {
+    this.modal().events$
+      .pipe(
+        filter(() => this.modal().active()),
+        takeUntil(this._destroy$),
+      )
+      .subscribe(($event: TFmModalEvent) => {
+        switch ($event.type) {
+          case FmModalEventType.MaximizedChange:
+            this.maximizeAnimationParams.set(this._calcMaximizeAnimationParams());
+            this._maximizedChanged = true;
+            break;
+
+          case FmModalEventType.ContentChange:
+            if (
+              !this.modal().maximized()
+              && new Date().valueOf() - this._createdAt.valueOf() > 50
+            ) {
+              this.heightAdjustAnimationParams.set(this._calcHeightAdjustAnimationParams());
+              this.heightAdjustAnimationToken.set(generateRandomNumber());
+            }
+            break;
+        }
+      });
+  }
+
   private _getWidthPresets(): Record<TFmWidthPreset, number> {
     return this._widthPresets || fmModalWidthPresets;
   }
@@ -274,7 +284,7 @@ export class FmModalInstanceLayoutComponent implements OnInit, OnDestroy {
     return this._getWidthPresets()[preset];
   }
 
-  private _runOpeningAnimation(animationName: TFmModalOpeningAnimation): void {
+  private _runOpeningAnimation(animationName: TFmModalOpeningAnimation, callback?: () => void): void {
     const animationConfig = fmModalOpeningAnimations[animationName];
 
     // required for tests
@@ -287,7 +297,7 @@ export class FmModalInstanceLayoutComponent implements OnInit, OnDestroy {
     const bodyElement = this._bodyRef().nativeElement;
 
     if (!animationConfig.validate(bodyElement)) {
-      return this._runOpeningAnimation(animationConfig.fallback);
+      return this._runOpeningAnimation(animationConfig.fallback, callback);
     }
 
     const factory = this._animationBuilder.build(animationConfig.transition());
@@ -296,6 +306,7 @@ export class FmModalInstanceLayoutComponent implements OnInit, OnDestroy {
     player.play();
     player.onDone(() => {
       player.destroy();
+      callback?.();
     });
   }
 

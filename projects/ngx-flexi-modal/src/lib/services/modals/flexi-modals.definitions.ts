@@ -3,18 +3,20 @@ import {Observable} from 'rxjs';
 
 import {IFmModalBasicPresetsOptionsByModalTypes} from '../../presets/basic/fm-modal-basic.definitions';
 import {FmModalActionDirective} from '../../components/modal/directives/fm-modal-action.directive';
+import { FmModalMaximizedChangeEvent } from './events/fm-modal-maximized-change.event';
 import { FmModalContentChangeEvent } from './events/fm-modal-content-change.event';
 import {FmModalBeforeCloseEvent} from './events/fm-modal-before-close.event';
 import {FmModalBeforeOpenEvent} from './events/fm-modal-before-open.event';
 import {FmModalWithComponent} from '../../models/fm-modal-with-component';
 import {FmModalWithTemplate} from '../../models/fm-modal-with-template';
-import { FmModalMaximizedChangeEvent } from './events/fm-modal-maximized-change.event';
+import { FmModalActiveEvent } from './events/fm-modal-active.event';
 import {FmModalAction} from '../../models/actions/fm-modal-action';
+import { FmModalReadyEvent } from './events/fm-modal-ready.event';
 import {FmModalUpdateEvent} from './events/fm-modal-update.event';
 import {FmModalCloseEvent} from './events/fm-modal-close.event';
 import {FmModalOpenEvent} from './events/fm-modal-open.event';
 import {FmModal} from '../../models/fm-modal';
-import { FmModalActiveChangeEvent } from './events/fm-modal-active-change.event';
+import { IFmModalAware } from '../../components/fm-modal.abstract';
 
 export type TFmWidthPreset = 'tiny' | 'small' | 'medium' | 'big' | 'large';
 export type TFmModalWidth = 'fit-content' | 'fit-window' | TFmWidthPreset | number;
@@ -30,7 +32,8 @@ export type TFmModalEvent = (
   | FmModalBeforeCloseEvent
   | FmModalCloseEvent
   | FmModalUpdateEvent
-  | FmModalActiveChangeEvent
+  | FmModalReadyEvent
+  | FmModalActiveEvent
   | FmModalContentChangeEvent
   | FmModalMaximizedChangeEvent
 );
@@ -51,7 +54,7 @@ export type IFmModalPresets<ModalTypeT extends IFmModalPresetOptionsByModalTypes
 
 export interface IFmModalPresetConfig<
   ShortcutModalOptionsT extends Record<string, unknown> = any,
-  ComponentT = any
+  ComponentT extends Partial<IFmModalAware> = any
 > {
   component: Type<ComponentT>;
   options: IFmModalWithComponentOptions<ComponentT>;
@@ -69,16 +72,25 @@ export interface IFmOpenModalFn {
 
   // open modal with component as a content
 
-  <InputsT extends object = Record<string, any>, ComponentT = object>(
+  <
+    InputsT extends object = Record<string, any>,
+    ComponentT extends Partial<IFmModalAware> = object
+  >(
     component: Type<ComponentT> | Promise<Type<ComponentT>>,
   ): FmModalWithComponent<ComponentT, InputsT> | null;
 
-  <InputsT extends object = Record<string, any>, ComponentT = object>(
+  <
+    InputsT extends object = Record<string, any>,
+    ComponentT extends Partial<IFmModalAware> = object
+  >(
     component: Type<ComponentT> | Promise<Type<ComponentT>>,
     openUntil$: Observable<any>
   ): FmModalWithComponent<ComponentT, InputsT> | null;
 
-  <InputsT extends object = Record<string, any>, ComponentT = object>(
+  <
+    InputsT extends object = Record<string, any>,
+    ComponentT extends Partial<IFmModalAware> = object
+  >(
     component: Type<ComponentT> | Promise<Type<ComponentT>>,
     options: IFmModalWithComponentOptions<ComponentT>
   ): FmModalWithComponent<ComponentT, InputsT> | null;
@@ -103,16 +115,19 @@ export interface IFmOpenModalFn {
 
   // open modal using a preset
 
-  <ComponentT, T extends keyof IFmModalPresetOptionsByModalTypes>(
-    modalType: T,
-    options: IFmModalPresetOptionsByModalTypes[T]
+  <
+    ComponentT extends Partial<IFmModalAware>,
+    PresetT extends keyof IFmModalPresetOptionsByModalTypes
+  >(
+    modalType: PresetT,
+    options: IFmModalPresetOptionsByModalTypes[PresetT]
   ): FmModalWithComponent<ComponentT> | null;
 }
 
 
 // Modal config
 
-export interface IFmModalConfig<ModalT extends FmModal = FmModal> {
+export interface IFmModalConfig<ModalT extends FmModal = FmModal<any, any>> {
   id: string;
   title: string | undefined;
   actions: Array<IFmModalActionConfig> | undefined;
@@ -153,7 +168,7 @@ export type IFmModalOptions<ModalT extends FmModal = FmModal> = TModalOptions<IF
 // Component Modals
 
 export interface IFmModalWithComponentConfig<
-  ComponentT,
+  ComponentT extends Partial<IFmModalAware>,
   InputsT extends object = Record<string, unknown>
 >
 extends IFmModalConfig<FmModalWithComponent<ComponentT>> {
@@ -161,7 +176,7 @@ extends IFmModalConfig<FmModalWithComponent<ComponentT>> {
 }
 
 export type IFmModalWithComponentOptions<
-  ComponentT,
+  ComponentT extends Partial<IFmModalAware>,
   InputsT extends object = Record<string, unknown>
 > = TModalOptions<IFmModalWithComponentConfig<ComponentT, InputsT>>;
 

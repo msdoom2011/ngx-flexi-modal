@@ -22,7 +22,7 @@ import {
 import { filter, Subject, takeUntil } from 'rxjs';
 
 import { FmModalMaximizedChangeEvent } from '../../services/modals/events/fm-modal-maximized-change.event';
-import { FmModalActiveChangeEvent } from '../../services/modals/events/fm-modal-active-change.event';
+import { FmModalActiveEvent } from '../../services/modals/events/fm-modal-active.event';
 import { FmModalBeforeCloseEvent } from '../../services/modals/events/fm-modal-before-close.event';
 import { FmModalBeforeOpenEvent } from '../../services/modals/events/fm-modal-before-open.event';
 import { FlexiModalsThemeService } from '../../services/theme/flexi-modals-theme.service';
@@ -79,7 +79,7 @@ export class FmModalComponent implements DoCheck, OnChanges, AfterContentInit, O
   public readonly _data = input<Record<string, unknown> | undefined>(undefined, { alias: 'data' });
 
   // Outputs
-  public readonly _activeEvent = output<FmModalActiveChangeEvent>({ alias: 'active' });
+  public readonly _activeEvent = output<FmModalActiveEvent>({ alias: 'active' });
   public readonly _changeEvent = output<FmModalUpdateEvent>({ alias: 'change' });
   public readonly _maximizeEvent = output<FmModalMaximizedChangeEvent>({ alias: 'maximize' });
   public readonly _minimizeEvent = output<FmModalMaximizedChangeEvent>({ alias: 'minimize' });
@@ -263,7 +263,7 @@ export class FmModalComponent implements DoCheck, OnChanges, AfterContentInit, O
         takeUntil(this._destroy$)
       )
       .subscribe($event => {
-        if ($event instanceof FmModalActiveChangeEvent) {
+        if ($event instanceof FmModalActiveEvent) {
           this._activeEvent.emit($event);
 
         } else if ($event instanceof FmModalUpdateEvent) {

@@ -1,6 +1,6 @@
 import {Directive, inject, input, TemplateRef} from '@angular/core';
 
-import {generateRandomId, isPlainObject} from '../../../tools/utils';
+import {generateRandomNumber, isPlainObject} from '../../../tools/utils';
 import {TFmModalButtonPosition} from '../../../services/modals/flexi-modals.definitions';
 
 export interface IFmModalActionDirectiveOptions {
@@ -35,7 +35,7 @@ export class FmModalActionDirective {
   });
 
   // Public props
-  public readonly id = 'fm-modal-action-' + generateRandomId();
+  public readonly id = 'fm-modal-action-' + generateRandomNumber();
 
 
   // Private implementation

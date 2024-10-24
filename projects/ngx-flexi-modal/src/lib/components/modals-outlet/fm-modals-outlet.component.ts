@@ -11,7 +11,6 @@ import {
   signal,
   TemplateRef,
 } from '@angular/core';
-import { NgComponentOutlet, NgTemplateOutlet } from '@angular/common';
 import { Subject, takeUntil } from 'rxjs';
 
 import { FmModalBeforeCloseEvent } from '../../services/modals/events/fm-modal-before-close.event';
@@ -22,13 +21,8 @@ import { FmModalSpinnerTplDirective } from './directives/fm-modal-spinner-tpl.di
 import { FmModalActionTplDirective } from './directives/fm-modal-action-tpl.directive';
 import { FmModalHeaderTplDirective } from './directives/fm-modal-header-tpl.directive';
 import { FmModalFooterTplDirective } from './directives/fm-modal-footer-tpl.directive';
+import { FmModalInstanceComponent } from './instance/fm-modal-instance.component';
 import { FlexiModalsService } from '../../services/modals/flexi-modals.service';
-import {
-  FmModalInstanceWithComponentComponent,
-} from './modal-instance/instance-types/fm-modal-instance-with-component.component';
-import {
-  FmModalInstanceWithTemplateComponent,
-} from './modal-instance/instance-types/fm-modal-instance-with-template.component';
 
 const MODAL_OPENED_CLASS = 'fm-modal-opened';
 
@@ -37,13 +31,8 @@ const MODAL_OPENED_CLASS = 'fm-modal-opened';
   templateUrl: './fm-modals-outlet.component.html',
   styleUrl: './fm-modals-outlet.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [ FmModalInstanceComponent ],
   standalone: true,
-  imports: [
-    NgTemplateOutlet,
-    NgComponentOutlet,
-    FmModalInstanceWithComponentComponent,
-    FmModalInstanceWithTemplateComponent,
-  ],
   host: {
     'data-cy': 'modals-outlet',
     '[class]': 'hostClasses()'

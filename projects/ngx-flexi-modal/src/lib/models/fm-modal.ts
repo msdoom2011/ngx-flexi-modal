@@ -1,16 +1,18 @@
 import { computed, signal } from '@angular/core';
 import { BehaviorSubject, filter, Observable, Subject, takeUntil } from 'rxjs';
 
-import { fmModalActionOptionsDefault, fmModalOptionsDefault } from '../services/modals/flexi-modals.constants';
 import { IFmModalConfig, IFmModalOptions, TFmModalEvent } from '../services/modals/flexi-modals.definitions';
 import { FmModalContentChangeEvent } from '../services/modals/events/fm-modal-content-change.event';
 import { FlexiModalsThemeService } from '../services/theme/flexi-modals-theme.service';
-import { FmModalCloseEvent } from '../services/modals/events/fm-modal-close.event';
-import { FmModalOpenEvent } from '../services/modals/events/fm-modal-open.event';
 import { IFmModalTheme } from '../services/theme/flexi-modals-theme.definitions';
 import { FlexiModalsService } from '../services/modals/flexi-modals.service';
-import { generateRandomId, normalizeOptions } from '../tools/utils';
+import { generateRandomNumber, normalizeOptions } from '../tools/utils';
 import { FmModalActions } from './actions/fm-modal-actions';
+import {
+  fmModalActionOptionsDefault,
+  FmModalEventType,
+  fmModalOptionsDefault,
+} from '../services/modals/flexi-modals.constants';
 
 interface ILoadingInfo {
   loading: boolean;
@@ -24,19 +26,21 @@ export abstract class FmModal<
   ContentToRenderT = any
 > {
 
+  // Abstract props
   public abstract readonly type: any;
 
+  // Signals
   private readonly _config = signal<ConfigT>(<ConfigT>{});
-
   private readonly _loading = signal<ILoadingInfo>({ loading: false, animation: true });
-
   private readonly _rendered = signal<boolean>(false);
+  private readonly _ready = signal<boolean>(false);
 
-  private readonly _destroy$ = new Subject<void>();
-
+  // Public props
   public readonly actions!: FmModalActions<this>;
-
   public readonly events$!: Observable<TFmModalEvent>;
+
+  // Private props
+  private readonly _destroy$ = new Subject<void>();
 
   constructor(
     public service: FlexiModalsService,
@@ -61,15 +65,7 @@ export abstract class FmModal<
         takeUntil(this._destroy$),
       );
 
-    this.events$.subscribe($event => {
-      if ($event instanceof FmModalOpenEvent) {
-        this._rendered.set(true);
-
-      } else if ($event instanceof FmModalCloseEvent) {
-        this._destroy$.next();
-        this._destroy$.complete();
-      }
-    });
+    this._listenModalEvents();
   }
 
 
@@ -89,6 +85,10 @@ export abstract class FmModal<
 
   public readonly active = computed<boolean>(() => {
     return this.service.getActive()?.id === this.id;
+  });
+
+  public readonly ready = computed<boolean>(() => {
+    return this._ready();
   });
 
   public readonly rendered = computed<boolean>(() => {
@@ -159,6 +159,25 @@ export abstract class FmModal<
 
   // Internal implementation
 
+  protected _listenModalEvents(): void {
+    this.events$.subscribe(($event: TFmModalEvent) => {
+      switch ($event.type) {
+        case FmModalEventType.Ready:
+          this._ready.set(true);
+          break;
+
+        case FmModalEventType.Open:
+          this._rendered.set(true);
+          break;
+
+        case FmModalEventType.Close:
+          this._destroy$.next();
+          this._destroy$.complete();
+          break;
+      }
+    });
+  }
+
   protected _normalizeOptions(options: OptionsT): ConfigT {
     const config = <ConfigT>{
       ...(!Object.keys(this._config()).length
@@ -176,7 +195,7 @@ export abstract class FmModal<
       for (let i = 0; i < config.actions.length; i++) {
         config.actions[i] = {
           ...fmModalActionOptionsDefault,
-          ...{ id: `fm-modal-action-${generateRandomId()}` },
+          ...{ id: `fm-modal-action-${generateRandomNumber()}` },
           ...config.actions[i]
         }
       }
@@ -189,6 +208,6 @@ export abstract class FmModal<
   // Static methods
 
   public static generateId(): string {
-    return `flexi-modal-${generateRandomId()}`;
+    return `flexi-modal-${generateRandomNumber()}`;
   }
 }

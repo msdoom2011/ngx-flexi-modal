@@ -5,7 +5,14 @@
     <fm-modal-instance-header />
   }
 
-  <div class="fm-modal--content-placeholder" #content></div>
+  @switch (modal().type) {
+    @case ('COMPONENT') {
+      <fm-modal-content-with-component />
+    }
+    @case ('TEMPLATE') {
+      <fm-modal-content-with-template />
+    }
+  }
 
   @if (modal().actions.length() || config.actionsTpl || config.footerTpl) {
     <fm-modal-instance-footer />

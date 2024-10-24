@@ -3,10 +3,8 @@ import { Component, computed, inject } from '@angular/core';
 import { TFmModalHeaderActionsPosition } from '../../../../../../services/theme/flexi-modals-theme.definitions';
 import { FmHeaderActionMaximizeComponent } from './action-maximize/fm-header-action-maximize.component';
 import { FmHeaderActionCloseComponent } from './action-close/fm-header-action-close.component';
+import { FmModalInstanceComponent } from '../../../fm-modal-instance.component';
 import { getHeaderActionAnimation } from './fm-header-actions.animations';
-import { FM_MODAL_INSTANCE } from '../../../fm-modal-instance.providers';
-import { FmModalInstance } from '../../../fm-modal-instance';
-import { FmModal } from '../../../../../../models/fm-modal';
 
 @Component({
   selector: 'fm-header-actions',
@@ -29,7 +27,7 @@ import { FmModal } from '../../../../../../models/fm-modal';
 export class FmHeaderActionsComponent {
 
   // Dependencies
-  private _instance = inject<FmModalInstance<FmModal>>(FM_MODAL_INSTANCE);
+  private _instance = inject(FmModalInstanceComponent);
 
   // Signals
   public modal = this._instance.modal;

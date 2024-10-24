@@ -2,9 +2,9 @@ import {FmModalEventType} from '../flexi-modals.constants';
 import {FmModalEvent} from './abstract/fm-modal.event';
 import {FmModal} from '../../../models/fm-modal';
 
-export class FmModalActiveChangeEvent<ModalT extends FmModal = FmModal> extends FmModalEvent<ModalT> {
+export class FmModalActiveEvent<ModalT extends FmModal = FmModal> extends FmModalEvent<ModalT> {
 
-  public readonly type = FmModalEventType.ActiveChange;
+  public readonly type = FmModalEventType.Active;
 
   constructor(
     modal: ModalT,

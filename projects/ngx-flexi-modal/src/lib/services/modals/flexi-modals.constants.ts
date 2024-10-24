@@ -1,16 +1,18 @@
 import { IFmModalActionConfig, IFmModalConfig, TFmWidthPreset } from './flexi-modals.definitions';
 
-export const FM_MODAL_WITH_COMPONENT_TYPE = 'COMPONENT';
-
-export const FM_MODAL_WITH_TEMPLATE_TYPE = 'TEMPLATE';
+export enum FmModalType {
+  Component = 'COMPONENT',
+  Template = 'TEMPLATE',
+}
 
 export enum FmModalEventType {
   BeforeOpen = 'BEFORE_OPEN',
   Open = 'OPEN',
   BeforeClose = 'BEFORE_CLOSE',
   Close = 'CLOSE',
+  Ready = 'READY',
+  Active = 'ACTIVE',
   Update = 'UPDATE',
-  ActiveChange = 'ACTIVE_CHANGE',
   ContentChange = 'CONTENT_CHANGE',
   MaximizedChange = 'MAXIMIZED_CHANGE',
 }

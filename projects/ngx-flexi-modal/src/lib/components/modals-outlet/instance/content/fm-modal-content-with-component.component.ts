@@ -1,42 +1,33 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, OnInit, Type } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, OnDestroy, OnInit, Type } from '@angular/core';
 import { SIGNAL } from '@angular/core/primitives/signals';
-import { NgComponentOutlet } from '@angular/common';
 import { delay, Subject, takeUntil } from 'rxjs';
 
-import { FmModalInstanceHeaderComponent } from '../instance-layout/header/fm-modal-instance-header.component';
-import { FmModalInstanceFooterComponent } from '../instance-layout/footer/fm-modal-instance-footer.component';
-import { FmModalInstanceLayoutComponent } from '../instance-layout/fm-modal-instance-layout.component';
 import { FmModalWithComponent } from '../../../../models/fm-modal-with-component';
-import { FM_MODAL_INSTANCE } from '../fm-modal-instance.providers';
+import { FmModalInstanceContent } from './fm-modal-instance-content';
 import { IFmModalAware } from '../../../fm-modal.abstract';
-import { FmModalInstance } from '../fm-modal-instance';
 
 @Component({
-  selector: 'fm-modal-instance-with-component',
-  templateUrl: '../fm-modal-instance.html',
-  styleUrl: '../fm-modal-instance.scss',
+  selector: 'fm-modal-content-with-component',
+  templateUrl: './fm-modal-instance-content.html',
+  styleUrl: './fm-modal-instance-content.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [
-    FmModalInstanceLayoutComponent,
-    FmModalInstanceHeaderComponent,
-    FmModalInstanceFooterComponent,
-    NgComponentOutlet,
-  ],
-  providers: [
-    { provide: FM_MODAL_INSTANCE, useExisting: FmModalInstanceWithComponentComponent },
-  ],
+  imports: [],
 })
-export class FmModalInstanceWithComponentComponent<ComponentT extends Partial<IFmModalAware>>
-extends FmModalInstance<FmModalWithComponent<ComponentT, any>>
-implements OnInit, AfterViewInit {
+export class FmModalContentWithComponentComponent
+extends FmModalInstanceContent<FmModalWithComponent>
+implements OnInit, AfterViewInit, OnDestroy {
+
+  // Private props
 
   private _startLoading$ = new Subject<void>();
   private _stopLoading$ = new Subject<void>();
+  private _destroy$ = new Subject<void>();
 
-  public override ngOnInit(): void {
-    super.ngOnInit();
 
+  // Lifecycle hooks
+
+  public ngOnInit(): void {
     this._startLoading$
       .pipe(
         delay(10),
@@ -54,7 +45,7 @@ implements OnInit, AfterViewInit {
       });
   }
 
-  protected _renderContent(): void {
+  public ngAfterViewInit(): void {
     const modal = this.modal();
     const content = modal.content;
 
@@ -73,10 +64,18 @@ implements OnInit, AfterViewInit {
     this._renderComponent(content);
   }
 
-  private _renderComponent(component: Type<ComponentT>): void {
+  public ngOnDestroy(): void {
+    this._destroy$.next();
+    this._destroy$.complete();
+  }
+
+
+  // Private implementation
+
+  private _renderComponent(component: Type<Partial<IFmModalAware>>): void {
     const modal = this.modal();
     const content$ = modal.content$;
-    const componentRef = this._contentRef()?.createComponent(component, { injector: this._injector });
+    const componentRef = this._contentRef()?.createComponent(component);
     const componentInputs = modal.config().inputs;
 
     if (componentRef?.instance.modal && componentRef.instance.modal[SIGNAL]) {

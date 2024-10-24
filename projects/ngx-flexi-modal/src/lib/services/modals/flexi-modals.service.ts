@@ -12,7 +12,7 @@ import { FLEXI_MODAL_FACTORY } from '../../flexi-modals.tokens';
 import { FmModalFactory } from './factories/fm-modal.factory';
 import { isPlainObject } from '../../tools/utils';
 import { FmModal } from '../../models/fm-modal';
-import { FmModalActiveChangeEvent } from './events/fm-modal-active-change.event';
+import { FmModalActiveEvent } from './events/fm-modal-active.event';
 
 @Injectable({
   providedIn: 'root'
@@ -34,7 +34,7 @@ export class FlexiModalsService {
       const activeModal = this.getActive();
 
       if (activeModal) {
-        this.emitEvent(new FmModalActiveChangeEvent(activeModal, true));
+        this.emitEvent(new FmModalActiveEvent(activeModal, true));
       }
     });
   }
@@ -58,7 +58,7 @@ export class FlexiModalsService {
   public open: IFmOpenModalFn = (
     subject: unknown,
     openUntilOrOptions?: Observable<unknown> | object
-  ): FmModal<any, any> | null => {
+  ): any | FmModal<any, any> | null => {
 
     const factory = this.findFactory(subject);
 

@@ -1,10 +1,11 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import {
   FmModalAbstract,
   FmModalActionDirective,
   FmModalFooterDirective,
   FmModalHeaderDirective,
+  FlexiModalsService,
 } from 'ngx-flexi-modal';
 
 @Component({
@@ -21,6 +22,8 @@ import {
 })
 export class ModalAwareComponent extends FmModalAbstract implements OnInit, OnDestroy {
 
+  private modals = inject(FlexiModalsService);
+
   public ngOnInit() {
     console.log('SERVICE MODAL INITIALIZED!!!');
     console.log('MODAL INSTANCE: ', this.modal());
@@ -31,7 +34,8 @@ export class ModalAwareComponent extends FmModalAbstract implements OnInit, OnDe
   }
 
   public onClick(): void {
-    alert('CLICK!!!');
-    this.modal()?.close();
+    this.modals.open('error', {
+      message: 'MESSAGE TEXT!!!'
+    });
   }
 }
