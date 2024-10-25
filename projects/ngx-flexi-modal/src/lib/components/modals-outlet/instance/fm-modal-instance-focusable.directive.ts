@@ -1,17 +1,17 @@
 import { afterRender, Directive, effect, ElementRef, inject, NgZone, OnDestroy, OnInit, signal } from '@angular/core';
 import { filter, fromEvent, Subject, takeUntil } from 'rxjs';
 
-import { FM_MODAL_HEADER_ACTION_CLASS } from './layout/fm-modal-instance-layout.constants';
 import { FmModalEventType } from '../../../services/modals/flexi-modals.constants';
 import { TFmModalEvent } from '../../../services/modals/flexi-modals.definitions';
+import { FM_MODAL_HEADER_ACTION_CLASS } from './fm-modal-instance.constants';
 import { FmModalInstanceComponent } from './fm-modal-instance.component';
 import { findFocusableElements } from '../../../tools/utils';
 
 @Directive({
-  selector: '[fmModalFocusControl]',
+  selector: '[fmModalInstanceFocusable]',
   standalone: true,
 })
-export class FmModalFocusControlDirective implements OnInit, OnDestroy {
+export class FmModalInstanceFocusableDirective implements OnInit, OnDestroy {
 
   // Dependencies
   private readonly _instance = inject(FmModalInstanceComponent);

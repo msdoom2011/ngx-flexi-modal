@@ -1,14 +1,13 @@
 import { animate, animateChild, group, query, sequence, style, transition, trigger } from '@angular/animations';
 
-import {TFmModalOpeningAnimation} from '../../../../services/modals/flexi-modals.definitions';
-import {IFmModalAnimationConfig} from './fm-modal-instance-layout.definitions';
+import {TFmModalOpeningAnimation} from '../../../services/modals/flexi-modals.definitions';
+import {IFmModalAnimationConfig} from './fm-modal-instance.definitions';
 import {
   FM_MODAL_BODY_CLASS,
   FM_MODAL_BODY_WRAPPER_CLASS,
-  FM_MODAL_CONTAINER_CLASS,
   FM_MODAL_HEADER_ACTIONS_OUTSIDE_SELECTOR,
   FM_MODAL_HEADER_WRAPPER_HIDDEN_SELECTOR,
-} from './fm-modal-instance-layout.constants';
+} from './fm-modal-instance.constants';
 
 export const getMaximizeAnimation = (animationName: string) => {
   const duration = 500;
@@ -75,15 +74,12 @@ export const getMaximizeAnimation = (animationName: string) => {
       }
     }),
     transition('true => false', [
+      style({
+        height: '100vh',
+        overflow: 'hidden',
+        alignItems: '{{ alignItems }}',
+      }),
       group([
-        query(`.${FM_MODAL_CONTAINER_CLASS}`, [
-          style({
-            height: '100vh',
-            overflow: 'hidden',
-            alignItems: '{{ alignItems }}',
-          })
-        ]),
-
         query(`.${FM_MODAL_BODY_WRAPPER_CLASS}`, [
           style({
             width: '100%',
@@ -154,7 +150,7 @@ export const getHeightAdjustAnimation = (animationName: string)=> {
   const duration = 300;
 
   return trigger(animationName, [
-    transition('* => *', [
+    transition('true <=> false', [
       query(`.${FM_MODAL_BODY_CLASS}`, [
         style({ height: '{{ height }}' }),
         animate(`${duration}ms ease-in-out`, style({ height: '*' })),

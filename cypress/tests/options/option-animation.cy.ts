@@ -18,13 +18,13 @@ describe('Option "animation"', () => {
     initializeServiceModals();
     showComponent(SimpleTextComponent);
 
-    cy.getCy('modal-layout').should('have.attr', 'data-animation', fmModalOptionsDefault.animation);
+    cy.getCy('modal').should('have.attr', 'data-animation', fmModalOptionsDefault.animation);
   });
 
   it('should has proper default animation (template)', () => {
     initializeTemplateModals(ModalEmptyComponent, { inputs: { opened: true }});
 
-    cy.getCy('modal-layout').should('have.attr', 'data-animation', fmModalOptionsDefault.animation);
+    cy.getCy('modal').should('have.attr', 'data-animation', fmModalOptionsDefault.animation);
   });
 
   it('should has proper redefined default animation (service)', () => {
@@ -33,7 +33,7 @@ describe('Option "animation"', () => {
     initializeServiceModals(withDefaultOptions({ animation }));
     showComponent(SimpleTextComponent);
 
-    cy.getCy('modal-layout').should('have.attr', 'data-animation', animation);
+    cy.getCy('modal').should('have.attr', 'data-animation', animation);
   });
 
   it('should has proper redefined default animation (templated)', () => {
@@ -41,7 +41,7 @@ describe('Option "animation"', () => {
 
     initializeTemplateModals(ModalEmptyComponent, { inputs: { opened: true }}, withDefaultOptions({ animation }));
 
-    cy.getCy('modal-layout').should('have.attr', 'data-animation', animation);
+    cy.getCy('modal').should('have.attr', 'data-animation', animation);
   });
 
   it('should display modal with configured animation (service)', () => {
@@ -83,7 +83,7 @@ describe('Option "animation"', () => {
     ): void {
       showComponent(component, { animation: animationName });
 
-      cy.getCy('modal-layout').should('have.attr', 'data-animation', animationNameApplied);
+      cy.getCy('modal').should('have.attr', 'data-animation', animationNameApplied);
       cy.getCy('modal-close-btn').click();
       cy.getCy('modal').should('not.exist');
     }
@@ -114,7 +114,7 @@ describe('Option "animation"', () => {
         fixture.detectChanges();
       });
 
-      cy.getCy('modal-layout').should('have.attr', 'data-animation', animationName);
+      cy.getCy('modal').should('have.attr', 'data-animation', animationName);
       cy.getCy('modal-close-btn').click();
       cy.getCy('modal').should('not.exist');
 

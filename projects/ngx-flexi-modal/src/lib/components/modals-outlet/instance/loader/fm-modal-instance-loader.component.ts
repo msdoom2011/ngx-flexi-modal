@@ -5,9 +5,9 @@ import { FmLinearDashedSpinnerComponent } from './spinners/linear-dashed-spinner
 import { FmLinearDottedSpinnerComponent } from './spinners/linear-dotted-spinner/fm-linear-dotted-spinner.component';
 import { FmRoundDottedSpinnerComponent } from './spinners/round-dotted-spinner/fm-round-dotted-spinner.component';
 import { FmRoundDashedSpinnerComponent } from './spinners/round-dashed-spinner/fm-round-dashed-spinner.component';
-import { FlexiModalsThemeService } from '../../../../../services/theme/flexi-modals-theme.service';
-import { FmModalsOutletComponent } from '../../../fm-modals-outlet.component';
-import { FmModalInstanceComponent } from '../../fm-modal-instance.component';
+import { FlexiModalsThemeService } from '../../../../services/theme/flexi-modals-theme.service';
+import { FmModalsOutletComponent } from '../../fm-modals-outlet.component';
+import { FmModalInstanceComponent } from '../fm-modal-instance.component';
 
 @Component({
   selector: 'fm-modal-instance-loader',

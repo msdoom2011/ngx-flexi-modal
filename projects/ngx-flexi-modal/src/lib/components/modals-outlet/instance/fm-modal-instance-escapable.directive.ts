@@ -4,10 +4,10 @@ import { filter, fromEvent, Subject, takeUntil } from 'rxjs';
 import { FmModalInstanceComponent } from './fm-modal-instance.component';
 
 @Directive({
-  selector: '[fmModalEscapeControl]',
+  selector: '[fmModalInstanceEscapable]',
   standalone: true,
 })
-export class FmModalEscapeControlDirective implements OnInit, OnDestroy {
+export class FmModalInstanceEscapableDirective implements OnInit, OnDestroy {
 
   // Dependencies
   private readonly _instance = inject(FmModalInstanceComponent);

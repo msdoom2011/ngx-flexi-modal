@@ -12,22 +12,22 @@ describe('Option "position"', () => {
     initializeServiceModals();
     showComponent(SimpleTextComponent);
 
-    cy.getCy('modal-layout').should('have.class', 'position-' + fmModalOptionsDefault.position);
+    cy.getCy('modal').should('have.class', 'position-' + fmModalOptionsDefault.position);
   });
 
   it('should has proper default position (template)', () => {
     initializeTemplateModals(ModalEmptyComponent, { inputs: { opened: true }});
 
-    cy.getCy('modal-layout').should('have.class', 'position-' + fmModalOptionsDefault.position);
+    cy.getCy('modal').should('have.class', 'position-' + fmModalOptionsDefault.position);
   });
 
   it('should has proper redefined default position (service)', () => {
     initializeServiceModals(withDefaultOptions({ position: 'center' }));
     showComponent(SimpleTextComponent).then((modal: any) => cy.wrap(modal).as('modal'));
 
-    cy.getCy('modal-layout').should('have.class', 'position-center');
+    cy.getCy('modal').should('have.class', 'position-center');
     cy.get('@modal').then((modal: any) => modal.update({ position: 'top' }));
-    cy.getCy('modal-layout').should('have.class', 'position-top');
+    cy.getCy('modal').should('have.class', 'position-top');
   });
 
   it('should has proper redefined default position (template)', () => {
@@ -37,11 +37,11 @@ describe('Option "position"', () => {
       withDefaultOptions({ position: 'center' }),
     );
 
-    cy.getCy('modal-layout').should('have.class', 'position-center');
+    cy.getCy('modal').should('have.class', 'position-center');
     cy.get('@fixture').then((fixture: any) => {
       fixture.componentRef.setInput('inputs', { position: 'top' });
       fixture.detectChanges();
     });
-    cy.getCy('modal-layout').should('have.class', 'position-top');
+    cy.getCy('modal').should('have.class', 'position-top');
   });
 });

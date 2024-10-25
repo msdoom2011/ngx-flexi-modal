@@ -10,9 +10,9 @@
   display: block;
   width: 8px;
   height: 5px;
-  background: var(--fm-color-spinner);
   margin-right: 5px;
   border-radius: 2px;
+  background: var(--fm-color-spinner);
 }
 
 @for $i from 1 through 5 {

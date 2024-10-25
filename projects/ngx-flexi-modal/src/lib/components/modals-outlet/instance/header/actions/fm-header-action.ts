@@ -1,6 +1,6 @@
 import { computed, Directive, inject } from '@angular/core';
 
-import { FM_MODAL_HEADER_ACTION_CLASS } from '../../fm-modal-instance-layout.constants';
+import { FM_MODAL_HEADER_ACTION_CLASS } from '../../fm-modal-instance.constants';
 import { FmHeaderActionsComponent } from './fm-header-actions.component';
 
 @Directive({

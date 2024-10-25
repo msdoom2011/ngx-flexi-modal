@@ -18,7 +18,8 @@ export const appConfig: ApplicationConfig = {
         closable: true,
         maximizable: true,
         scroll: 'content',
-        animation: 'zoom-out',
+        // animation: 'zoom-out',
+        animation: 'fade-in',
         spinner: 'round-dotted',
       }),
       // withWidthPresets({

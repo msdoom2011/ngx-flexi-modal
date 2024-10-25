@@ -1,9 +1,9 @@
 import { Component, computed, inject } from '@angular/core';
 
-import { TFmModalHeaderActionsPosition } from '../../../../../../services/theme/flexi-modals-theme.definitions';
+import { TFmModalHeaderActionsPosition } from '../../../../../services/theme/flexi-modals-theme.definitions';
 import { FmHeaderActionMaximizeComponent } from './action-maximize/fm-header-action-maximize.component';
 import { FmHeaderActionCloseComponent } from './action-close/fm-header-action-close.component';
-import { FmModalInstanceComponent } from '../../../fm-modal-instance.component';
+import { FmModalInstanceComponent } from '../../fm-modal-instance.component';
 import { getHeaderActionAnimation } from './fm-header-actions.animations';
 
 @Component({

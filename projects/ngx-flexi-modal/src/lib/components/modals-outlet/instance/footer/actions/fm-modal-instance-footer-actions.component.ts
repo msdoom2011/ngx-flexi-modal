@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 
-import { FlexiModalsThemeService } from '../../../../../../services/theme/flexi-modals-theme.service';
-import { IFmModalActionConfig } from '../../../../../../services/modals/flexi-modals.definitions';
-import { FmModalsOutletComponent } from '../../../../fm-modals-outlet.component';
-import { FmModalAction } from '../../../../../../models/actions/fm-modal-action';
-import { FmModalInstanceComponent } from '../../../fm-modal-instance.component';
+import { FlexiModalsThemeService } from '../../../../../services/theme/flexi-modals-theme.service';
+import { IFmModalActionConfig } from '../../../../../services/modals/flexi-modals.definitions';
+import { FmModalsOutletComponent } from '../../../fm-modals-outlet.component';
+import { FmModalAction } from '../../../../../models/actions/fm-modal-action';
+import { FmModalInstanceComponent } from '../../fm-modal-instance.component';
 
 @Component({
   selector: 'fm-modal-instance-footer-actions',
