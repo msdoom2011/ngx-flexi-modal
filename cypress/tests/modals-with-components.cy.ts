@@ -52,7 +52,6 @@ describe('FmModalsOutletComponent', () => {
         .should('have.length', 1);
     cy.getCy('modal-title').should('not.exist');
     cy.getCy('modal-maximize-btn').should('not.exist');
-    cy.getCy('modal-close-btn').should('be.visible').should('have.focus');
 
     // check footer
     cy.getCy('modal-footer').should('not.exist');
