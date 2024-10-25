@@ -1,10 +1,6 @@
 @let config = modal().config();
 
-<fm-modal-instance-layout #viewport>
-  @if (config.title || config.headerTpl) {
-    <fm-modal-instance-header />
-  }
-
+<fm-modal-instance-layout>
   @switch (modal().type) {
     @case ('COMPONENT') {
       <fm-modal-content-with-component />
@@ -12,9 +8,5 @@
     @case ('TEMPLATE') {
       <fm-modal-content-with-template />
     }
-  }
-
-  @if (modal().actions.length() || config.actionsTpl || config.footerTpl) {
-    <fm-modal-instance-footer />
   }
 </fm-modal-instance-layout>

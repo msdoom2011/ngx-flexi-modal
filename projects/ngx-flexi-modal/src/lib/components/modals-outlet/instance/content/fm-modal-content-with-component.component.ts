@@ -30,7 +30,7 @@ implements OnInit, AfterViewInit, OnDestroy {
   public ngOnInit(): void {
     this._startLoading$
       .pipe(
-        delay(10),
+        delay(50),
         takeUntil(this._stopLoading$),
         takeUntil(this._destroy$)
       )

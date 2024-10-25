@@ -32,7 +32,9 @@
           #headerWrapper
         >
           <div data-cy="modal-header-content" class="fm-modal--header-content">
-            <ng-content select="fm-modal-instance-header" />
+            @if (config.title || config.headerTpl) {
+              <fm-modal-instance-header />
+            }
           </div>
 
           @if (config.maximizable || config.closable) {
@@ -57,7 +59,9 @@
           <ng-content />
         </div>
 
-        <ng-content select="fm-modal-instance-footer" />
+        @if (modal().actions.length() || config.actionsTpl || config.footerTpl) {
+          <fm-modal-instance-footer />
+        }
       </div>
     </div>
   </div>
