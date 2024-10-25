@@ -4,7 +4,6 @@ import { BehaviorSubject } from 'rxjs';
 import { FmModalWithComponent } from '../../../models/fm-modal-with-component';
 import { IFmModalWithComponentOptions } from '../flexi-modals.definitions';
 import { FmModalFactory } from './fm-modal.factory';
-import { IFmModalAware } from '../../../components/fm-modal.abstract';
 
 @Injectable()
 export class FmModalWithComponentFactory extends FmModalFactory<FmModalWithComponent> {
@@ -19,7 +18,7 @@ export class FmModalWithComponentFactory extends FmModalFactory<FmModalWithCompo
     );
   }
 
-  public create<ComponentT extends Partial<IFmModalAware>>(
+  public create<ComponentT extends object>(
     component: Type<ComponentT> | Promise<Type<ComponentT>>,
     options: IFmModalWithComponentOptions<ComponentT>
   ): FmModalWithComponent<ComponentT> {

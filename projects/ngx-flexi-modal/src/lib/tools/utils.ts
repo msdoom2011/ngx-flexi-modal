@@ -1,7 +1,6 @@
 import {IFmModalWithComponentOptions, IFmModalOptions} from '../services/modals/flexi-modals.definitions';
 import {IFmModalBasicInputs} from '../presets/basic/fm-modal-basic.definitions';
 import {FmModalWithComponent} from '../models/fm-modal-with-component';
-import { IFmModalAware } from '../components/fm-modal.abstract';
 
 export function generateRandomNumber(): number {
   return Math.round(new Date().valueOf() * Math.random() / 10000);
@@ -65,7 +64,7 @@ export function normalizeOptions(
 }
 
 export function extendModalWithComponentOptions<
-  ComponentT extends Partial<IFmModalAware>,
+  ComponentT extends object,
   InputsT extends Record<string, unknown>
 >(
   basicOptions: IFmModalWithComponentOptions<ComponentT, Partial<InputsT>>,

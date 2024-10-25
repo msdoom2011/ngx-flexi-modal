@@ -19,12 +19,9 @@ import { FmModal } from '../../../projects/ngx-flexi-modal/src/lib/models/fm-mod
     }
   `
 })
-export class SimpleTextComponent implements IFmModalAware {
+export class SimpleTextComponent {
 
   static content = 'The simple text component works!';
 
   public content = SimpleTextComponent.content;
-
-  // @TODO implementation of IFmModalAware MUST be optional!!!!
-  public modal = input<FmModal | null>();
 }

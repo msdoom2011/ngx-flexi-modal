@@ -257,7 +257,10 @@ implements OnInit, OnDestroy {
       focusedElement !== document.body
       && !this._elementRef.nativeElement.contains(focusedElement)
     ) {
-      return this._makeInitFocus();
+      $event.preventDefault();
+      this._makeInitFocus();
+
+      return;
 
     } else if (indexToFocus < 0) {
       return;

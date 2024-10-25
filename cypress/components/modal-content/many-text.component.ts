@@ -23,10 +23,7 @@ import { FmModal } from '../../../projects/ngx-flexi-modal/src/lib/models/fm-mod
     }
   `
 })
-export class ManyTextComponent implements IFmModalAware {
+export class ManyTextComponent {
 
   public rows: Array<number> = new Array(30).fill(1);
-
-  // @TODO implementation of IFmModalAware MUST be optional!!!!
-  public modal = input<FmModal | null>();
 }

@@ -6,8 +6,6 @@ import { FmSuccessIconComponent } from '../modal-icons/fm-success-icon.component
 import { FmConfirmIconComponent } from '../modal-icons/fm-confirm-icon.component';
 import { FmErrorIconComponent } from '../modal-icons/fm-error-icon.component';
 import { FmInfoIconComponent } from '../modal-icons/fm-info-icon.component';
-import { IFmModalAware } from '../../../../components/fm-modal.abstract';
-import { FmModal } from '../../../../models/fm-modal';
 
 @Component({
   selector: 'fm-modal-basic',
@@ -23,10 +21,9 @@ import { FmModal } from '../../../../models/fm-modal';
   styleUrl: './fm-modal-basic.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FmModalBasicComponent implements IFmModalAware {
+export class FmModalBasicComponent {
 
   // Inputs
-  public readonly modal = input<FmModal | null>();
   public readonly icon = input<TFmModalBasicIcon>();
   public readonly message = input.required<Array<string>, string | Array<string>>({
     transform: value => typeof value === 'string' ? [value] : value
