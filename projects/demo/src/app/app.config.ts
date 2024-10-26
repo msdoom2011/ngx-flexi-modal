@@ -18,8 +18,7 @@ export const appConfig: ApplicationConfig = {
         closable: true,
         maximizable: true,
         scroll: 'content',
-        // animation: 'zoom-out',
-        animation: 'fade-in',
+        animation: 'zoom-out',
         spinner: 'round-dotted',
       }),
       // withWidthPresets({
@@ -88,7 +87,7 @@ export const appConfig: ApplicationConfig = {
           },
           styling: {
             headerHeight: 40,
-            headerActionsPosition: 'outside',
+            headerActionsPosition: 'inside',
             headerActionsWithBg: false,
           }
         },

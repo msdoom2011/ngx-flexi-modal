@@ -1,11 +1,13 @@
 import { afterRender, Directive, effect, ElementRef, inject, NgZone, OnDestroy, OnInit, signal } from '@angular/core';
-import { filter, fromEvent, Subject, takeUntil } from 'rxjs';
+import { filter, fromEvent, Subject, takeUntil, tap } from 'rxjs';
 
 import { FmModalEventType } from '../../../services/modals/flexi-modals.constants';
 import { TFmModalEvent } from '../../../services/modals/flexi-modals.definitions';
 import { FM_MODAL_HEADER_ACTION_CLASS } from './fm-modal-instance.constants';
 import { FmModalInstanceComponent } from './fm-modal-instance.component';
 import { findFocusableElements } from '../../../tools/utils';
+
+type TFocusableElement = Element & { focus: () => void };
 
 @Directive({
   selector: '[fmModalInstanceFocusable]',
@@ -20,11 +22,12 @@ export class FmModalInstanceFocusableDirective implements OnInit, OnDestroy {
 
   // Signals
   private readonly _modal = this._instance.modal;
-  private readonly _focusableElements = signal<Array<Element & { focus: () => any }>>([]);
+  private readonly _focusableElements = signal<Array<TFocusableElement>>([]);
 
   // Private props
   private readonly _destroy$ = new Subject<void>();
   private _focusableElementsUpdateRequested = false;
+  private _focusableElementBeforeInactive: TFocusableElement | null = null;
 
 
   // Effects
@@ -38,14 +41,26 @@ export class FmModalInstanceFocusableDirective implements OnInit, OnDestroy {
     const isAutofocusEnabled = this._modal().config().autofocus;
     const isActive = this._modal().active();
 
-    if (!isActive && isFocusInModal) {
-      return (<any>document.activeElement).blur();
+    this._updateFocusableElements();
 
-    } else if (!isActive || !isAutofocusEnabled || isFocusInModal) {
+    if (isActive && this._focusableElementBeforeInactive) {
+      this._focusableElementBeforeInactive.focus?.();
+      this._focusableElementBeforeInactive = null;
+
+      return;
+    }
+
+    if (isActive || isFocusInModal) {
+      (<any>document.activeElement).blur();
+    }
+
+    if (!isActive || !isAutofocusEnabled || isFocusInModal) {
       return;
     }
 
     this._makeInitialFocus();
+  }, {
+    allowSignalWrites: true,
   });
 
 
@@ -64,16 +79,25 @@ export class FmModalInstanceFocusableDirective implements OnInit, OnDestroy {
   public ngAfterRender = afterRender({ read: () => {
     if (this._modal().ready() && this._focusableElementsUpdateRequested) {
       this._focusableElementsUpdateRequested = false;
-      this._focusableElements.set(findFocusableElements(this._instanceElementRef.nativeElement));
+      this._updateFocusableElements();
     }
   }});
 
 
   // Internal implementation
 
+  private _updateFocusableElements(): void {
+    this._focusableElements.set(findFocusableElements(this._instanceElementRef.nativeElement));
+  }
+
   private _initializeModalListeners(): void {
     this._modal().events$
       .pipe(
+        tap(($event: TFmModalEvent) => {
+          if ($event.type === FmModalEventType.Active && !$event.active) {
+            this._focusableElementBeforeInactive = <TFocusableElement>document.activeElement;
+          }
+        }),
         filter(() => this._modal().active()),
         takeUntil(this._destroy$)
       )
@@ -138,7 +162,7 @@ export class FmModalInstanceFocusableDirective implements OnInit, OnDestroy {
       return;
     }
 
-    const focusedElement = <Element & { focus: () => any }>document.activeElement;
+    const focusedElement = <TFocusableElement>document.activeElement;
     let indexToFocus = elements.indexOf(focusedElement);
 
     if (

@@ -49,7 +49,7 @@ import {
 } from './fm-modal-instance.animations';
 
 @Component({
-  selector: 'fm-modal-instance-layout',
+  selector: 'fm-modal-instance',
   templateUrl: './fm-modal-instance.component.html',
   styleUrl: './fm-modal-instance.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -73,8 +73,10 @@ import {
     'class': 'fm-modal-instance',
     '[id]': 'modal().id()',
     '[class]': 'hostClasses()',
+    '[class.active]': 'modal().active()',
     '[class.scrollable]': 'modal().config().scroll === "modal"',
     '[class.maximized]': 'modal().maximized()',
+    '[style.--modal-index]': 'modal().index()',
   },
   animations: [
     getHeightAdjustAnimation('adjustHeight'),
@@ -115,14 +117,17 @@ export class FmModalInstanceComponent implements OnInit, OnDestroy {
 
   // Computed
 
-  public readonly backdropVisible = computed<boolean>(() => {
-    const modal = this.modal();
+  public readonly hostClasses = computed<Array<string>>(() => {
+    const { width, height, scroll, maximized, position, classes, theme } = this.modal().config();
 
-    return (
-      !modal.config().maximized
-      && this._service.modals().length > 0
-      && modal.index() > 0
-    );
+    return [
+      `scroll-${scroll}`,
+      ...(!maximized ? [`position-${position}`] : []),
+      ...(height && typeof height === 'string' ? [ `height-${height}` ] : []),
+      ...(width && typeof width === 'string' ? [ `width-${height}` ] : []),
+      ...(this._themes.isThemeExist(theme) ? [ this._themes.getThemeClass(theme || '') ] : []),
+      ...(classes || []),
+    ];
   });
 
   public readonly headerVisible = computed<boolean>(() => {
@@ -141,30 +146,16 @@ export class FmModalInstanceComponent implements OnInit, OnDestroy {
     );
   });
 
+  public readonly backdropVisible = computed<boolean>(() => {
+    return this.modal().index() > 0;
+  });
+
   public readonly loaderVisible = computed<boolean>(() => {
     return this._loaderVisible();
   });
 
-  public readonly hostClasses = computed<Array<string>>(() => {
-    const { width, height, scroll, maximized, position, classes, theme } = this.modal().config();
-    const { headerActionsPosition } = this.modal().theme().styling;
-
-    return [
-      `scroll-${scroll}`,
-      `header-actions-${typeof headerActionsPosition === 'string' ? headerActionsPosition : 'hidden'}`,
-      ...(!maximized ? [`position-${position}`] : []),
-      ...(height && typeof height === 'string' ? [ `height-${height}` ] : []),
-      ...(width && typeof width === 'string' ? [ `width-${height}` ] : []),
-      ...(this._themes.isThemeExist(theme) ? [ this._themes.getThemeClass(theme || '') ] : []),
-      ...(classes || []),
-    ];
-  });
-
   public readonly bodyStyles = computed<Partial<CSSStyleDeclaration>>(() => {
-    return {
-      ...this._widthStyles(),
-      ...this._heightStyles(),
-    };
+    return { ...this._widthStyles(), ...this._heightStyles() };
   });
 
   private readonly _widthStyles = computed<Partial<CSSStyleDeclaration>>(() => {
@@ -204,7 +195,19 @@ export class FmModalInstanceComponent implements OnInit, OnDestroy {
 
   // Effects
 
-  private readonly _activeUntilEffect = effect(() => {
+  private readonly _activeEffect = effect(() => {
+    this._runHeaderActionsAnimation(this.modal().active());
+  });
+
+  private readonly _loadingEffect = effect(() => {
+    if (this.modal().loading()) {
+      this._loaderVisible.set(true);
+    }
+  }, {
+    allowSignalWrites: true,
+  });
+
+  private readonly _openUntilEffect = effect(() => {
     const modalDestroy$ = this.modal().config().openUntil;
 
     if (!modalDestroy$) {
@@ -218,14 +221,6 @@ export class FmModalInstanceComponent implements OnInit, OnDestroy {
     this._modalDestroySubscription = modalDestroy$
       .pipe(takeUntil(this._destroy$))
       .subscribe(() => this.modal().close());
-  });
-
-  private readonly _loadingEffect = effect(() => {
-    if (this.modal().loading()) {
-      this._loaderVisible.set(true);
-    }
-  }, {
-    allowSignalWrites: true,
   });
 
 
@@ -257,7 +252,13 @@ export class FmModalInstanceComponent implements OnInit, OnDestroy {
 
     if (this._maximizedChanged) {
       this._maximizedChanged = false;
-      this._runHeaderActionsAnimation();
+
+      if (
+        !this.modal().maximized()
+        && this.modal().theme().styling.headerActionsPosition === 'outside'
+      ) {
+        this._runHeaderActionsAnimation(true);
+      }
     }
   }
 
@@ -334,24 +335,22 @@ export class FmModalInstanceComponent implements OnInit, OnDestroy {
     });
   }
 
-  private _runHeaderActionsAnimation(): void {
-    if (
-      !this._headerActionsRef()
-      || this.modal().maximized()
-      || this.modal().theme().styling.headerActionsPosition !== 'outside'
-    ) {
+  private _runHeaderActionsAnimation(show: boolean, callback?: () => void): void {
+    if (!this._headerActionsRef()) {
       return;
     }
 
+    const duration = 400;
     const factory = this._animationBuilder.build([
-      style({ opacity: 0, display: 'flex' }),
-      animate('400ms ease-in-out', style({ opacity: 1 })),
+      style({ opacity: show ? 0 : 1, display: 'flex' }),
+      animate(`${duration}ms ease-in-out`, style({ opacity: show ? 1 : 0 })),
     ]);
     const player = factory.create(this._headerActionsRef()?.nativeElement);
 
     player.play();
     player.onDone(() => {
       player.destroy();
+      callback?.();
     });
   }
 
@@ -398,6 +397,7 @@ export class FmModalInstanceComponent implements OnInit, OnDestroy {
       paddingLeft: bodyWrapperStyles.paddingLeft,
       paddingRight: bodyWrapperStyles.paddingRight,
       borderRadius: bodyStyles.borderRadius,
+      boxShadow: bodyStyles.boxShadow,
     };
   }
 }

@@ -20,6 +20,7 @@ export interface IFmModalMaximizeAnimationParams {
   paddingLeft: string;
   paddingRight: string;
   borderRadius: string;
+  boxShadow: string;
 }
 
 export interface IFmModalMinimizeAnimationParams {

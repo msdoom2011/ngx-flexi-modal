@@ -1,4 +1,4 @@
-$outer-v-padding: 50px;
+$outer-v-padding: 60px;
 $outer-h-padding: 30px;
 
 :host {
@@ -90,6 +90,14 @@ $outer-h-padding: 30px;
   }
 }
 
+.fm-modal--header-actions {
+  opacity: 0;
+
+  :host.active & {
+    opacity: 1;
+  }
+}
+
 .fm-modal--body-wrapper {
   display: flex;
   position: relative;
@@ -98,9 +106,9 @@ $outer-h-padding: 30px;
   box-sizing: content-box;
   z-index: 10;
 
-  :host:not(.maximized).position-top.header-actions-outside & {
-    padding-top: calc($outer-v-padding + 24px);
-    max-height: calc(100% - $outer-v-padding * 2 - 24px);
+  :host:not(.maximized).position-top & {
+    padding-top: calc($outer-v-padding + var(--modal-index) * var(--fm-header-height));
+    max-height: calc(100% - $outer-v-padding * 2 - var(--modal-index) * var(--fm-header-height));
   }
 
   :host.width-fit-window & {

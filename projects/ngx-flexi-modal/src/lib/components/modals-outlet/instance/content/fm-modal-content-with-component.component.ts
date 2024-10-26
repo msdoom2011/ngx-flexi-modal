@@ -1,6 +1,5 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, OnDestroy, OnInit, Type } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, Type } from '@angular/core';
 import { SIGNAL } from '@angular/core/primitives/signals';
-import { delay, Subject, takeUntil } from 'rxjs';
 
 import { FmModalWithComponent } from '../../../../models/fm-modal-with-component';
 import { FmModalInstanceContent } from './fm-modal-instance-content';
@@ -16,57 +15,50 @@ import { IFmModalAware } from '../../../fm-modal.abstract';
 })
 export class FmModalContentWithComponentComponent
 extends FmModalInstanceContent<FmModalWithComponent>
-implements OnInit, AfterViewInit, OnDestroy {
-
-  // Private props
-
-  private _startLoading$ = new Subject<void>();
-  private _stopLoading$ = new Subject<void>();
-  private _destroy$ = new Subject<void>();
-
-
-  // Lifecycle hooks
-
-  public ngOnInit(): void {
-    this._startLoading$
-      .pipe(
-        delay(50),
-        takeUntil(this._stopLoading$),
-        takeUntil(this._destroy$)
-      )
-      .subscribe(() => {
-        this.modal().startLoading(false);
-      });
-
-    this._stopLoading$
-      .pipe(takeUntil(this._destroy$))
-      .subscribe(() => {
-        this.modal().stopLoading();
-      });
-  }
+implements AfterViewInit {
 
   public ngAfterViewInit(): void {
     const modal = this.modal();
     const content = modal.content;
 
     if (content instanceof Promise) {
-      this._startLoading$.next();
+      const startLoadingDate = new Date();
+      const minimumLoadingTime = 200;
+      const instantLoadingTime = 50;
+
+      const startLoadingTimeout = setTimeout(() => {
+        clearTimeout(startLoadingTimeout);
+        modal.startLoading(false);
+      }, instantLoadingTime);
 
       content.then(component => {
-        modal.markContentChanged();
-        this._stopLoading$.next();
-        this._renderComponent(component);
+        const actualLoadingTime = new Date().valueOf() - startLoadingDate.valueOf();
+        const restLoadingTime = (
+          actualLoadingTime < minimumLoadingTime
+          && actualLoadingTime > instantLoadingTime
+        ) ? minimumLoadingTime - actualLoadingTime : 0;
+
+        if (!restLoadingTime) {
+          clearTimeout(startLoadingTimeout);
+        }
+
+        const renderTimeout = setTimeout(() => {
+          clearTimeout(renderTimeout);
+
+          modal.markContentChanged();
+          this._renderComponent(component);
+
+          const stopLoadingTimeout = setTimeout(() => {
+            clearTimeout(stopLoadingTimeout);
+            modal.stopLoading();
+          }, 400);
+        }, restLoadingTime);
       });
 
       return;
     }
 
     this._renderComponent(content);
-  }
-
-  public ngOnDestroy(): void {
-    this._destroy$.next();
-    this._destroy$.complete();
   }
 
 

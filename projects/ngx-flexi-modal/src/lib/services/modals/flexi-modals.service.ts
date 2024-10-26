@@ -2,9 +2,10 @@ import { computed, effect, inject, Injectable, signal } from '@angular/core';
 import { filter, Observable, Subject } from 'rxjs';
 
 import { IFmModalOptions, IFmOpenModalFn, TFmModalEvent } from './flexi-modals.definitions';
+import { FmModalMaximizedChangeEvent } from './events/fm-modal-maximized-change.event';
 import { FmModalBeforeCloseEvent } from './events/fm-modal-before-close.event';
 import { FmModalBeforeOpenEvent } from './events/fm-modal-before-open.event';
-import { FmModalMaximizedChangeEvent } from './events/fm-modal-maximized-change.event';
+import { FmModalActiveEvent } from './events/fm-modal-active.event';
 import { FmModalUpdateEvent } from './events/fm-modal-update.event';
 import { FmModalCloseEvent } from './events/fm-modal-close.event';
 import { FmModalOpenEvent } from './events/fm-modal-open.event';
@@ -12,7 +13,6 @@ import { FLEXI_MODAL_FACTORY } from '../../flexi-modals.tokens';
 import { FmModalFactory } from './factories/fm-modal.factory';
 import { isPlainObject } from '../../tools/utils';
 import { FmModal } from '../../models/fm-modal';
-import { FmModalActiveEvent } from './events/fm-modal-active.event';
 
 @Injectable({
   providedIn: 'root'
@@ -29,12 +29,15 @@ export class FlexiModalsService {
     return this._modals();
   });
 
+  private _oldActiveModal: FmModal | null = null;
+
   constructor() {
     effect(() => {
       const activeModal = this.getActive();
 
-      if (activeModal) {
+      if (activeModal && activeModal.id() !== this._oldActiveModal?.id()) {
         this.emitEvent(new FmModalActiveEvent(activeModal, true));
+        this._oldActiveModal = activeModal;
       }
     });
   }

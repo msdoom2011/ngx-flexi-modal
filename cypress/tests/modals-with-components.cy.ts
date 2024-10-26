@@ -29,8 +29,8 @@ describe('FmModalsOutletComponent', () => {
     cy.getCy('modal-closing-layer').invoke('outerWidth').should('eq', windowWidth);
     cy.getCy('modal-closing-layer').invoke('outerHeight').should('eq', windowHeight);
     cy.getCy('modal-body-wrapper').should('be.visible').should('contain.text', SimpleTextComponent.content);
-    cy.getCy('modal-body-wrapper').invoke('css', 'paddingTop').should('eq', '50px');
-    cy.getCy('modal-body-wrapper').invoke('css', 'paddingBottom').should('eq', '50px');
+    cy.getCy('modal-body-wrapper').invoke('css', 'paddingTop').should('eq', '60px');
+    cy.getCy('modal-body-wrapper').invoke('css', 'paddingBottom').should('eq', '60px');
     cy.getCy('modal-body-wrapper').invoke('css', 'paddingLeft').should('eq', '30px');
     cy.getCy('modal-body-wrapper').invoke('css', 'paddingRight').should('eq', '30px');
     cy.getCy('modal-body').invoke('outerWidth').should('eq', minBodyWidth);

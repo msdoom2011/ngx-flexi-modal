@@ -8,6 +8,6 @@
   ></div>
 
   @for(modal of modals(); track modal.id()) {
-    <fm-modal-instance-layout [modal]="$any(modal)" @fadeInOutInstance #modals />
+    <fm-modal-instance [modal]="$any(modal)" @fadeInOutInstance #modals />
   }
 }

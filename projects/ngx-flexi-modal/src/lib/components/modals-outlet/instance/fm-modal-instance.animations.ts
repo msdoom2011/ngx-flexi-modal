@@ -43,10 +43,12 @@ export const getMaximizeAnimation = (animationName: string) => {
           style({
             minHeight: '{{ height }}',
             borderRadius: '{{ borderRadius }}',
+            boxShadow: '{{ boxShadow }}',
             height: '100%'
           }),
           animate(`${duration}ms ease-in-out`, style({
             borderRadius: '*',
+            boxShadow: '*',
           })),
         ]),
         query(FM_MODAL_HEADER_WRAPPER_HIDDEN_SELECTOR, [
@@ -71,6 +73,7 @@ export const getMaximizeAnimation = (animationName: string) => {
         paddingBottom: '0',
         paddingLeft: '0',
         paddingRight: '0',
+        boxShadow: 'none',
       }
     }),
     transition('true => false', [

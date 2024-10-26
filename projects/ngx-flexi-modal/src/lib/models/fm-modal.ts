@@ -1,5 +1,5 @@
 import { computed, signal } from '@angular/core';
-import { BehaviorSubject, filter, Observable, Subject, takeUntil } from 'rxjs';
+import { BehaviorSubject, filter, merge, Observable, Subject, takeUntil } from 'rxjs';
 
 import { IFmModalConfig, IFmModalOptions, TFmModalEvent } from '../services/modals/flexi-modals.definitions';
 import { FmModalContentChangeEvent } from '../services/modals/events/fm-modal-content-change.event';
@@ -13,6 +13,7 @@ import {
   FmModalEventType,
   fmModalOptionsDefault,
 } from '../services/modals/flexi-modals.constants';
+import { FmModalActiveEvent } from '../services/modals/events/fm-modal-active.event';
 
 interface ILoadingInfo {
   loading: boolean;
@@ -41,6 +42,7 @@ export abstract class FmModal<
 
   // Private props
   private readonly _destroy$ = new Subject<void>();
+  private readonly _events$ = new Subject<TFmModalEvent>();
 
   constructor(
     public service: FlexiModalsService,
@@ -59,11 +61,10 @@ export abstract class FmModal<
 
     this.setOptions(options);
 
-    this.events$ = this.service.events$
-      .pipe(
-        filter(($event) => $event.id === this.id()),
-        takeUntil(this._destroy$),
-      );
+    this.events$ = merge(
+      this._events$,
+      this.service.events$.pipe(filter(($event) => $event.id === this.id())),
+    ).pipe(takeUntil(this._destroy$));
 
     this._listenModalEvents();
   }
@@ -160,6 +161,16 @@ export abstract class FmModal<
   // Internal implementation
 
   protected _listenModalEvents(): void {
+    this.service.events$
+      .pipe(takeUntil(this._destroy$))
+      .subscribe(($event: TFmModalEvent) => {
+        if ($event.type === FmModalEventType.Active) {
+          if ($event.modal.id() !== this.id()) {
+            this._events$.next(new FmModalActiveEvent(this, false));
+          }
+        }
+      });
+
     this.events$.subscribe(($event: TFmModalEvent) => {
       switch ($event.type) {
         case FmModalEventType.Ready:
