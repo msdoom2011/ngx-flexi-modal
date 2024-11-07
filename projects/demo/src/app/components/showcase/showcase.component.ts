@@ -126,15 +126,11 @@ export class ShowcaseComponent {
   }
 
   public onOpenSuccess(): void {
-    this.modals.open('success', {
-      message: 'Your data was successfully saved'
-    });
+    this.modals.open('success', 'Your data was successfully saved');
   }
 
   public onOpenInfo(): void {
-    this.modals.open('info', {
-      message: 'Our service was updated to the newer version'
-    });
+    this.modals.open('info', 'Our service was updated to the newer version');
   }
 
   public onOpenConfirm(): void {

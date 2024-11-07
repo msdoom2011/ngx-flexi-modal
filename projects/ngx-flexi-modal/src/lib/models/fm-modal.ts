@@ -85,7 +85,7 @@ export abstract class FmModal<
   });
 
   public readonly active = computed<boolean>(() => {
-    return this.service.getActive()?.id === this.id;
+    return this.service.modalActive()?.id() === this.id();
   });
 
   public readonly ready = computed<boolean>(() => {

@@ -6,7 +6,7 @@ export function generateRandomNumber(): number {
   return Math.round(new Date().valueOf() * Math.random() / 10000);
 }
 
-export function isPlainObject(obj: unknown): obj is object  {
+export function isPlainObject(obj: unknown): obj is Record<string, unknown>  {
   return (
     !!obj
     && typeof obj === 'object'
@@ -63,7 +63,7 @@ export function normalizeOptions(
   return options;
 }
 
-export function extendModalWithComponentOptions<
+export function extendModalOptionsWithInputs<
   ComponentT extends object,
   InputsT extends Record<string, unknown>
 >(

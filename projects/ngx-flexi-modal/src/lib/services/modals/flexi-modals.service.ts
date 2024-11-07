@@ -1,5 +1,6 @@
-import { computed, effect, inject, Injectable, signal } from '@angular/core';
-import { filter, Observable, Subject } from 'rxjs';
+import { distinctUntilChanged, filter, map, Observable, Subject } from 'rxjs';
+import { computed, inject, Injectable, signal } from '@angular/core';
+import { toObservable } from '@angular/core/rxjs-interop';
 
 import { IFmModalOptions, IFmOpenModalFn, TFmModalEvent } from './flexi-modals.definitions';
 import { FmModalMaximizedChangeEvent } from './events/fm-modal-maximized-change.event';
@@ -11,7 +12,6 @@ import { FmModalCloseEvent } from './events/fm-modal-close.event';
 import { FmModalOpenEvent } from './events/fm-modal-open.event';
 import { FLEXI_MODAL_FACTORY } from '../../flexi-modals.tokens';
 import { FmModalFactory } from './factories/fm-modal.factory';
-import { isPlainObject } from '../../tools/utils';
 import { FmModal } from '../../models/fm-modal';
 
 @Injectable({
@@ -25,22 +25,29 @@ export class FlexiModalsService {
 
   private readonly _modals = signal<Array<FmModal>>([]);
 
+  constructor() {
+    toObservable(this.modalActive)
+      .pipe(
+        map(modal => modal?.id()),
+        distinctUntilChanged(),
+        filter(Boolean),
+      )
+      .subscribe((modalActiveId) => {
+        const modalActive = this.getById(modalActiveId);
+
+        if (modalActive) {
+          this.emitEvent(new FmModalActiveEvent(modalActive, true));
+        }
+      });
+  }
+
   public readonly modals = computed<Array<FmModal>>(() => {
     return this._modals();
   });
 
-  private _oldActiveModal: FmModal | null = null;
-
-  constructor() {
-    effect(() => {
-      const activeModal = this.getActive();
-
-      if (activeModal && activeModal.id() !== this._oldActiveModal?.id()) {
-        this.emitEvent(new FmModalActiveEvent(activeModal, true));
-        this._oldActiveModal = activeModal;
-      }
-    });
-  }
+  public readonly modalActive = computed<FmModal<any, any> | undefined>(() => {
+    return this._modals()[this._modals().length - 1];
+  });
 
   public get events$(): Observable<TFmModalEvent>{
     return this._events$.pipe(filter($event => !$event.stopped));
@@ -58,23 +65,14 @@ export class FlexiModalsService {
     return this._factories.find(factory => factory.test(subject));
   }
 
-  public open: IFmOpenModalFn = (
-    subject: unknown,
-    openUntilOrOptions?: Observable<unknown> | object
-  ): any | FmModal<any, any> | null => {
-
-    const factory = this.findFactory(subject);
+  public open: IFmOpenModalFn = (content: unknown, options?: unknown): any | FmModal<any, any> | null => {
+    const factory = this.findFactory(content);
 
     if (!factory) {
-      throw new Error(`Unable to find a proper modal factory for the subject: ${subject}`);
+      throw new Error(`Unable to find a proper modal factory for the content: ${content}`);
     }
 
-    const modalOptions = isPlainObject(openUntilOrOptions)
-      ? openUntilOrOptions
-      : openUntilOrOptions
-        ? { openUntil: openUntilOrOptions }
-        : {};
-    const modal = factory.create(subject, modalOptions);
+    const modal = factory.create(content, options);
     const $beforeOpenEvent = new FmModalBeforeOpenEvent(modal);
 
     this.emitEvent($beforeOpenEvent);
@@ -158,20 +156,6 @@ export class FlexiModalsService {
   }
 
   public getById<ModalT extends FmModal = FmModal>(modalId: string): ModalT | undefined {
-    if (!modalId) {
-      return;
-    }
-
     return <ModalT | undefined>this._modals().find(modal => modal.id() === modalId);
-  }
-
-  public getActive<ModalT extends FmModal = FmModal>(): ModalT | undefined {
-    const modals = this._modals();
-
-    if (!modals.length) {
-      return;
-    }
-
-    return <ModalT>modals[modals.length - 1];
   }
 }

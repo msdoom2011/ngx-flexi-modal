@@ -5,8 +5,8 @@ import { FLEXI_MODAL_DEFAULT_OPTIONS } from '../../../flexi-modals.tokens';
 import { fmModalOptionsDefault } from '../flexi-modals.constants';
 import { IFmModalOptions } from '../flexi-modals.definitions';
 import { FlexiModalsService } from '../flexi-modals.service';
-import { FmModal } from '../../../models/fm-modal';
 import { normalizeOptions } from '../../../tools/utils';
+import { FmModal } from '../../../models/fm-modal';
 
 @Injectable()
 export abstract class FmModalFactory<ModalT extends FmModal> {
@@ -29,7 +29,7 @@ export abstract class FmModalFactory<ModalT extends FmModal> {
 
   public abstract test(subject: unknown): boolean;
 
-  public abstract create(subject: unknown, options: IFmModalOptions<any>): ModalT | null;
+  public abstract create(subject: unknown, options: unknown): ModalT | null;
 
   protected _normalizeOptions<ModalOptionsT extends Partial<IFmModalOptions<any>>>(options: ModalOptionsT): ModalOptionsT {
     return <ModalOptionsT>{

@@ -6,10 +6,10 @@ export type TFmModalBasicIcon = keyof IFmModalBasicPresetsOptionsByModalTypes | 
 export type TFmModalBasicAlign = 'left' | 'center' | 'right';
 
 export interface IFmModalBasicPresetsOptionsByModalTypes {
-  error: IFmModalBasicOptions;
-  warning: IFmModalBasicOptions;
-  success: IFmModalBasicOptions;
-  info: IFmModalBasicOptions;
+  error: IFmModalBasicOptions | string;
+  warning: IFmModalBasicOptions | string;
+  success: IFmModalBasicOptions | string;
+  info: IFmModalBasicOptions | string;
   confirm: IFmModalConfirmOptions;
 }
 

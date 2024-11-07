@@ -1,8 +1,9 @@
 import { EmbeddedViewRef, Injectable, TemplateRef } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 import { FmModalWithTemplate } from '../../../models/fm-modal-with-template';
 import { IFmModalWithTemplateOptions } from '../flexi-modals.definitions';
+import { isPlainObject } from '../../../tools/utils';
 import { FmModalFactory } from './fm-modal.factory';
 
 @Injectable()
@@ -14,10 +15,15 @@ export class FmModalWithTemplateFactory extends FmModalFactory<FmModalWithTempla
 
   public create<ContextT extends Record<string, unknown>>(
     templateRef: TemplateRef<ContextT>,
-    options: IFmModalWithTemplateOptions<ContextT>
+    optionsOrOpenUntil: Observable<unknown> | IFmModalWithTemplateOptions<ContextT> | undefined
   ): FmModalWithTemplate<ContextT> {
 
     const content$ = new BehaviorSubject<EmbeddedViewRef<ContextT> | null>(null);
+    const options = isPlainObject(optionsOrOpenUntil)
+      ? optionsOrOpenUntil
+      : optionsOrOpenUntil
+        ? { openUntil: optionsOrOpenUntil }
+        : {};
 
     return new FmModalWithTemplate(
       this.service,

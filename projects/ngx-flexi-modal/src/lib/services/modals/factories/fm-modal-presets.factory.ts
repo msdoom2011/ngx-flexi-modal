@@ -33,7 +33,7 @@ export class FmModalPresetsFactory extends FmModalFactory<FmModalWithComponent> 
     T extends keyof IFmModalPresetOptionsByModalTypes
   >(
     modalType: T,
-    options: IFmModalPresetOptionsByModalTypes[T]
+    options: IFmModalPresetOptionsByModalTypes[T],
   ): FmModalWithComponent<ComponentT> | null {
 
     const modalTypeConfig = this._presets[modalType];

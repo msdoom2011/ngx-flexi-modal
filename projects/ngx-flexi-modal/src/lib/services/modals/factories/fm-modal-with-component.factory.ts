@@ -1,8 +1,9 @@
 import { ComponentRef, Injectable, Type } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 import { FmModalWithComponent } from '../../../models/fm-modal-with-component';
 import { IFmModalWithComponentOptions } from '../flexi-modals.definitions';
+import { isPlainObject } from '../../../tools/utils';
 import { FmModalFactory } from './fm-modal.factory';
 
 @Injectable()
@@ -20,10 +21,15 @@ export class FmModalWithComponentFactory extends FmModalFactory<FmModalWithCompo
 
   public create<ComponentT extends object>(
     component: Type<ComponentT> | Promise<Type<ComponentT>>,
-    options: IFmModalWithComponentOptions<ComponentT>
+    optionsOrOpenUntil: Observable<unknown> | IFmModalWithComponentOptions<ComponentT> | undefined
   ): FmModalWithComponent<ComponentT> {
 
     const content$ = new BehaviorSubject<ComponentRef<ComponentT> | null>(null);
+    const options = isPlainObject(optionsOrOpenUntil)
+      ? optionsOrOpenUntil
+      : optionsOrOpenUntil
+        ? { openUntil: optionsOrOpenUntil }
+        : {};
 
     return new FmModalWithComponent(
       this.service,
