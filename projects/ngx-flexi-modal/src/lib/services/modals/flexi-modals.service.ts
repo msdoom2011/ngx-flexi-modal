@@ -146,7 +146,9 @@ export class FlexiModalsService {
     }
 
     this._modals.update(modals => modals.filter(modalInst => modalInst.id() !== modalId));
+
     this.emitEvent(new FmModalCloseEvent(modal));
+    modal.close(true);
   }
 
   public closeAll(): void {

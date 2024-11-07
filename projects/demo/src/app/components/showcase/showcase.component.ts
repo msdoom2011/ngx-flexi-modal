@@ -14,6 +14,7 @@ import {
 } from 'ngx-flexi-modal';
 
 import {TemplateAwareComponent} from '../modal-content/template-aware/template-aware.component';
+import { ModalWithFormComponent } from '../modal-content/modal-with-form/modal-with-form.component';
 
 @Component({
   selector: 'fm-app-showcase',
@@ -69,12 +70,13 @@ export class ShowcaseComponent {
     this.modalsThemes.setTheme(themeName);
   }
 
-  public onOpenComponentModal(): void {
+  public onOpenModalAwareComponent(): void {
     // this.modals.open(ModalAwareComponent, {
     this.modals.open(
       import('../modal-content/modal-aware/modal-aware.component').then(i => i.ModalAwareComponent),
       {
-        title: 'Modal title',
+        title: 'Modal Aware Component',
+        autofocus: false,
         actions: [
           {
             label: 'Okay',
@@ -96,6 +98,10 @@ export class ShowcaseComponent {
         ],
       },
     );
+  }
+
+  public onOpenModalWithForm(): void {
+    this.modals.open(ModalWithFormComponent);
   }
 
   public onOpenError(): void {

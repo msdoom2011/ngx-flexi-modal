@@ -14,8 +14,8 @@ export function isPlainObject(obj: unknown): obj is object  {
   );
 }
 
-export function findFocusableElements(element: Element): Array<Element & { focus: () => void }> {
-  return <Array<Element & { focus: () => void }>>Array.from(
+export function findFocusableElements(element: Element): Array<Element & { focus: () => void; blur: () => void }> {
+  return <Array<Element & { focus: () => void; blur: () => void }>>Array.from(
     element.querySelectorAll([
       'a[href]',
       'button',

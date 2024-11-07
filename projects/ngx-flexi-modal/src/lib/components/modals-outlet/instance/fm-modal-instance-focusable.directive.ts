@@ -1,5 +1,6 @@
 import { afterRender, Directive, effect, ElementRef, inject, NgZone, OnDestroy, OnInit, signal } from '@angular/core';
-import { filter, fromEvent, Subject, takeUntil, tap } from 'rxjs';
+import { filter, fromEvent, merge, skip, Subject, takeUntil, tap } from 'rxjs';
+import { toObservable } from '@angular/core/rxjs-interop';
 
 import { FmModalEventType } from '../../../services/modals/flexi-modals.constants';
 import { TFmModalEvent } from '../../../services/modals/flexi-modals.definitions';
@@ -7,7 +8,10 @@ import { FM_MODAL_HEADER_ACTION_CLASS } from './fm-modal-instance.constants';
 import { FmModalInstanceComponent } from './fm-modal-instance.component';
 import { findFocusableElements } from '../../../tools/utils';
 
-type TFocusableElement = Element & { focus: () => void };
+type TFocusableElement = Element & {
+  focus: () => void;
+  blur: () => void;
+};
 
 @Directive({
   selector: '[fmModalInstanceFocusable]',
@@ -25,27 +29,43 @@ export class FmModalInstanceFocusableDirective implements OnInit, OnDestroy {
   private readonly _focusableElements = signal<Array<TFocusableElement>>([]);
 
   // Private props
+  private readonly _active$ = toObservable(this._modal).pipe(skip(1));
   private readonly _destroy$ = new Subject<void>();
   private _focusableElementsUpdateRequested = false;
   private _focusableElementBeforeInactive: TFocusableElement | null = null;
+  private _returnFocusToModalTimeout: any = null;
+  private _closed = false;
+
+
+  // Getters
+
+  private get _autofocusEnabled(): boolean {
+    return this._modal().config().autofocus;
+  }
 
 
   // Effects
 
-  private readonly _focusableElementsEffect = effect(() => {
-    if (!this._modal().ready()) {
+  private readonly _modalActiveEffect = effect(() => {
+    if (!this._modal().ready() || this._closed) {
       return;
     }
 
     const isFocusInModal = this._instanceElementRef.nativeElement.contains(document.activeElement);
-    const isAutofocusEnabled = this._modal().config().autofocus;
     const isActive = this._modal().active();
 
     this._updateFocusableElements();
 
     if (isActive && this._focusableElementBeforeInactive) {
-      this._focusableElementBeforeInactive.focus?.();
-      this._focusableElementBeforeInactive = null;
+      // This condition should not work during the first modal appearance.
+      // Delay is necessary to prevent buttons to be clicked (for example)
+      // when closing the another overlay modal by the Enter key.
+      const focusTimeout = setTimeout(() => {
+        clearTimeout(focusTimeout);
+
+        this._focusableElementBeforeInactive?.focus?.();
+        this._focusableElementBeforeInactive = null;
+      });
 
       return;
     }
@@ -54,11 +74,22 @@ export class FmModalInstanceFocusableDirective implements OnInit, OnDestroy {
       (<any>document.activeElement).blur();
     }
 
-    if (!isActive || !isAutofocusEnabled || isFocusInModal) {
-      return;
+    if (isActive && this._autofocusEnabled && !isFocusInModal) {
+      this._makeInitialFocus();
     }
+  }, {
+    allowSignalWrites: true,
+  });
 
-    this._makeInitialFocus();
+  private readonly _modalReadyEffect = effect(() => {
+    if (
+      this._modal().ready()
+      && !this._autofocusEnabled
+      && !this._focusableElementBeforeInactive
+    ) {
+      this._updateFocusableElements();
+      this._focusableElementBeforeInactive = this._findInitialFocusableElement();
+    }
   }, {
     allowSignalWrites: true,
   });
@@ -67,8 +98,8 @@ export class FmModalInstanceFocusableDirective implements OnInit, OnDestroy {
   // Lifecycle hooks
 
   public ngOnInit(): void {
-    this._initializeModalListeners();
-    this._initializeOnTabKeydown();
+    this._listenToModalEvents();
+    this._listenToDomEvents();
   }
 
   public ngOnDestroy(): void {
@@ -90,12 +121,12 @@ export class FmModalInstanceFocusableDirective implements OnInit, OnDestroy {
     this._focusableElements.set(findFocusableElements(this._instanceElementRef.nativeElement));
   }
 
-  private _initializeModalListeners(): void {
+  private _listenToModalEvents(): void {
     this._modal().events$
       .pipe(
         tap(($event: TFmModalEvent) => {
-          if ($event.type === FmModalEventType.Active && !$event.active) {
-            this._focusableElementBeforeInactive = <TFocusableElement>document.activeElement;
+          if ($event.type === FmModalEventType.Close) {
+            this._closed = true;
           }
         }),
         filter(() => this._modal().active()),
@@ -103,54 +134,102 @@ export class FmModalInstanceFocusableDirective implements OnInit, OnDestroy {
       )
       .subscribe(($event: TFmModalEvent) => {
         switch ($event.type) {
-          case FmModalEventType.Ready:
-          case FmModalEventType.ContentChange:
-            this._focusableElementsUpdateRequested = true;
+          case FmModalEventType.Active:
+            this._listenToDomEvents();
             break;
 
+          case FmModalEventType.Ready:
+          case FmModalEventType.ContentChange: {
+            this._focusableElementsUpdateRequested = true;
+            break;
+          }
           case FmModalEventType.Update: {
             const { actions, actionsTpl, headerTpl, footerTpl } = $event.changes;
 
             if (actions || actionsTpl || headerTpl || footerTpl) {
               this._focusableElementsUpdateRequested = true;
             }
+            break;
           }
         }
       });
   }
 
-  private _initializeOnTabKeydown(): void {
+  private _listenToDomEvents(): void {
+    this._zone.runOutsideAngular(() => {
+      this._listenToWindowBlurEvent();
+      this._listenToWindowFocusEvent();
+      this._listenToWindowKeydownEvent();
+      this._listenToWindowVisibilityChangeEvent();
+    });
+  }
+
+  private _listenToWindowVisibilityChangeEvent(): void {
+    fromEvent(window, 'visibilitychange')
+      .pipe(
+        filter(() => this._modal().active()),
+        takeUntil(merge(this._active$, this._destroy$)),
+      )
+      .subscribe(() => {
+        if (document.hidden && this._returnFocusToModalTimeout) {
+          clearTimeout(this._returnFocusToModalTimeout);
+          this._returnFocusToModalTimeout = null;
+        }
+      });
+  }
+
+  private _listenToWindowBlurEvent(): void {
+    fromEvent(window, 'blur')
+      .pipe(
+        filter(() => this._modal().active()),
+        takeUntil(merge(this._active$, this._destroy$)),
+      )
+      .subscribe(($event: Event) => {
+        if (document.hidden) {
+          return;
+        }
+
+        (<Window>$event.target).focus();
+
+        this._returnFocusToModalTimeout = setTimeout(() => {
+          this._makeInitialFocus();
+
+          clearTimeout(this._returnFocusToModalTimeout);
+          this._returnFocusToModalTimeout = null;
+        }, 50);
+      });
+  }
+
+  private _listenToWindowFocusEvent(): void {
     const modalElement = this._instanceElementRef.nativeElement;
 
-    this._zone.runOutsideAngular(() => {
-      fromEvent<FocusEvent>(window, 'focus', { capture: true })
-        .pipe(
-          filter(() => this._modal().active()),
-          takeUntil(this._destroy$),
-        )
-        .subscribe(($event: FocusEvent) => {
-          if (
-            !$event.target
-            || !($event.target instanceof Element)
-          ) {
-            return;
+    fromEvent<FocusEvent>(window, 'focus', { capture: true })
+      .pipe(
+        filter(() => this._modal().active()),
+        takeUntil(merge(this._active$, this._destroy$)),
+      )
+      .subscribe(($event: FocusEvent) => {
+        if (!($event.target instanceof Element)) {
+          return;
 
-          } else if (!modalElement.contains($event.target)) {
-            this._makeInitialFocus();
-          }
-        });
+        } else if (modalElement.contains($event.target)) {
+          this._focusableElementBeforeInactive = <TFocusableElement>document.activeElement;
 
-      fromEvent<KeyboardEvent>(window, 'keydown')
-        .pipe(
-          filter(($event: KeyboardEvent) => {
-            return $event.key === 'Tab' && this._modal().active();
-          }),
-          takeUntil(this._destroy$),
-        )
-        .subscribe(($event: KeyboardEvent) => {
-          this._onTabKeydownCallback($event);
-        });
-    });
+        } else {
+          this._makeInitialFocus();
+        }
+      });
+  }
+
+  private _listenToWindowKeydownEvent(): void {
+    fromEvent<KeyboardEvent>(window, 'keydown')
+      .pipe(
+        filter(($event: KeyboardEvent) => $event.key === 'Tab' && this._modal().active()),
+        takeUntil(merge(this._active$, this._destroy$)),
+      )
+      .subscribe(($event: KeyboardEvent) => {
+        this._onTabKeydownCallback($event);
+      });
   }
 
   private _onTabKeydownCallback($event: KeyboardEvent): void {
@@ -194,32 +273,35 @@ export class FmModalInstanceFocusableDirective implements OnInit, OnDestroy {
     }
   }
 
-  private _makeInitialFocus(): void {
+  private _findInitialFocusableElement(): TFocusableElement | null {
     const focusableElements = this._focusableElements();
 
     for (const element of focusableElements) {
       if (element.matches('[autofocus], [fm-autofocus="true"]')) {
-        element.focus();
-
-        return;
+        return element;
       }
     }
-
-    let focusSucceeded = false;
 
     for (const element of focusableElements) {
       if (!element.classList.contains(FM_MODAL_HEADER_ACTION_CLASS)) {
-        focusSucceeded = true;
-        element.focus();
-
-        break;
+        return element;
       }
     }
 
-    if (!focusSucceeded && focusableElements.length) {
-      focusableElements[0].focus();
+    if (focusableElements.length) {
+      return focusableElements[0];
+    }
 
-    } else if (!focusableElements.length) {
+    return null;
+  }
+
+  private _makeInitialFocus(): void {
+    const initialElement = this._findInitialFocusableElement();
+
+    if (initialElement) {
+      initialElement.focus();
+
+    } else {
       (<any>document.activeElement).blur();
     }
   }

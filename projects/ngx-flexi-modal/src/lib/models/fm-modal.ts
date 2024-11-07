@@ -153,7 +153,14 @@ export abstract class FmModal<
     this._loading.set({ loading: false, animation: animation });
   }
 
-  public close(): void {
+  public close(destruct: boolean = false): void {
+    if (destruct) {
+      this._destroy$.next();
+      this._destroy$.complete();
+
+      return;
+    }
+
     this.service.close(this.id());
   }
 
@@ -179,11 +186,6 @@ export abstract class FmModal<
 
         case FmModalEventType.Open:
           this._rendered.set(true);
-          break;
-
-        case FmModalEventType.Close:
-          this._destroy$.next();
-          this._destroy$.complete();
           break;
       }
     });
