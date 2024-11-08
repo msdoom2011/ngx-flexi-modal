@@ -22,11 +22,11 @@ export const appConfig: ApplicationConfig = {
         spinner: 'round-dotted',
       }),
       // withWidthPresets({
-      //   large: 1280,
-      //   big: 960,
-      //   medium: 768,
-      //   small: 568,
-      //   tiny: 700,
+      //   lg: 1280,
+      //   bg: 960,
+      //   md: 768,
+      //   sm: 568,
+      //   xs: 700,
       // }),
       // withStyling({
         // frameShadow: '20px 20px 20px 0 rgba(255, 0, 0, 0.3)',
@@ -89,6 +89,7 @@ export const appConfig: ApplicationConfig = {
             headerHeight: 40,
             headerActionsPosition: 'inside',
             headerActionsWithBg: false,
+            horizontalMargin: 15,
           }
         },
       ])

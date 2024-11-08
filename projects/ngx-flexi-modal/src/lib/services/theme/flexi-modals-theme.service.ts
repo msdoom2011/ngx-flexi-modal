@@ -1,12 +1,19 @@
-import { computed, Inject, Injectable, Optional, signal } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
 
-import { FLEXI_MODAL_COLOR_SCHEME, FLEXI_MODAL_STYLING_OPTIONS, FLEXI_MODAL_THEME } from '../../flexi-modals.tokens';
-import { generateRandomNumber, normalizeOptions } from '../../tools/utils';
+import { appendHeaderStyleElement, generateRandomNumber, normalizeOptions } from '../../tools/utils';
+import { TFmWidthPreset } from '../modals/flexi-modals.definitions';
+import {
+  FLEXI_MODAL_COLOR_SCHEME,
+  FLEXI_MODAL_STYLING_OPTIONS,
+  FLEXI_MODAL_THEME,
+  FLEXI_MODAL_WIDTH_PRESETS,
+} from '../../flexi-modals.tokens';
 import {
   FM_DEFAULT_THEME,
   fmColorSchemeCssVars,
   fmDefaultColorScheme,
   fmDefaultStyling,
+  fmModalWidthPresets,
   fmStylingCssValueGetters,
   fmStylingCssVars,
 } from './flexi-modals-theme.constants';
@@ -23,13 +30,44 @@ import {
 })
 export class FlexiModalsThemeService {
 
+  // Signals
   private readonly _themes = signal<IFmModalThemes>({});
-
   private readonly _themeName = signal<string>('');
+  private readonly _widthPresets = signal<Record<TFmWidthPreset, number>>(fmModalWidthPresets);
 
+  // Private props
   private readonly _instanceId = generateRandomNumber();
+  private _styleElement: HTMLStyleElement | null = null;
 
-  private _stylesElement: HTMLStyleElement | null = null;
+  constructor() {
+    const themeConfigs = inject<Array<IFmModalThemeOptions>>(FLEXI_MODAL_THEME, { optional: true });
+    const defaultColorScheme = inject<IFmModalColorScheme>(FLEXI_MODAL_COLOR_SCHEME, { optional: true });
+    const defaultStylingOptions = inject<IFmModalStylingOptions>(FLEXI_MODAL_STYLING_OPTIONS, { optional: true });
+    const widthPresets = inject<Record<TFmWidthPreset, number>>(FLEXI_MODAL_WIDTH_PRESETS, { optional: true });
+
+    if (themeConfigs?.length && (defaultColorScheme || defaultStylingOptions)) {
+      console.warn(
+        'Specified both providers "FM_MODAL_COLOR_SCHEME" or "FM_MODAL_STYLING_OPTIONS" ' +
+        'and "FM_MODAL_THEME". The "FM_MODAL_COLOR_SCHEME" provider was ignored.'
+      );
+    }
+
+    if (widthPresets) {
+      this._initializeWidthPresets(widthPresets);
+    }
+
+    if (themeConfigs?.length) {
+      this._initializeWithThemes(themeConfigs);
+
+    } else if (defaultColorScheme || defaultStylingOptions) {
+      this._initializeWithOptions(defaultColorScheme, defaultStylingOptions);
+
+    } else {
+      this._initializeWithDefaults();
+    }
+  }
+
+  // Computed
 
   public readonly theme = computed<IFmModalTheme>(() => {
     return this._themes()[this._themeName()];
@@ -47,28 +85,9 @@ export class FlexiModalsThemeService {
     return this._themes();
   });
 
-  constructor(
-    @Optional() @Inject(FLEXI_MODAL_THEME) themeConfigs: Array<IFmModalThemeOptions>,
-    @Optional() @Inject(FLEXI_MODAL_COLOR_SCHEME) defaultColorScheme: IFmModalColorScheme,
-    @Optional() @Inject(FLEXI_MODAL_STYLING_OPTIONS) defaultStylingOptions: IFmModalStylingOptions,
-  ) {
-    if (themeConfigs?.length && (defaultColorScheme || defaultStylingOptions)) {
-      console.warn(
-        'Specified both providers "FM_MODAL_COLOR_SCHEME" or "FM_MODAL_STYLING_OPTIONS" ' +
-        'and "FM_MODAL_THEME". The "FM_MODAL_COLOR_SCHEME" provider was ignored.'
-      );
-    }
-
-    if (themeConfigs?.length) {
-      this._initializeWithThemes(themeConfigs);
-
-    } else if (defaultColorScheme || defaultStylingOptions) {
-      this._initializeWithOptions(defaultColorScheme, defaultStylingOptions);
-
-    } else {
-      this._initializeWithDefaults();
-    }
-  }
+  public readonly widthPresets = computed<Record<TFmWidthPreset, number>>(() => {
+    return this._widthPresets();
+  });
 
 
   // Public methods
@@ -107,26 +126,31 @@ export class FlexiModalsThemeService {
   }
 
   public attachThemeStyles(): void {
-    const classDefinitions = this._generateThemeStyles();
+    if (this._styleElement) {
+      this.detachThemeStyles();
+    }
 
-    this._stylesElement = document.createElement('style');
-    this._stylesElement.type = 'text/css';
-    this._stylesElement.innerHTML = classDefinitions.join('\n');
-
-    document.getElementsByTagName('head')[0].appendChild(this._stylesElement);
+    this._styleElement = appendHeaderStyleElement([
+      ...this._generateWidthPresetsStyles(),
+      ...this._generateThemeStyles(),
+    ]);
   }
 
   public detachThemeStyles(): void {
-    if (!this._stylesElement) {
+    if (!this._styleElement) {
       return;
     }
 
-    this._stylesElement.remove();
-    this._stylesElement = null;
+    this._styleElement.remove();
+    this._styleElement = null;
   }
 
 
   // Private methods
+
+  private _initializeWidthPresets(widthPresets: Record<TFmWidthPreset, number>): void {
+    this._widthPresets.set(widthPresets);
+  }
 
   private _initializeWithDefaults(): void {
     this._themeName.set(FM_DEFAULT_THEME);
@@ -139,14 +163,12 @@ export class FlexiModalsThemeService {
   }
 
   private _initializeWithOptions(
-    colorsScheme: IFmModalColorScheme,
-    stylingOptions: IFmModalStylingOptions,
+    colorsScheme: IFmModalColorScheme | null,
+    stylingOptions: IFmModalStylingOptions | null,
   ): void {
 
     this._themeName.set(FM_DEFAULT_THEME);
-    this._themes.set({
-      [FM_DEFAULT_THEME]: this._composeThemeConfig(colorsScheme, stylingOptions),
-    });
+    this._themes.set({ [FM_DEFAULT_THEME]: this._composeThemeConfig(colorsScheme, stylingOptions) });
   }
 
   private _initializeWithThemes(themeConfigs: Array<IFmModalThemeOptions>): void {
@@ -170,13 +192,32 @@ export class FlexiModalsThemeService {
   }
 
   private _validateThemeConfig(themeConfig: IFmModalThemeOptions): boolean {
-    if (!themeConfig.name || typeof themeConfig.name !== 'string') {
+    if (!themeConfig.name) {
       console.warn(`"${themeConfig.name}" is not a valid theme name. This theme was skipped.`);
 
       return false;
     }
 
     return true;
+  }
+
+  private _generateWidthPresetsStyles(): Array<string> {
+    const presets = this._widthPresets();
+    const props: Array<string> = [];
+
+    for (const presetName in presets) {
+      if (Object.prototype.hasOwnProperty.call(presets, presetName)) {
+        props.push(`--fm-modal-preset-width-${presetName}: ${presets[<TFmWidthPreset>presetName]}px;`);
+      }
+    }
+
+    return [
+      'fm-modals-outlet {'
+      + props
+        .map(propStr => `  ${propStr}\n`)
+        .join('')
+      + '}\n'
+    ];
   }
 
   private _generateThemeStyles(): Array<string> {
@@ -200,7 +241,7 @@ export class FlexiModalsThemeService {
         + themeClassProps
           .map(propStr => `  ${propStr}\n`)
           .join('')
-        + '}'
+        + '}\n'
       ));
     }
 
@@ -240,8 +281,8 @@ export class FlexiModalsThemeService {
   }
 
   private _composeThemeConfig(
-    colorsScheme: Partial<IFmModalColorScheme> | undefined,
-    stylingOptions: IFmModalStylingOptions | undefined
+    colorsScheme: Partial<IFmModalColorScheme> | null | undefined,
+    stylingOptions: IFmModalStylingOptions | null | undefined
   ): IFmModalTheme {
 
     return {

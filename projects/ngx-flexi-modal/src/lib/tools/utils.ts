@@ -35,6 +35,15 @@ export function findFocusableElements(element: Element): Array<Element & { focus
     });
 }
 
+export function appendHeaderStyleElement(classDefinitions: Array<string>): HTMLStyleElement {
+  const element = document.createElement('style');
+
+  element.innerHTML = classDefinitions.join('\n');
+  document.getElementsByTagName('head')[0].appendChild(element);
+
+  return element;
+}
+
 export function normalizeOptions(
   optionsObj: Record<string, unknown>,
   switchableProps: Array<string> = []

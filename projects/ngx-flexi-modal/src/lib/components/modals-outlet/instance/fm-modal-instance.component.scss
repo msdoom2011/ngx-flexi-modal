@@ -1,8 +1,5 @@
-$outer-v-padding: 60px;
-$outer-h-padding: 30px;
-
 :host {
-  position: absolute;
+  position: fixed;
   display: block;
   z-index: 10;
   inset: 0;
@@ -101,20 +98,44 @@ $outer-h-padding: 30px;
 .fm-modal--body-wrapper {
   display: flex;
   position: relative;
-  padding: $outer-v-padding $outer-h-padding;
-  max-height: calc(100% - $outer-v-padding * 2);
   box-sizing: content-box;
   z-index: 10;
+  padding: var(--fm-modal-v-margin) var(--fm-modal-h-margin);
+  max-width: calc(100% - var(--fm-modal-h-margin) * 2);
+  max-height: calc(100% - var(--fm-modal-v-margin) * 2);
 
   :host:not(.maximized).position-top & {
-    padding-top: calc($outer-v-padding + var(--modal-index) * var(--fm-header-height));
-    max-height: calc(100% - $outer-v-padding * 2 - var(--modal-index) * var(--fm-header-height));
+    padding-top: calc(var(--fm-modal-v-margin) + var(--modal-index) * var(--fm-header-height));
+    max-height: calc(100% - var(--fm-modal-v-margin) * 2 - var(--modal-index) * var(--fm-header-height));
   }
 
-  :host.width-fit-window & {
-    box-sizing: border-box;
-    max-width: 100%;
+  :host.width-fit-window &,
+  :host.width-lg &,
+  :host.width-bg &,
+  :host.width-md &,
+  :host.width-sm &,
+  :host.width-xs & {
     width: 100%;
+  }
+
+  :host.width-lg & {
+    max-width: min(var(--fm-modal-preset-width-lg), 100% - var(--fm-modal-h-margin) * 2);
+  }
+
+  :host.width-bg & {
+    max-width: min(var(--fm-modal-preset-width-bg), 100% - var(--fm-modal-h-margin) * 2);
+  }
+
+  :host.width-md & {
+    max-width: min(var(--fm-modal-preset-width-md), 100% - var(--fm-modal-h-margin) * 2);
+  }
+
+  :host.width-sm & {
+    max-width: min(var(--fm-modal-preset-width-sm), 100% - var(--fm-modal-h-margin) * 2);
+  }
+
+  :host.width-xs & {
+    max-width: min(var(--fm-modal-preset-width-xs), 100% - var(--fm-modal-h-margin) * 2);
   }
 
   :host.maximized & {

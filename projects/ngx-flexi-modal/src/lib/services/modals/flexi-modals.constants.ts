@@ -1,4 +1,4 @@
-import { IFmModalActionConfig, IFmModalConfig, TFmWidthPreset } from './flexi-modals.definitions';
+import { IFmModalActionConfig, IFmModalConfig } from './flexi-modals.definitions';
 
 export enum FmModalType {
   Component = 'COMPONENT',
@@ -16,14 +16,6 @@ export enum FmModalEventType {
   ContentChange = 'CONTENT_CHANGE',
   MaximizedChange = 'MAXIMIZED_CHANGE',
 }
-
-export const fmModalWidthPresets: Record<TFmWidthPreset, number> = {
-  large: 1280,
-  big: 960,
-  medium: 768,
-  small: 568,
-  tiny: 428,
-};
 
 export const fmModalOptionsDefault: IFmModalConfig = {
   id: '',

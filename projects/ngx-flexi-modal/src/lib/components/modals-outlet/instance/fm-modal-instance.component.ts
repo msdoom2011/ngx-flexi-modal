@@ -16,9 +16,9 @@ import { animate, AnimationBuilder, style } from '@angular/animations';
 import { NgComponentOutlet, NgTemplateOutlet } from '@angular/common';
 import { filter, Subject, Subscription, takeUntil } from 'rxjs';
 
+import { TFmModalEvent, TFmModalOpeningAnimation } from '../../../services/modals/flexi-modals.definitions';
 import { FmModalContentWithComponentComponent } from './content/fm-modal-content-with-component.component';
 import { FmModalContentWithTemplateComponent } from './content/fm-modal-content-with-template.component';
-import { FmModalEventType, fmModalWidthPresets } from '../../../services/modals/flexi-modals.constants';
 import { FlexiModalsThemeService } from '../../../services/theme/flexi-modals-theme.service';
 import { FmModalInstanceFooterComponent } from './footer/fm-modal-instance-footer.component';
 import { FmModalInstanceHeaderComponent } from './header/fm-modal-instance-header.component';
@@ -28,14 +28,8 @@ import { FmModalInstanceFocusableDirective } from './fm-modal-instance-focusable
 import { FmModalReadyEvent } from '../../../services/modals/events/fm-modal-ready.event';
 import { FmHeaderActionsComponent } from './header/actions/fm-header-actions.component';
 import { FlexiModalsService } from '../../../services/modals/flexi-modals.service';
-import { FLEXI_MODAL_WIDTH_PRESETS } from '../../../flexi-modals.tokens';
+import { FmModalEventType } from '../../../services/modals/flexi-modals.constants';
 import { FmModal } from '../../../models/fm-modal';
-import {
-  TFmModalEvent,
-  TFmModalOpeningAnimation,
-  TFmModalWidth,
-  TFmWidthPreset,
-} from '../../../services/modals/flexi-modals.definitions';
 import {
   IFmHeightAdjustParams,
   IFmModalMaximizeAnimationParams,
@@ -91,7 +85,6 @@ export class FmModalInstanceComponent implements OnInit, OnDestroy {
   private readonly _themes = inject(FlexiModalsThemeService);
   private readonly _elementRef = inject(ElementRef<HTMLElement>);
   private readonly _animationBuilder = inject(AnimationBuilder);
-  private readonly _widthPresets = inject<Record<TFmWidthPreset, number> | undefined>(FLEXI_MODAL_WIDTH_PRESETS, { optional: true });
 
   // Inputs
   public readonly modal = input.required<FmModal<any, any>>();
@@ -122,9 +115,9 @@ export class FmModalInstanceComponent implements OnInit, OnDestroy {
 
     return [
       `scroll-${scroll}`,
-      ...(!maximized ? [`position-${position}`] : []),
+      ...(!maximized ? [ `position-${position}` ] : []),
       ...(height && typeof height === 'string' ? [ `height-${height}` ] : []),
-      ...(width && typeof width === 'string' ? [ `width-${height}` ] : []),
+      ...(width && typeof width === 'string' ? [ `width-${width}` ] : []),
       ...(this._themes.isThemeExist(theme) ? [ this._themes.getThemeClass(theme || '') ] : []),
       ...(classes || []),
     ];
@@ -159,23 +152,16 @@ export class FmModalInstanceComponent implements OnInit, OnDestroy {
   });
 
   private readonly _widthStyles = computed<Partial<CSSStyleDeclaration>>(() => {
-    const { width: widthOpt, maximized: maximizeOpt } = this.modal().config();
+    const { width, maximized } = this.modal().config();
 
-    if (maximizeOpt) {
+    if (maximized) {
       return {};
     }
 
-    const styles: Partial<CSSStyleDeclaration> = {
-      minWidth: `${this._getPresetWidth('tiny')}px`,
-    };
+    const styles: Partial<CSSStyleDeclaration> = {};
 
-    if (this._isWidthPreset(widthOpt)) {
-      styles.maxWidth = `min(${this._getPresetWidth(<TFmWidthPreset>widthOpt)}px, 100%)`;
-      styles.width = '100%';
-
-    } else if (typeof widthOpt === 'number') {
-      styles.maxWidth = `min(${widthOpt}px, 100%)`;
-      styles.width = '100%';
+    if (typeof width === 'number') {
+      styles.maxWidth = `min(${width}px, 100% - ${this.modal().theme().styling.horizontalMargin}px * 2)`;
     }
 
     return styles;
@@ -295,18 +281,6 @@ export class FmModalInstanceComponent implements OnInit, OnDestroy {
             break;
         }
       });
-  }
-
-  private _getWidthPresets(): Record<TFmWidthPreset, number> {
-    return this._widthPresets || fmModalWidthPresets;
-  }
-
-  private _isWidthPreset(preset: TFmModalWidth): boolean {
-    return typeof preset === 'string' && preset in this._getWidthPresets();
-  }
-
-  private _getPresetWidth(preset: TFmWidthPreset): number {
-    return this._getWidthPresets()[preset];
   }
 
   private _runOpeningAnimation(animationName: TFmModalOpeningAnimation, callback?: () => void): void {

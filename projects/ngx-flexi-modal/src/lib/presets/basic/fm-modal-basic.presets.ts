@@ -10,7 +10,7 @@ export const fmModalBasicPresets: IFmModalPresets<IFmModalBasicPresetsOptionsByM
     component: FmModalBasicComponent,
     options: {
       title: 'Error',
-      width: 'tiny',
+      width: 'xs',
       inputs: {
         icon: 'error'
       },
@@ -24,7 +24,7 @@ export const fmModalBasicPresets: IFmModalPresets<IFmModalBasicPresetsOptionsByM
     component: FmModalBasicComponent,
     options: {
       title: 'Warning',
-      width: 'tiny',
+      width: 'xs',
       inputs: {
         icon: 'warning'
       },
@@ -38,7 +38,7 @@ export const fmModalBasicPresets: IFmModalPresets<IFmModalBasicPresetsOptionsByM
     component: FmModalBasicComponent,
     options: {
       title: 'Success',
-      width: 'tiny',
+      width: 'xs',
       inputs: {
         icon: 'success'
       },
@@ -52,7 +52,7 @@ export const fmModalBasicPresets: IFmModalPresets<IFmModalBasicPresetsOptionsByM
     component: FmModalBasicComponent,
     options: {
       title: 'Information',
-      width: 'tiny',
+      width: 'xs',
       inputs: {
         icon: 'info'
       },
@@ -67,7 +67,7 @@ export const fmModalBasicPresets: IFmModalPresets<IFmModalBasicPresetsOptionsByM
     options: {
       title: 'Confirmation',
       closable: false,
-      width: 'tiny',
+      width: 'xs',
       inputs: {
         icon: 'confirm'
       },

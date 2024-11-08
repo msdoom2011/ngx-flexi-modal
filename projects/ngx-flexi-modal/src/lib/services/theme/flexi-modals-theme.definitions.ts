@@ -43,4 +43,6 @@ export interface IFmModalStylingConfig {
   headerHeight: number;
   headerFontSize: string;
   headerFontWeight: string;
+  verticalMargin: number;
+  horizontalMargin: number;
 }

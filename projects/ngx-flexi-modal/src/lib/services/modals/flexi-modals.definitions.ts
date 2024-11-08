@@ -17,7 +17,7 @@ import {FmModalCloseEvent} from './events/fm-modal-close.event';
 import {FmModalOpenEvent} from './events/fm-modal-open.event';
 import {FmModal} from '../../models/fm-modal';
 
-export type TFmWidthPreset = 'tiny' | 'small' | 'medium' | 'big' | 'large';
+export type TFmWidthPreset = 'xs' | 'sm' | 'md' | 'bg' | 'lg';
 export type TFmModalWidth = 'fit-content' | 'fit-window' | TFmWidthPreset | number;
 export type TFmModalHeight = 'fit-content' | number;
 export type TFmModalScroll = 'modal' | 'content';

@@ -1,6 +1,15 @@
 import {IFmModalStylingConfig, IFmModalColorScheme} from './flexi-modals-theme.definitions';
+import { TFmWidthPreset } from '../modals/flexi-modals.definitions';
 
 export const FM_DEFAULT_THEME = 'default';
+
+export const fmModalWidthPresets: Record<TFmWidthPreset, number> = {
+  lg: 1280,
+  bg: 960,
+  md: 768,
+  sm: 568,
+  xs: 428,
+};
 
 export const fmDefaultColorScheme: IFmModalColorScheme = {
   spinner: '#c0c0c0',
@@ -30,6 +39,8 @@ export const fmDefaultStyling: IFmModalStylingConfig = {
   headerHeight: 40,
   headerFontSize: '1.17em',
   headerFontWeight: '600',
+  verticalMargin: 60,
+  horizontalMargin: 18,
 };
 
 export const fmColorSchemeCssVars: (
@@ -56,6 +67,8 @@ export const fmColorSchemeCssVars: (
 export const fmStylingCssVars: (
   Record<keyof IFmModalStylingConfig, string>
 ) = {
+  verticalMargin: '--fm-modal-v-margin',
+  horizontalMargin: '--fm-modal-h-margin',
   frameRounding: '--fm-frame-border-radius',
   frameShadow: '--fm-frame-box-shadow',
   headerHeight: '--fm-header-height',
@@ -76,9 +89,9 @@ export const fmStylingCssValueGetters: (
         ? fmDefaultStyling.frameRounding + 'px'
         : '0';
   },
-  headerHeight: (height: number) => {
-    return height >= 30 ? `${height}px` : '30px';
-  },
+  headerHeight: (height: number) => height >= 30 ? `${height}px` : '30px',
+  verticalMargin: (margin: number) => `${margin}px`,
+  horizontalMargin: (margin: number) => `${margin}px`,
   frameShadow: undefined,
   frameBorder: undefined,
   headerActionsPosition: undefined,
