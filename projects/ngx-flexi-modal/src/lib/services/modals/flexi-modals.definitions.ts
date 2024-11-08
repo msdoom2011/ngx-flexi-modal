@@ -52,7 +52,7 @@ export type IFmModalPresets<ModalTypeT extends IFmModalPresetOptionsByModalTypes
 }
 
 export interface IFmModalPresetConfig<
-  ShortcutModalOptionsT extends Record<string, unknown> = any,
+  ShortcutModalOptionsT extends object = any,
   ComponentT extends object = any
 > {
   component: Type<ComponentT>;
@@ -72,14 +72,14 @@ export interface IFmOpenModalFn {
   // open modal with component as a content
 
   <
-    InputsT extends object = Record<string, any>,
+    InputsT extends object = object,
     ComponentT extends object = object
   >(
     component: Type<ComponentT> | Promise<Type<ComponentT>>,
   ): FmModalWithComponent<ComponentT, InputsT> | null;
 
   <
-    InputsT extends object = Record<string, any>,
+    InputsT extends object = object,
     ComponentT extends object = object
   >(
     component: Type<ComponentT> | Promise<Type<ComponentT>>,
@@ -87,7 +87,7 @@ export interface IFmOpenModalFn {
   ): FmModalWithComponent<ComponentT, InputsT> | null;
 
   <
-    InputsT extends object = Record<string, any>,
+    InputsT extends object = object,
     ComponentT extends object = object
   >(
     component: Type<ComponentT> | Promise<Type<ComponentT>>,
@@ -97,16 +97,16 @@ export interface IFmOpenModalFn {
 
   // open modal with template as a content
 
-  <ContextT extends Record<string, unknown>>(
+  <ContextT extends object>(
     template: TemplateRef<ContextT>,
   ): FmModalWithTemplate<ContextT> | null;
 
-  <ContextT extends Record<string, unknown>>(
+  <ContextT extends object>(
     template: TemplateRef<ContextT>,
     openUntil$: Observable<unknown>,
   ): FmModalWithTemplate<ContextT> | null;
 
-  <ContextT extends Record<string, unknown>>(
+  <ContextT extends object>(
     template: TemplateRef<ContextT>,
     options: IFmModalWithTemplateOptions<ContextT>,
   ): FmModalWithTemplate<ContextT> | null;
@@ -154,7 +154,7 @@ export interface IFmModalConfig<ModalT extends FmModal = FmModal<any, any>> {
    * Random data that can be used to read for example in event listeners.
    * This object doesn't go to any renderable modal content
    */
-  data: Record<string, unknown>;
+  data: object;
 }
 
 type TModalOptions<ConfigT extends IFmModalConfig<any>> = (
@@ -169,7 +169,7 @@ export type IFmModalOptions<ModalT extends FmModal = FmModal> = TModalOptions<IF
 
 export interface IFmModalWithComponentConfig<
   ComponentT extends object,
-  InputsT extends object = Record<string, unknown>
+  InputsT extends object = object
 >
 extends IFmModalConfig<FmModalWithComponent<ComponentT>> {
   inputs: InputsT;
@@ -177,21 +177,21 @@ extends IFmModalConfig<FmModalWithComponent<ComponentT>> {
 
 export type IFmModalWithComponentOptions<
   ComponentT extends object,
-  InputsT extends object = Record<string, unknown>
+  InputsT extends object = object
 > = TModalOptions<IFmModalWithComponentConfig<ComponentT, InputsT>>;
 
 
 // Template Modals
 
 export interface IFmModalWithTemplateConfig<
-  ContextT extends Record<string, unknown> = Record<string, unknown>
+  ContextT extends object = object
 >
 extends IFmModalConfig<FmModalWithTemplate<ContextT>> {
   context: ContextT | null,
 }
 
 export type IFmModalWithTemplateOptions<
-  ContextT extends Record<string, unknown> = Record<string, unknown>
+  ContextT extends object = object
 > = TModalOptions<IFmModalWithTemplateConfig<ContextT>>;
 
 

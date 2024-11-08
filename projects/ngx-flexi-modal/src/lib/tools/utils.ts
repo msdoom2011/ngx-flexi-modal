@@ -65,7 +65,7 @@ export function normalizeOptions(
 
 export function extendModalOptionsWithInputs<
   ComponentT extends object,
-  InputsT extends Record<string, unknown>
+  InputsT extends object
 >(
   basicOptions: IFmModalWithComponentOptions<ComponentT, Partial<InputsT>>,
   userOptions: IFmModalOptions<FmModalWithComponent<ComponentT, InputsT>> & Partial<InputsT>,

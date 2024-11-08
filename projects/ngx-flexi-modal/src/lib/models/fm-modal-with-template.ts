@@ -5,7 +5,7 @@ import { FmModalType } from '../services/modals/flexi-modals.constants';
 import { FmModal } from './fm-modal';
 
 export class FmModalWithTemplate<
-  ContextT extends Record<string, unknown> = any
+  ContextT extends object = any
 >
 extends FmModal<
   IFmModalWithTemplateConfig<ContextT>,

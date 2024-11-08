@@ -76,7 +76,7 @@ export class FmModalComponent implements DoCheck, OnChanges, AfterContentInit, O
   public readonly _closable = input<boolean | undefined>(undefined, { alias: 'closable' });
   public readonly _maximizable = input<boolean | undefined>(undefined, { alias: 'maximizable' });
   public readonly _theme = input<string | undefined>(undefined, { alias: 'theme' });
-  public readonly _data = input<Record<string, unknown> | undefined>(undefined, { alias: 'data' });
+  public readonly _data = input<object | undefined>(undefined, { alias: 'data' });
 
   // Outputs
   public readonly _activeEvent = output<FmModalActiveEvent>({ alias: 'active' });

@@ -28,7 +28,7 @@ export interface IFmModalConfirmOptions extends IFmModalBasicOptions {
   onNo?: ($event: MouseEvent, action: FmModalAction) => void,
 }
 
-export interface IFmModalBasicInputs extends Record<string, unknown> {
+export interface IFmModalBasicInputs {
   message: string | Array<string>;
   messageAlign?: TFmModalBasicAlign;
   icon?: TFmModalBasicIcon;

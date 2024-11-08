@@ -13,7 +13,7 @@ export class FmModalWithTemplateFactory extends FmModalFactory<FmModalWithTempla
     return !!(subject && subject instanceof TemplateRef);
   }
 
-  public create<ContextT extends Record<string, unknown>>(
+  public create<ContextT extends object>(
     templateRef: TemplateRef<ContextT>,
     optionsOrOpenUntil: Observable<unknown> | IFmModalWithTemplateOptions<ContextT> | undefined
   ): FmModalWithTemplate<ContextT> {
