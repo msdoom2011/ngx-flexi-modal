@@ -12,7 +12,7 @@ import {
 } from '../../../projects/ngx-flexi-modal/src/lib/services/theme/flexi-modals-theme.definitions';
 import {
   withColorScheme,
-  withStyling,
+  withStylingOptions,
   withThemes,
 } from '../../../projects/ngx-flexi-modal/src/lib/flexi-modals.providers';
 
@@ -83,7 +83,7 @@ export class ColorsHelper {
     const { label, initialize, templated } = config;
 
     it(label('check default value'), () => {
-      initialize(withStyling({ frameBorder: true }));
+      initialize(withStylingOptions({ frameBorder: true }));
       checkOption(fmDefaultColorScheme[<keyof IFmModalColorScheme>optionName], templated);
     });
   }
@@ -101,7 +101,7 @@ export class ColorsHelper {
 
       initialize(
         withColorScheme({ [optionName]: color }),
-        withStyling({ frameBorder: true }),
+        withStylingOptions({ frameBorder: true }),
       );
       checkOption(color, templated);
     });

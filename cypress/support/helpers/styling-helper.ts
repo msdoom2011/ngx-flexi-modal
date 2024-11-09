@@ -11,7 +11,7 @@ import {
   IFmModalStylingOptions,
   IFmModalThemeOptions,
 } from '../../../projects/ngx-flexi-modal/src/lib/services/theme/flexi-modals-theme.definitions';
-import { withStyling, withThemes } from '../../../projects/ngx-flexi-modal/src/lib/flexi-modals.providers';
+import { withStylingOptions, withThemes } from '../../../projects/ngx-flexi-modal/src/lib/flexi-modals.providers';
 
 export interface IStylingTestsConfig {
   label(label: string): string;
@@ -81,7 +81,7 @@ export class StylingHelper {
     const { label, initialize, templated } = config;
 
     it(label('check default value'), () => {
-      initialize(withStyling(defaultStyling));
+      initialize(withStylingOptions(defaultStyling));
       checkOption(fmDefaultStyling[<keyof IFmModalStylingConfig>optionName], templated);
     });
   }
@@ -98,7 +98,7 @@ export class StylingHelper {
 
     it(label('check styling value'), () => {
       initialize(
-        withStyling({
+        withStylingOptions({
           ...defaultStyling,
           [optionName]: optionValue
         }),

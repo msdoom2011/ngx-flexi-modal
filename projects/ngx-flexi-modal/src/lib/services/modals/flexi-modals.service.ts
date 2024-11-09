@@ -14,9 +14,7 @@ import { FLEXI_MODAL_FACTORY } from '../../flexi-modals.tokens';
 import { FmModalFactory } from './factories/fm-modal.factory';
 import { FmModal } from '../../models/fm-modal';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class FlexiModalsService {
 
   private readonly _factories = inject<Array<FmModalFactory<any>>>(FLEXI_MODAL_FACTORY);
@@ -63,6 +61,10 @@ export class FlexiModalsService {
 
   public findFactory(subject: unknown): FmModalFactory<any> | undefined {
     return this._factories.find(factory => factory.test(subject));
+  }
+
+  public getById<ModalT extends FmModal = FmModal>(modalId: string): ModalT | undefined {
+    return <ModalT | undefined>this._modals().find(modal => modal.id() === modalId);
   }
 
   public open: IFmOpenModalFn = (content: unknown, options?: unknown): any | FmModal<any, any> | null => {
@@ -153,9 +155,5 @@ export class FlexiModalsService {
     [...this._modals()].forEach(modalConfig => {
       this.close(modalConfig.id());
     });
-  }
-
-  public getById<ModalT extends FmModal = FmModal>(modalId: string): ModalT | undefined {
-    return <ModalT | undefined>this._modals().find(modal => modal.id() === modalId);
   }
 }

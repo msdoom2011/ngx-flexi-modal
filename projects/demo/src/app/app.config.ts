@@ -1,7 +1,14 @@
 import { ApplicationConfig, provideExperimentalZonelessChangeDetection } from '@angular/core';
 
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import { provideFlexiModals, withDefaultOptions, withModalPresets, withThemes } from 'ngx-flexi-modal';
+import {
+  provideFlexiModals,
+  withDefaultOptions,
+  withModalPresets,
+  withStylingOptions,
+  withColorScheme,
+  withThemes,
+} from 'ngx-flexi-modal';
 
 import { modalBasicCustomPresets } from './modal/basic-custom/modal-basic-custom.presets';
 
@@ -28,10 +35,13 @@ export const appConfig: ApplicationConfig = {
       //   sm: 568,
       //   xs: 700,
       // }),
-      // withStyling({
-        // frameShadow: '20px 20px 20px 0 rgba(255, 0, 0, 0.3)',
-        // frameBorder: false,
-        // frameRounding: 10,
+      // withColorScheme({
+      //   bodyBg: 'yellow',
+      // }),
+      // withStylingOptions({
+      //   frameShadow: '20px 20px 20px 0 rgba(255, 0, 0, 0.3)',
+      //   frameBorder: false,
+      //   frameRounding: 10,
       // }),
       // withColorScheme({
         // border: '#ccc',

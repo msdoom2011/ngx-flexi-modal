@@ -3,7 +3,7 @@ import { TFmWidthPreset } from '../modals/flexi-modals.definitions';
 
 export const FM_DEFAULT_THEME = 'default';
 
-export const fmModalWidthPresets: Record<TFmWidthPreset, number> = {
+export const fmDefaultWidthPresets: Record<TFmWidthPreset, number> = {
   lg: 1280,
   bg: 960,
   md: 768,

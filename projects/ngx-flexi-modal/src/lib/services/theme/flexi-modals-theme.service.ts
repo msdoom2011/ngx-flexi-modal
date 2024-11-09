@@ -13,54 +13,48 @@ import {
   fmColorSchemeCssVars,
   fmDefaultColorScheme,
   fmDefaultStyling,
-  fmModalWidthPresets,
+  fmDefaultWidthPresets,
   fmStylingCssValueGetters,
   fmStylingCssVars,
 } from './flexi-modals-theme.constants';
 import {
   IFmModalColorScheme,
+  IFmModalStylingConfig,
   IFmModalStylingOptions,
   IFmModalTheme,
   IFmModalThemeOptions,
   IFmModalThemes,
 } from './flexi-modals-theme.definitions';
 
-@Injectable({
-  providedIn: 'root',
-})
+interface IDefaults {
+  presets: Record<TFmWidthPreset, number>;
+  colors: IFmModalColorScheme;
+  styling: IFmModalStylingConfig;
+}
+
+@Injectable({ providedIn: 'root' })
 export class FlexiModalsThemeService {
 
   // Signals
   private readonly _themes = signal<IFmModalThemes>({});
   private readonly _themeName = signal<string>('');
-  private readonly _widthPresets = signal<Record<TFmWidthPreset, number>>(fmModalWidthPresets);
 
   // Private props
-  private readonly _instanceId = generateRandomNumber();
   private _styleElement: HTMLStyleElement | null = null;
+  private readonly _instanceId = generateRandomNumber();
+  private readonly _defaults: IDefaults = {
+    presets: fmDefaultWidthPresets,
+    colors: fmDefaultColorScheme,
+    styling: fmDefaultStyling,
+  };
 
   constructor() {
     const themeConfigs = inject<Array<IFmModalThemeOptions>>(FLEXI_MODAL_THEME, { optional: true });
-    const defaultColorScheme = inject<IFmModalColorScheme>(FLEXI_MODAL_COLOR_SCHEME, { optional: true });
-    const defaultStylingOptions = inject<IFmModalStylingOptions>(FLEXI_MODAL_STYLING_OPTIONS, { optional: true });
-    const widthPresets = inject<Record<TFmWidthPreset, number>>(FLEXI_MODAL_WIDTH_PRESETS, { optional: true });
 
-    if (themeConfigs?.length && (defaultColorScheme || defaultStylingOptions)) {
-      console.warn(
-        'Specified both providers "FM_MODAL_COLOR_SCHEME" or "FM_MODAL_STYLING_OPTIONS" ' +
-        'and "FM_MODAL_THEME". The "FM_MODAL_COLOR_SCHEME" provider was ignored.'
-      );
-    }
-
-    if (widthPresets) {
-      this._initializeWidthPresets(widthPresets);
-    }
+    this._initializeDefaultOptions();
 
     if (themeConfigs?.length) {
       this._initializeWithThemes(themeConfigs);
-
-    } else if (defaultColorScheme || defaultStylingOptions) {
-      this._initializeWithOptions(defaultColorScheme, defaultStylingOptions);
 
     } else {
       this._initializeWithDefaults();
@@ -68,6 +62,10 @@ export class FlexiModalsThemeService {
   }
 
   // Computed
+
+  public readonly themes = computed<IFmModalThemes>(() => {
+    return this._themes();
+  });
 
   public readonly theme = computed<IFmModalTheme>(() => {
     return this._themes()[this._themeName()];
@@ -79,14 +77,6 @@ export class FlexiModalsThemeService {
 
   public readonly themeClass = computed<string>(() => {
     return this.getThemeClass(this.themeName());
-  });
-
-  public readonly themes = computed<IFmModalThemes>(() => {
-    return this._themes();
-  });
-
-  public readonly widthPresets = computed<Record<TFmWidthPreset, number>>(() => {
-    return this._widthPresets();
   });
 
 
@@ -148,27 +138,32 @@ export class FlexiModalsThemeService {
 
   // Private methods
 
-  private _initializeWidthPresets(widthPresets: Record<TFmWidthPreset, number>): void {
-    this._widthPresets.set(widthPresets);
+  private _initializeDefaultOptions(): void {
+    const widthPresets = inject<Record<TFmWidthPreset, number>>(FLEXI_MODAL_WIDTH_PRESETS, { optional: true });
+    const styling = inject<IFmModalStylingOptions>(FLEXI_MODAL_STYLING_OPTIONS, { optional: true });
+    const colors = inject<IFmModalColorScheme>(FLEXI_MODAL_COLOR_SCHEME, { optional: true });
+
+    if (colors) {
+      this._defaults.colors = { ...this._defaults.colors, ...colors };
+    }
+
+    if (styling) {
+      this._defaults.styling = { ...this._defaults.styling, ...styling };
+    }
+
+    if (widthPresets) {
+      this._defaults.presets = { ...this._defaults.presets, ...widthPresets };
+    }
   }
 
   private _initializeWithDefaults(): void {
     this._themeName.set(FM_DEFAULT_THEME);
     this._themes.set({
       [FM_DEFAULT_THEME]: {
-        colors: fmDefaultColorScheme,
-        styling: fmDefaultStyling,
+        colors: this._defaults.colors,
+        styling: this._defaults.styling,
       }
     });
-  }
-
-  private _initializeWithOptions(
-    colorsScheme: IFmModalColorScheme | null,
-    stylingOptions: IFmModalStylingOptions | null,
-  ): void {
-
-    this._themeName.set(FM_DEFAULT_THEME);
-    this._themes.set({ [FM_DEFAULT_THEME]: this._composeThemeConfig(colorsScheme, stylingOptions) });
   }
 
   private _initializeWithThemes(themeConfigs: Array<IFmModalThemeOptions>): void {
@@ -202,7 +197,7 @@ export class FlexiModalsThemeService {
   }
 
   private _generateWidthPresetsStyles(): Array<string> {
-    const presets = this._widthPresets();
+    const presets = this._defaults.presets;
     const props: Array<string> = [];
 
     for (const presetName in presets) {
@@ -287,11 +282,11 @@ export class FlexiModalsThemeService {
 
     return {
       colors: {
-        ...fmDefaultColorScheme,
+        ...this._defaults.colors,
         ...(colorsScheme || {}),
       },
       styling: {
-        ...fmDefaultStyling,
+        ...this._defaults.styling,
         ...(stylingOptions
           ? normalizeOptions(stylingOptions, ['headerActionsPosition', 'frameShadow'])
           : {}

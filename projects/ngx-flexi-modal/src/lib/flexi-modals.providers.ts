@@ -48,15 +48,21 @@ export function withDefaultOptions(options: IFmModalOptions<any>): Array<Provide
   ];
 }
 
+export function withStylingOptions(options: IFmModalStylingOptions): Array<Provider> {
+  return [
+    { provide: FLEXI_MODAL_STYLING_OPTIONS, useValue: options },
+  ];
+}
+
 export function withColorScheme(colors: Partial<IFmModalColorScheme>): Array<Provider> {
   return [
     { provide: FLEXI_MODAL_COLOR_SCHEME, useValue: colors },
   ];
 }
 
-export function withStyling(options: IFmModalStylingOptions): Array<Provider> {
+export function withWidthPresets(presets: Record<TFmWidthPreset, number>): Array<Provider> {
   return [
-    { provide: FLEXI_MODAL_STYLING_OPTIONS, useValue: options },
+    { provide: FLEXI_MODAL_WIDTH_PRESETS, useValue: presets },
   ];
 }
 
@@ -65,12 +71,6 @@ export function withThemes(themes: Array<IFmModalThemeOptions>): Array<Provider>
     ...themes.map(themeConfig => (
       { provide: FLEXI_MODAL_THEME, useValue: themeConfig, multi: true }
     )),
-  ];
-}
-
-export function withWidthPresets(presets: Record<TFmWidthPreset, number>): Array<Provider> {
-  return [
-    { provide: FLEXI_MODAL_WIDTH_PRESETS, useValue: presets },
   ];
 }
 
