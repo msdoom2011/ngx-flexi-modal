@@ -96,8 +96,10 @@ describe('Option "onClose"', () => {
     cy.get('@onCloseSpy').should('not.be.called');
     cy.getCy('modal').should('have.length', 2);
 
+    cy.get(cySelector('modal') + `#${templatedModalId}`).should('be.hidden');
+    cy.get(cySelector('modal') + `#${innerModalId}`).should('be.visible').click();
+
     cy.get(cySelector('modal') + `#${templatedModalId}`).should('be.visible');
-    cy.get(cySelector('modal') + `#${innerModalId}`).should('be.visible');
   });
 
   it('should not trigger callback if modal close propagation stopped', () => {

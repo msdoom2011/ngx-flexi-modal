@@ -1,7 +1,4 @@
-import { Component, input } from '@angular/core';
-
-import { IFmModalAware } from '../../../projects/ngx-flexi-modal/src/lib/components/fm-modal.abstract';
-import { FmModal } from '../../../projects/ngx-flexi-modal/src/lib/models/fm-modal';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'cy-many-text',
@@ -11,6 +8,7 @@ import { FmModal } from '../../../projects/ngx-flexi-modal/src/lib/models/fm-mod
       @for (i of rows; track $index) {
         <p>The simple text component works!</p>
       }
+      <p id="very-last-item">The simple text component works!</p>
     </div>
   `,
   styles: `

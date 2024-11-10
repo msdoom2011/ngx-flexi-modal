@@ -33,7 +33,7 @@
 <fm-modal
   id="test-custom-id"
   title="Templated Modal And Another Very Long Title I Want That User Can See All The Time And Another Very Long Title I Want That User Can See All The Time"
-  width="fit-window"
+  width="sm"
   height="fit-content"
   position="center"
   scroll="content"
@@ -59,6 +59,7 @@
   <ng-container *fmModalBody>
     @defer {
       <fm-app-template-aware [modal]="modal" />
+
     } @loading {
       <fm-modal-loader />
     }

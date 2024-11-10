@@ -86,7 +86,7 @@ describe('Option "onOpen"', () => {
     });
 
     cy.get('@fixture').then(($fixture: any) => {
-      $fixture.componentRef.setInput({ inputs: { opened: true } });
+      $fixture.componentRef.setInput('inputs', { opened: true });
       $fixture.detectChanges();
     });
 
@@ -135,7 +135,7 @@ describe('Option "onOpen"', () => {
     });
 
     cy.get('@fixture').then(($fixture: any) => {
-      $fixture.componentRef.setInput({ inputs: { opened: true } });
+      $fixture.componentRef.setInput('inputs', { opened: true });
       $fixture.detectChanges();
     });
 

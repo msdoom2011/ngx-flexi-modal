@@ -13,6 +13,8 @@ export interface IFmHeightAdjustParams {
 }
 
 export interface IFmModalMaximizeAnimationParams {
+  top: string;
+  left: string;
   width: string;
   height: string;
   paddingTop: string;
@@ -24,6 +26,9 @@ export interface IFmModalMaximizeAnimationParams {
 }
 
 export interface IFmModalMinimizeAnimationParams {
+  top: string;
+  left: string;
   alignItems: string;
   headerHeight: string;
+  bodyHeight: string;
 }

@@ -19,6 +19,7 @@ import {
 } from './flexi-modals-theme.constants';
 import {
   IFmModalColorScheme,
+  IFmModalColorSchemeOptions,
   IFmModalStylingConfig,
   IFmModalStylingOptions,
   IFmModalTheme,
@@ -144,11 +145,11 @@ export class FlexiModalsThemeService {
     const colors = inject<IFmModalColorScheme>(FLEXI_MODAL_COLOR_SCHEME, { optional: true });
 
     if (colors) {
-      this._defaults.colors = { ...this._defaults.colors, ...colors };
+      this._defaults.colors = this._composeColorsConfig(colors);
     }
 
     if (styling) {
-      this._defaults.styling = { ...this._defaults.styling, ...styling };
+      this._defaults.styling = this._composeStylingConfig(styling);
     }
 
     if (widthPresets) {
@@ -276,22 +277,36 @@ export class FlexiModalsThemeService {
   }
 
   private _composeThemeConfig(
-    colorsScheme: Partial<IFmModalColorScheme> | null | undefined,
+    colorsScheme: IFmModalColorSchemeOptions | null | undefined,
     stylingOptions: IFmModalStylingOptions | null | undefined
   ): IFmModalTheme {
 
     return {
-      colors: {
-        ...this._defaults.colors,
-        ...(colorsScheme || {}),
-      },
-      styling: {
-        ...this._defaults.styling,
-        ...(stylingOptions
+      colors: this._composeColorsConfig(colorsScheme),
+      styling: this._composeStylingConfig(stylingOptions),
+    };
+  }
+
+  private _composeColorsConfig(
+    colorsScheme: IFmModalColorSchemeOptions | null | undefined
+  ): IFmModalColorScheme {
+
+    return {
+      ...this._defaults.colors,
+      ...(colorsScheme || {}),
+    };
+  }
+
+  private _composeStylingConfig(
+    stylingOptions: IFmModalStylingOptions | null | undefined
+  ): IFmModalStylingConfig {
+
+    return {
+      ...this._defaults.styling,
+      ...(stylingOptions
           ? normalizeOptions(stylingOptions, ['headerActionsPosition', 'frameShadow'])
           : {}
-        ),
-      },
+      ),
     };
   }
 }

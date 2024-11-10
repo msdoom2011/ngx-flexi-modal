@@ -340,9 +340,9 @@ export class FmModalInstanceComponent implements OnInit, OnDestroy {
     const hostElement = this._elementRef.nativeElement;
     const bodyElement = this._bodyRef().nativeElement;
     const bodyWrapperElement = this._bodyWrapperRef().nativeElement;
+    const bodyWrapperBox = bodyWrapperElement.getBoundingClientRect();
     const bodyBox = bodyElement.getBoundingClientRect();
     const hostBox = hostElement.getBoundingClientRect();
-    const hostStyles = window.getComputedStyle(hostElement);
     const bodyStyles = window.getComputedStyle(bodyElement);
     const bodyWrapperStyles = window.getComputedStyle(bodyWrapperElement);
 
@@ -350,8 +350,14 @@ export class FmModalInstanceComponent implements OnInit, OnDestroy {
       const headerHeight = this._headerWrapperRef()
         ? this._headerWrapperRef()?.nativeElement.getBoundingClientRect().height
         : 0;
+      const alignItems = this.modal().config().position === 'top'
+        ? 'flex-start'
+        : 'center';
 
       return {
+        top: bodyWrapperBox.top + 'px',
+        left: bodyWrapperBox.left + 'px',
+        bodyHeight: bodyBox.height + 'px',
         headerHeight: headerHeight + 'px',
         alignItems: (
           bodyBox.height
@@ -359,11 +365,13 @@ export class FmModalInstanceComponent implements OnInit, OnDestroy {
           + parseInt(bodyWrapperStyles.paddingBottom)
         ) > hostBox.height
           ? 'flex-start'
-          : hostStyles.alignItems,
+          : alignItems,
       };
     }
 
     return {
+      top: bodyWrapperBox.top + 'px',
+      left: bodyWrapperBox.left + 'px',
       width: bodyBox.width + 'px',
       height: bodyBox.height + 'px',
       paddingTop: bodyWrapperStyles.paddingTop,

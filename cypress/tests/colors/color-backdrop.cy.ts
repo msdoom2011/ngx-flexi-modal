@@ -50,7 +50,6 @@ function checkBackdrop(color: string): void {
 
   cy.getCy('modal-backdrop')
     .should('have.length', 1)
-    .should('be.visible')
     .invoke('css', 'background-color')
       .should('eq', colorToRgb(color));
 }

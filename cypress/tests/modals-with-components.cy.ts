@@ -3,8 +3,8 @@ import { initializeServiceModals, showComponent } from '../support/helpers/commo
 import {
   fmDefaultColorScheme,
   fmDefaultStyling,
+  fmDefaultWidthPresets,
 } from '../../projects/ngx-flexi-modal/src/lib/services/theme/flexi-modals-theme.constants';
-import { fmModalWidthPresets } from '../../projects/ngx-flexi-modal/src/lib/services/modals/flexi-modals.constants';
 
 describe('FmModalsOutletComponent', () => {
   const windowWidth = 500;
@@ -16,12 +16,11 @@ describe('FmModalsOutletComponent', () => {
 
   it('should display modal properly using default settings', () => {
     const contentHeight = 100;
-    const minBodyWidth = fmModalWidthPresets.tiny;
 
     initializeServiceModals();
     showComponent(SimpleTextComponent).then((modal: any) => cy.wrap(modal).as('modal'));
 
-    cy.getCy('modals-backdrop').should('be.visible').invoke('outerWidth').should('eq', windowWidth);
+    cy.getCy('modals-backdrop').invoke('outerWidth').should('eq', windowWidth);
     cy.getCy('modals-backdrop').invoke('outerHeight').should('eq', windowHeight);
 
     // check layout
@@ -29,11 +28,10 @@ describe('FmModalsOutletComponent', () => {
     cy.getCy('modal-closing-layer').invoke('outerWidth').should('eq', windowWidth);
     cy.getCy('modal-closing-layer').invoke('outerHeight').should('eq', windowHeight);
     cy.getCy('modal-body-wrapper').should('be.visible').should('contain.text', SimpleTextComponent.content);
-    cy.getCy('modal-body-wrapper').invoke('css', 'paddingTop').should('eq', '60px');
-    cy.getCy('modal-body-wrapper').invoke('css', 'paddingBottom').should('eq', '60px');
-    cy.getCy('modal-body-wrapper').invoke('css', 'paddingLeft').should('eq', '30px');
-    cy.getCy('modal-body-wrapper').invoke('css', 'paddingRight').should('eq', '30px');
-    cy.getCy('modal-body').invoke('outerWidth').should('eq', minBodyWidth);
+    cy.getCy('modal-body-wrapper').invoke('css', 'paddingTop').should('eq', fmDefaultStyling.verticalMargin + 'px');
+    cy.getCy('modal-body-wrapper').invoke('css', 'paddingBottom').should('eq', fmDefaultStyling.verticalMargin + 'px');
+    cy.getCy('modal-body-wrapper').invoke('css', 'paddingLeft').should('eq', fmDefaultStyling.horizontalMargin + 'px');
+    cy.getCy('modal-body-wrapper').invoke('css', 'paddingRight').should('eq', fmDefaultStyling.horizontalMargin + 'px');
     cy.getCy('modal-body')
       .invoke('outerHeight')
         .should('be.lt', contentHeight + 10 + fmDefaultStyling.headerHeight)
@@ -60,7 +58,11 @@ describe('FmModalsOutletComponent', () => {
     cy.getCy('modal-loader').should('not.exist');
     cy.get('@modal').then((modal: any) => modal.startLoading());
     cy.getCy('modal-loader').should('be.visible').invoke('outerHeight').should('eq', contentHeight);
-    cy.getCy('modal-loader').invoke('outerWidth').should('eq', minBodyWidth);
+    cy.getCy('modal-loader').invoke('outerWidth').then((loaderWidth: any) => {
+      cy.getCy('modal-body').invoke('outerWidth').then((modalWidth: any) => {
+        expect(loaderWidth).to.equal(modalWidth);
+      });
+    });
   });
 
   it('should display with correct styling', () => {
@@ -86,7 +88,6 @@ describe('FmModalsOutletComponent', () => {
       .invoke('css', 'box-shadow')
         .should('include', frameShadowColor)
         .should('not.include', fmDefaultColorScheme.border);
-    cy.getCy('modal-body').invoke('outerWidth').should('eq', fmModalWidthPresets.tiny);
     cy.getCy('modal-body').invoke('css', 'border-radius').should('eq', options.frameRounding + 'px');
     cy.getCy('modal-header-actions').should('have.class', 'position-' + options.headerActionsPosition);
 

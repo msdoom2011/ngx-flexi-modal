@@ -17,6 +17,9 @@ export const getMaximizeAnimation = (animationName: string) => {
       group([
         query(`.${FM_MODAL_BODY_WRAPPER_CLASS}`, [
           style({
+            position: 'absolute',
+            top: '{{ top }}',
+            left: '{{ left }}',
             height: '{{ height }}',
             width: '{{ width }}',
             paddingTop: '{{ paddingTop }}',
@@ -31,6 +34,8 @@ export const getMaximizeAnimation = (animationName: string) => {
             overflow: 'hidden',
           }),
           animate(`${duration}ms ease-in-out`, style({
+            top: '0',
+            left: '0',
             width: '*',
             height: '*',
             paddingTop: '*',
@@ -67,6 +72,8 @@ export const getMaximizeAnimation = (animationName: string) => {
       ]),
     ], {
       params: {
+        top: '0',
+        left: '0',
         width: '0',
         height: '0',
         paddingTop: '0',
@@ -78,15 +85,14 @@ export const getMaximizeAnimation = (animationName: string) => {
     }),
     transition('true => false', [
       style({
-        height: '100vh',
         overflow: 'hidden',
         alignItems: '{{ alignItems }}',
       }),
       group([
         query(`.${FM_MODAL_BODY_WRAPPER_CLASS}`, [
           style({
+            height: '{{ bodyHeight }}',
             width: '100%',
-            height: '100%',
             minHeight: 0,
             minWidth: 0,
             maxWidth: '100%',
@@ -142,8 +148,11 @@ export const getMaximizeAnimation = (animationName: string) => {
       ]),
     ], {
       params: {
+        top: '0',
+        left: '0',
         alignItems: 'flex-start',
         headerHeight: '40px',
+        bodyHeight: '0px',
       }
     }),
   ]);

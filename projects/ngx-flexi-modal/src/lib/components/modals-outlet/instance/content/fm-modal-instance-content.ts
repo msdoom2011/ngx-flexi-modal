@@ -3,7 +3,11 @@ import { computed, Directive, inject, viewChild, ViewContainerRef } from '@angul
 import { FmModalInstanceComponent } from '../fm-modal-instance.component';
 import { FmModal } from '../../../../models/fm-modal';
 
-@Directive()
+@Directive({
+  host: {
+    '[attr.data-cy]': 'modal-content-component'
+  }
+})
 export abstract class FmModalInstanceContent<ModalT extends FmModal<any, any>> {
 
   // Dependencies

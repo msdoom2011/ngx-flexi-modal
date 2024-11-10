@@ -6,7 +6,7 @@ import { FmModalWithTemplateFactory } from './services/modals/factories/fm-modal
 import { FmModalPresetsFactory } from './services/modals/factories/fm-modal-presets.factory';
 import { fmModalBasicPresets } from './presets/basic/fm-modal-basic.presets';
 import {
-  IFmModalColorScheme,
+  IFmModalColorSchemeOptions,
   IFmModalStylingOptions,
   IFmModalThemeOptions,
 } from './services/theme/flexi-modals-theme.definitions';
@@ -54,7 +54,7 @@ export function withStylingOptions(options: IFmModalStylingOptions): Array<Provi
   ];
 }
 
-export function withColorScheme(colors: Partial<IFmModalColorScheme>): Array<Provider> {
+export function withColorScheme(colors: IFmModalColorSchemeOptions): Array<Provider> {
   return [
     { provide: FLEXI_MODAL_COLOR_SCHEME, useValue: colors },
   ];

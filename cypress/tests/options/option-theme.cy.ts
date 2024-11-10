@@ -32,7 +32,7 @@ describe('Option "theme"', () => {
     checkModalTheme(FM_DEFAULT_THEME, false);
   });
 
-  it.only('should be set via the default modal options configuration (service)', () => {
+  it('should be set via the default modal options configuration (service)', () => {
     initializeServiceModals(
       withDefaultOptions({ theme: 'dark' }),
       withThemes([
@@ -105,6 +105,7 @@ describe('Option "theme"', () => {
 });
 
 function checkOutletTheme(themeName: string, presence: boolean = true): void {
+  cy.getCy('modal').should('be.visible');
   cy.getCy('modals-outlet')
     .invoke('attr', 'class')
     .then((className: any) => {
@@ -116,6 +117,7 @@ function checkOutletTheme(themeName: string, presence: boolean = true): void {
 
 function checkModalTheme(themeName: string, presence: boolean = true): void {
   cy.getCy('modal')
+    .should('be.visible')
     .invoke('attr', 'class')
     .then((className: any) => {
       presence

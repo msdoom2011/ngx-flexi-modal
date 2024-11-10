@@ -9,7 +9,7 @@ export interface IFmModalTheme {
 export interface IFmModalThemeOptions {
   name: string;
   default?: boolean;
-  colors?: Partial<IFmModalColorScheme>;
+  colors?: IFmModalColorSchemeOptions;
   styling?: IFmModalStylingOptions;
 }
 
@@ -32,7 +32,7 @@ export interface IFmModalColorScheme {
   actionFocusOutline: string;
 }
 
-export type IFmModalStylingOptions = Partial<IFmModalStylingConfig>;
+export type IFmModalColorSchemeOptions = Partial<IFmModalColorScheme>;
 
 export interface IFmModalStylingConfig {
   frameBorder: boolean;
@@ -46,3 +46,5 @@ export interface IFmModalStylingConfig {
   verticalMargin: number;
   horizontalMargin: number;
 }
+
+export type IFmModalStylingOptions = Partial<IFmModalStylingConfig>;
